@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RequestStatus;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,5 +21,6 @@ class DatabaseSeeder extends Seeder
         UserSeeder::run();
         EquipmentCategorySeeder::run();
         TicketStatusSeeder::run();
+        RequestStatusSeeder::run();
     }
 }

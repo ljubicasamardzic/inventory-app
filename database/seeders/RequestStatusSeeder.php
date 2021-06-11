@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\TicketStatus;
+use App\Models\RequestStatus;
 use Illuminate\Database\Seeder;
 
-class TicketStatusSeeder extends Seeder
+class RequestStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,13 @@ class TicketStatusSeeder extends Seeder
     public static function run()
     {
         $statuses = [
-            '1' => ['name' => 'Unprocessed', 'icon' => 'badge-warning'],
-            '2' => ['name' => 'In progress', 'icon' => 'badge-info'],
-            '3' => ['name' => 'Processed', 'icon' => 'badge-success']
+            '1' => ['name' => 'Pending', 'icon' => 'badge-warning'],
+            '2' => ['name' => 'Approved', 'icon' => 'badge-success'],
+            '3' => ['name' => 'Rejected', 'icon' => 'badge-danger']
         ];
 
         foreach ($statuses as $key => $status) {
-            TicketStatus::query()->create([
+            RequestStatus::query()->create([
                 'id' => $key,
                 'name' => $status['name'],
                 'icon' => $status['icon']

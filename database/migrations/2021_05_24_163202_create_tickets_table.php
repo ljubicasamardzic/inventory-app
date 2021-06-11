@@ -16,7 +16,11 @@ class CreateTicketsTable extends Migration
             $table->foreignId('status_id')->default(1)->constrained('ticket_statuses');
             $table->foreignId('user_id')->constrained('users'); // ko je uputio
             $table->foreignId('officer_id')->nullable()->constrained('users'); // ko je preuzeo
-            $table->boolean('is_done')->default(false);
+            $table->foreignId('HR_id')->nullable()->constrained('users'); // ko je finalno odobrio ili odbio zahtjev
+            $table->foreignId('officer_approval')->nullable()->default(1)->constrained('request_statuses');
+            $table->foreignId('HR_approval')->nullable()->default(1)->constrained('request_statuses');
+            $table->timestamp('date_finished')->nullable();
+            // $table->boolean('is_done')->default(false);
             $table->timestamps();
             // requesting office supplies
             $table->text('description_supplies')->nullable();

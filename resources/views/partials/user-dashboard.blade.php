@@ -2,7 +2,7 @@
   <div class="col-12">    
     <div class="mt-3 float-right">
       <a type="button" 
-          class="btn btn-sm btn-warning  @if ($equipment->count() < 1) disabled @endif"
+          class="btn btn-sm btn-warning mr-2  @if ($equipment->count() < 1) disabled @endif"
           data-toggle="modal" 
           data-target="#modal-report-malfunction" 
       >

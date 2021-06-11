@@ -22,8 +22,12 @@ class Ticket extends Model
     /** TICKET STATUSES **/
     const UNPROCESSED = 1;
     const IN_PROGRESS = 2;
-    const APPROVED = 3;
-    const REJECTED = 4;
+    const PROCESSED = 3;
+
+    // REQUEST STATUSES
+    const PENDING = 1;
+    const APPROVED = 2;
+    const REJECTED = 3;
 
     const dates = ['created_at', 'updated_at'];
 
@@ -35,8 +39,20 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'officer_id');
     }
 
+    public function admin() {
+        return $this->belongsTo(User::class, 'HR_id');
+    }
+
     public function status(){
         return $this->belongsTo(TicketStatus::class);
+    }
+
+    public function officerApproval() {
+        return $this->belongsTo(RequestStatus::class, 'officer_approval');
+    }
+
+    public function HRApproval() {
+        return $this->belongsTo(RequestStatus::class, 'HR_approval');
     }
 
     public function equipment() {
@@ -48,7 +64,7 @@ class Ticket extends Model
     }
 
     public function scopeOpen($query){
-        return $query->where('is_done', 0)->get();
+        return $query->where('status_id', '<>', Ticket::PROCESSED)->get();
     }
 
     public function getDateAttribute() {
@@ -80,7 +96,7 @@ class Ticket extends Model
     }
 
     public function scopeReadyForHR($query) {
-        return $query->where('status_id', [Ticket::APPROVED, Ticket::REJECTED])->get();
+        return $query->where('officer_approval', '<>', Ticket::PENDING)->get();
     }
     
 }

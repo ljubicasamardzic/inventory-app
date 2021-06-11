@@ -16,7 +16,12 @@
                         <select name="equipment_id" class="form-control  @error('equipment_id') is-invalid @enderror" id="equipment_id">
                             <option value="">-- select equipment --</option>
                             @foreach ($equipment as $item)
-                                <option value="{{ $item->equipment_id }}">{{ $item->equipment->full_name }}</option>
+                                <option value="{{ $item->equipment_id }}">
+                                    {{ $item->equipment->full_name }} 
+                                    @if ($item->serial_number != null)
+                                        ({{$item->serial_number->serial_number}})
+                                    @endif
+                                </option>
                             @endforeach
                         </select>
                         @error('equipment_id')

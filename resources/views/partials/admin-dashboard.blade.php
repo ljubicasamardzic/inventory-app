@@ -1,49 +1,51 @@
 <div class="row">
     <div class="col-12">
-        <div class="card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-laptop-code mr-2"></i>
-                    Available equipment by category
-                </h3>
-            </div><!-- /.card-header -->
-            <div class="card-body table-responsive">
+        @can('viewAny', \App\Models\Equipment::class)
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-laptop-code mr-2"></i>
+                        Available equipment by category
+                    </h3>
+                </div><!-- /.card-header -->
+                <div class="card-body table-responsive">
 
-                @foreach($categories as $category)
-                    <div class="card card-default collapsed-card mt-3">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ $category->name }}</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                    @foreach($categories as $category)
+                        <div class="card card-default collapsed-card mt-3">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ $category->name }}</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Qty. available</th>
+                                        <th>Description</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($category->equipment as $e)
+                                        <tr class="clickable-row" data-href="/equipment/{{ $e->id }}" >
+                                            <td>{{ $e->id }}</td>
+                                            <td>{{ $e->name }}</td>
+                                            <td>{{ $e->available_quantity }}</td>
+                                            <td>{{ $e->short_description }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Qty. available</th>
-                                    <th>Description</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($category->equipment as $e)
-                                    <tr class="clickable-row" data-href="/equipment/{{ $e->id }}" >
-                                        <td>{{ $e->id }}</td>
-                                        <td>{{ $e->name }}</td>
-                                        <td>{{ $e->available_quantity }}</td>
-                                        <td>{{ $e->short_description }}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
 
-            </div><!-- /.card-body -->
-        </div>
+                </div><!-- /.card-body -->
+            </div>
+        @endcan
         <!-- /.card -->
         <div class="card mt-4" id="open_requests_id">
             <div class="card-header border-transparent">
@@ -67,7 +69,9 @@
                         <th>Equipment type</th>
                         <th>Employee</th>
                         <th>Admin</th>
-                        <th>Date</th>
+                        <th>Date received</th>
+                        <th>Officer Approval</th>
+                        <th>HR approval</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -92,6 +96,8 @@
                                     @else <td>/</td>
                                     @endif
                                 <td>{{ $ticket->date }}</td>
+                                <td><span class="badge {{ $ticket->officerApproval->icon }}">{{ $ticket->officerApproval->name }}</span></td>
+                                <td><span class="badge {{ $ticket->HRApproval->icon }}">{{ $ticket->HRApproval->name }}</span></td>
                                 <td><span class="badge {{ $ticket->status->icon }}">{{ $ticket->status->name }}</span></td>
                             </tr>
                         @endforeach

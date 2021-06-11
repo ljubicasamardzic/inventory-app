@@ -50,9 +50,16 @@
                                     <td>{{ $ticket->user->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Admin:</td>
+                                    <td>Officer:</td>
                                     @if ($ticket->officer != null)
                                         <td>{{ $ticket->officer->name }}</td>
+                                    @else <td>N/A</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <td>HR:</td>
+                                    @if ($ticket->admin != null)
+                                        <td>{{ $ticket->admin->name }}</td>
                                     @else <td>N/A</td>
                                     @endif
                                 </tr>
@@ -64,19 +71,19 @@
                                     <td>Request date:</td>
                                     <td>{{ $ticket->date }}</td>
                                 </tr>
-                                <tr>
-                                    <td>Finished:</td>
-                                    <td> @if($ticket->is_done)
-                                        <i class="fa fa-check-circle"></i>
-                                    @else
-                                        <i class="fa fa-times-circle"></i>
-                                    @endif</td>
-                                </tr>
                             </table>
                         </div>
 
                     <div class="col-7 table-responsive">
                         <table class="table table-striped table-sm">
+                            <tr>
+                                <td>Officer approval:</td>
+                                <td><span class="badge {{ $ticket->officerApproval->icon }}">{{ $ticket->officerApproval->name }}</span></td>
+                            </tr>
+                            <tr>
+                                <td>HR approval:</td>
+                                <td><span class="badge {{ $ticket->HRApproval->icon }}">{{ $ticket->HRApproval->name }}</span></td>
+                            </tr>
                             @if ($ticket->isSuppliesRequest())
                                     <tr>
                                         <td>Required office supplies:</td>
@@ -119,14 +126,14 @@
                                         </tr>
                                         <tr>
                                             <td>Serial number:</td>
-                                            @if ($ticket->equipment != null)
+                                            @if ($ticket->equipment->serial_number() != null)
                                                 <td>{{ $ticket->equipment->serial_number()->serial_number }}</td>
                                             @else <td>/</td>
                                             @endif
                                         </tr>
                                         <tr>
                                             <td>Remarks:</td>
-                                        @if ($ticket->equipment->description_malfunction != '')
+                                        @if ($ticket->description_malfunction != '')
                                                 <td>{{ $ticket->description_malfunction }}</td>
                                         @else <td>/</td>
                                         @endif 
@@ -134,15 +141,15 @@
                                     @endif
                                 @endif
                         </table>
+                    </div>
+                    <div class="col-12">
                         <div class="float-right">
                             <button class="btn btn-primary mr-2 btn-sm">Approve request</button>
                             <button class="btn btn-danger btn-sm">Reject request</button>
                         </div>
                     </div>
-
                 </div><!-- /.card-body -->
             </div>
-         
         </div>
     </div>
 
