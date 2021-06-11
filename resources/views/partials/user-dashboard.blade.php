@@ -1,23 +1,4 @@
 <div class="row">
-  <div class="col-12">    
-    <div class="mt-3 float-right">
-      <a type="button" 
-          class="btn btn-sm btn-warning mr-2  @if ($equipment->count() < 1) disabled @endif"
-          data-toggle="modal" 
-          data-target="#modal-report-malfunction" 
-      >
-        Report equipment malfunction
-      </a>
-      <a type="button" 
-          class="btn btn-sm btn-primary"
-          data-toggle="modal" 
-          data-target="#modal-equipment" 
-      >
-        Request equipment 
-      </a>
-    </div>  
-  </div>
-
   <div class="col-12">
     <div class="card mt-4">
       <div class="card-header">
@@ -25,6 +6,22 @@
               <i class="fas fa-laptop-code mr-1"></i>
               Assigned Equipment
           </h3>
+          <div class="float-right">
+            <a type="button" 
+                class="btn btn-sm btn-warning mr-2  @if ($equipment->count() < 1) disabled @endif"
+                data-toggle="modal" 
+                data-target="#modal-report-malfunction" 
+            >
+              Report equipment malfunction
+            </a>
+            <a type="button" 
+                class="btn btn-sm btn-primary"
+                data-toggle="modal" 
+                data-target="#modal-equipment" 
+            >
+              Request equipment 
+            </a>
+          </div>  
       </div>
       <div class="card-body table-responsive p-0">
         <table class="table table-head-fixed text-nowrap">

@@ -33,7 +33,7 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
         // dd($ticket);
-        $content_header = "Ticket details";
+        $content_header = "Request details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/#open_requests_id' ],
             // [ 'name' => 'Ticket list', 'link' => '/equipment' ],

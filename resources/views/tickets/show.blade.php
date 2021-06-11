@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('page_title', 'Ticket details')
+@section('page_title', 'Request details')
 
 @section('content')
     
@@ -9,8 +9,8 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-user mr-1"></i>
-                        Ticket details
+                        <i class="fas fa-clipboard-list mr-2"></i>                        
+                        Request details
                     </h3>
                     {{-- show only if the ticket is unprocessed, since once somebody assumes responsibility over it, 
                         somebody else should not take it over --}}
@@ -40,6 +40,11 @@
                                 Mark finished
                             </button>
                         @endcan
+                    @endif
+
+                    {{-- if the request has been finished, make that obvious to the user --}}
+                    @if ($ticket->finished_date != null) 
+                        <span class="bg-blue float-right px-2 py-1" style="border-radius:5px">Finished on {{ $ticket->finished_date }}</span>
                     @endif
 
                 </div><!-- /.card-header -->

@@ -10,6 +10,8 @@ class Ticket extends Model
     use HasFactory;
 
     protected $guarded = [];
+    
+    protected $dates = ['deadline', 'date_finished', 'created_at', 'updated_at'];
 
     /** TICKET TYPES **/
     const NEW_EQUIPMENT = 1;
@@ -69,6 +71,14 @@ class Ticket extends Model
 
     public function getDateAttribute() {
         return $this->created_at->format('d.m.Y');
+    }
+
+    public function getFinishedDateAttribute() {
+        return $this->date_finished->format('d.m.Y');
+    }
+
+    public function getFormattedDeadlineAttribute() {
+        return $this->deadline->format('d.m.Y');
     }
 
     public function isEquipmentRequest() {
