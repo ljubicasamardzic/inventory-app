@@ -44,11 +44,9 @@
 
                 </div><!-- /.card-header -->
 
-
                 <div class="card-body table-responsive">
-
                     <div class="row">
-                        <div class="col-5 table-responsive">
+                        <div class="col-6 table-responsive">
                             <table class="table table-striped table-sm">
                                 <tr>
                                     <td>ID</td>
@@ -99,122 +97,116 @@
                             </table>
                         </div>
 
-                    <div class="col-7 table-responsive">
-                        <table class="table table-striped table-sm">
-                            <tr>
-                                <td>Officer approval:</td>
-                                <td><span class="badge {{ $ticket->officerApproval->icon }}">{{ $ticket->officerApproval->name }}</span></td>
-                            </tr>
-                            <tr>
-                                <td>HR approval:</td>
-                                <td><span class="badge {{ $ticket->HRApproval->icon }}">{{ $ticket->HRApproval->name }}</span></td>
-                            </tr>
-                            @if ($ticket->isSuppliesRequest())
-                                    <tr>
-                                        <td>Required office supplies:</td>
-                                        @if ($ticket->description_supplies != null)
-                                            <td>{{ $ticket->description_supplies }}</td>
-                                        @else <td>/</td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <td>Quantity:</td>
-                                        @if ($ticket->description_supplies != null)
-                                            <td>{{ $ticket->quantity }}</td>
-                                        @else <td>/</td>
-                                        @endif
-                                    </tr>
-                                @endif
-                                @if ($ticket->isEquipmentRequest())
-                                    @if ($ticket->isNewItemsRequest())
+                        <div class="col-6 table-responsive">
+                            <table class="table table-striped table-sm">
+                                @if ($ticket->isSuppliesRequest())
                                         <tr>
-                                            <td>Requested equipment:</td>
-                                            @if ($ticket->equipment_category != null)
-                                                <td>{{ $ticket->equipment_category->name }}</td>
+                                            <td>Required office supplies:</td>
+                                            @if ($ticket->description_supplies != null)
+                                                <td>{{ $ticket->description_supplies }}</td>
                                             @else <td>/</td>
                                             @endif
                                         </tr>
                                         <tr>
-                                            <td>Remarks:</td>
-                                            @if ($ticket->description_equipment != null)
-                                                <td>{{ $ticket->description_equipment }}</td>
+                                            <td>Quantity:</td>
+                                            @if ($ticket->description_supplies != null)
+                                                <td>{{ $ticket->quantity }}</td>
                                             @else <td>/</td>
                                             @endif
-                                        </tr>
-                                    @elseif ($ticket->isRepairRequest())
-                                        <tr>
-                                            <td>Malfunctioning equipment:</td>
-                                            @if ($ticket->equipment != null)
-                                                <td>{{ $ticket->equipment->full_name }}</td>
-                                            @else <td>/</td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td>Serial number:</td>
-                                            @if ($ticket->equipment->serial_number() != null)
-                                                <td>{{ $ticket->equipment->serial_number()->serial_number }}</td>
-                                            @else <td>/</td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td>Remarks:</td>
-                                        @if ($ticket->description_malfunction != '')
-                                                <td>{{ $ticket->description_malfunction }}</td>
-                                        @else <td>/</td>
-                                        @endif 
                                         </tr>
                                     @endif
-                                @endif
-                        </table>
+                                    @if ($ticket->isEquipmentRequest())
+                                        @if ($ticket->isNewItemsRequest())
+                                            <tr>
+                                                <td>Requested equipment:</td>
+                                                @if ($ticket->equipment_category != null)
+                                                    <td>{{ $ticket->equipment_category->name }}</td>
+                                                @else <td>/</td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td>Remarks:</td>
+                                                @if ($ticket->description_equipment != null)
+                                                    <td>{{ $ticket->description_equipment }}</td>
+                                                @else <td>/</td>
+                                                @endif
+                                            </tr>
+                                        @elseif ($ticket->isRepairRequest())
+                                            <tr>
+                                                <td>Malfunctioning equipment:</td>
+                                                @if ($ticket->equipment != null)
+                                                    <td>{{ $ticket->equipment->full_name }}</td>
+                                                @else <td>/</td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td>Serial number:</td>
+                                                @if ($ticket->equipment->serial_number() != null)
+                                                    <td>{{ $ticket->equipment->serial_number()->serial_number }}</td>
+                                                @else <td>/</td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td>Remarks:</td>
+                                            @if ($ticket->description_malfunction != '')
+                                                    <td>{{ $ticket->description_malfunction }}</td>
+                                            @else <td>/</td>
+                                            @endif 
+                                            </tr>
+                                        @endif
+                                    @endif
+                            </table>
+                        </div>
+                        {{-- only show these to the officer or superadmin that should approve or reject the request --}}
+                        
+                        @if ($ticket->officer_id != null && $ticket->officer_approval == App\Models\Ticket::PENDING)
+                            @can('update2', $ticket)
+                                <div class="col-12">
+                                    <div class="float-right mr-3">
+                                        <button class="btn btn-danger"
+                                                            data-toggle="modal"
+                                                            data-target="#reject_request_officer_modal"                
+                                        >
+                                            Reject request
+                                        </button>
+                                        <button class="btn btn-primary ml-3"
+                                                data-toggle="modal"
+                                                data-target="#approve_request_officer_modal"
+                                        >
+                                            Approve request
+                                        </button>
+                                    </div>
+                                </div>
+                            @endcan
+                        @endif
+                    
+                        {{-- buttons are visible only to HR and superadmin after the officer has either approved or rejected the request --}}
+                        @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING)
+                            @can('update3', $ticket)
+                                <div class="col-12">
+                                    <div class="float-right mr-3">
+                                        <button class="btn btn-danger"
+                                                data-toggle="modal"
+                                                data-target="#reject_request_HR_modal" 
+                                        >
+                                            Reject request
+                                        </button>
+                                        <button class="btn btn-primary ml-3"
+                                                data-toggle="modal"
+                                                data-target="#approve_request_HR_modal" 
+                                        >
+                                            Approve request
+                                        </button>
+                                    </div>
+                                </div>
+                            @endcan
+                        @endif
                     </div>
-                    {{-- only show these to the officer or superadmin that should approve or reject the request --}}
-                    @if ($ticket->officer_id != null && $ticket->officer_approval == App\Models\Ticket::PENDING)
-                        @can('update2', $ticket)
-                            <div class="col-12">
-                                <div class="float-right mr-3">
-                                    <button class="btn btn-danger"
-                                                        data-toggle="modal"
-                                                        data-target="#reject_request_officer_modal"                
-                                    >
-                                        Reject request
-                                    </button>
-                                    <button class="btn btn-primary ml-3"
-                                            data-toggle="modal"
-                                            data-target="#approve_request_officer_modal"
-                                    >
-                                        Approve request
-                                    </button>
-                                </div>
-                            </div>
-                        @endcan
-                    @endif
-                
-                    {{-- buttons are visible only to HR and superadmin after the officer has either approved or rejected the request --}}
-                    @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING)
-                        @can('update3', $ticket)
-                            <div class="col-12">
-                                <div class="float-right mr-3">
-                                    <button class="btn btn-danger"
-                                            data-toggle="modal"
-                                            data-target="#reject_request_HR_modal" 
-                                    >
-                                        Reject request
-                                    </button>
-                                    <button class="btn btn-primary ml-3"
-                                            data-toggle="modal"
-                                            data-target="#approve_request_HR_modal" 
-                                    >
-                                        Approve request
-                                    </button>
-                                </div>
-                            </div>
-                        @endcan
-                    @endif
-                </div><!-- /.card-body -->
-            </div>
+                </div> <!-- /.card-body -->
+            </div> 
+            @include('tickets.decision_details') 
         </div>
     </div>
-
 @include('tickets/modals/reject_request_officer_modal')
 @include('tickets/modals/approve_request_officer_modal')
 @include('tickets/modals/reject_request_HR_modal')
