@@ -11,21 +11,12 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         $user = User::query()->find(auth()->id());
@@ -37,7 +28,6 @@ class HomeController extends Controller
                                         ->with('available_equipment')
                                         ->get();
 
-        
         if ($user->isSuperAdmin()) {
             $tickets = Ticket::query()->open();
         } else if ($user->isSupportOfficer()) {
@@ -50,7 +40,6 @@ class HomeController extends Controller
             $tickets = [];
         }
 
-        // dd($tickets);
         return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets']));
     }
 }

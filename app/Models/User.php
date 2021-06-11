@@ -74,4 +74,8 @@ class User extends Authenticatable
     public function isAdministrativeOfficer() {
         return $this->role_id == User::ADMINISTRATIVE_OFFICER;
     }
+
+    public function isEmployee() {
+        return $this->role_id == User::USER;
+    }
 }

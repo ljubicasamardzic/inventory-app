@@ -13,10 +13,8 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="status_id" value="{{ App\Models\Ticket::PROCESSED }}">
-                    <div>
-                        <p>Are you sure you want to mark this request as finished?</p>
-                        <p>Please note that this decision is final and cannot be overturned.</p>
-                    </div>
+                    <label for="date_finished">Date finished:</label>
+                    <input type="date" name="date_finished" class="form-control">
                 </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>

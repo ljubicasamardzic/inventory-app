@@ -15,13 +15,20 @@ class CreateTicketsTable extends Migration
             $table->integer('ticket_request_type');
             $table->foreignId('status_id')->default(1)->constrained('ticket_statuses');
             $table->foreignId('user_id')->constrained('users'); // ko je uputio
+            
             $table->foreignId('officer_id')->nullable()->constrained('users'); // ko je preuzeo
-            $table->foreignId('HR_id')->nullable()->constrained('users'); // ko je finalno odobrio ili odbio zahtjev
             $table->foreignId('officer_approval')->nullable()->default(1)->constrained('request_statuses');
+            $table->text('officer_remarks')->nullable();
+            
+            $table->foreignId('HR_id')->nullable()->constrained('users'); // ko je finalno odobrio ili odbio zahtjev
             $table->foreignId('HR_approval')->nullable()->default(1)->constrained('request_statuses');
+            $table->text('HR_remarks')->nullable();
+
+            $table->double('price')->nullable();
+            $table->timestamp('deadline')->nullable();
             $table->timestamp('date_finished')->nullable();
-            // $table->boolean('is_done')->default(false);
             $table->timestamps();
+
             // requesting office supplies
             $table->text('description_supplies')->nullable();
             $table->double('quantity')->nullable();

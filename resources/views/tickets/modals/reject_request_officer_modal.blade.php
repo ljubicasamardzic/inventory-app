@@ -13,10 +13,8 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="officer_approval" value="{{ App\Models\Ticket::REJECTED }}">
-                    <div>
-                        <p>Are you sure you want to reject this request?</p>
-                        <p>Please note that this decision is final and cannot be overturned.</p>
-                    </div>
+                    <label for="officer_remarks">Remarks:</label>
+                    <textarea name="officer_remarks" cols="30" rows="5" class="form-control"></textarea>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>

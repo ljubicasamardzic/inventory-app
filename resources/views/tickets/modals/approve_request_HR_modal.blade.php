@@ -14,10 +14,8 @@
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="HR_approval" value="{{ App\Models\Ticket::APPROVED }}">
                     <input type="hidden" name="HR_id" value="{{ auth()->id() }}">
-                    <div>
-                        <p>Are you sure you want to approve this request?</p>
-                        <p>Please note that this decision is final and cannot be overturned.</p>
-                    </div>
+                    <label for="HR_remarks">Remarks:</label>
+                    <textarea name="HR_remarks" cols="30" rows="5" class="form-control"></textarea>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>
