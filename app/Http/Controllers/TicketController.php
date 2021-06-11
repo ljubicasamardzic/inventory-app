@@ -50,6 +50,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        // dd($ticket);
         $content_header = "Ticket details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/#open_requests_id' ],
@@ -79,7 +80,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        // dd($request);
     }
 
     /**
@@ -91,5 +92,37 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         //
+    }
+
+    public function update_1(TicketRequest $request) {
+        $request->merge(['status_id' => Ticket::IN_PROGRESS]);
+
+        $ticket = Ticket::find($request->id);
+
+        $ticket->update($request->only(['officer_id', 'status_id']));
+        return redirect()->back();
+    }
+
+    public function update_2(TicketRequest $request) {
+        
+        $ticket = Ticket::find($request->id);
+
+        $ticket->update($request->only(['officer_approval']));
+        return redirect()->back();
+    }
+
+    public function update_3(TicketRequest $request) {
+        // dd($request);
+        $ticket = Ticket::find($request->id);
+
+        $ticket->update($request->only(['HR_approval', 'HR_id']));
+        return redirect()->back();
+    }
+
+    public function update_4(TicketRequest $request) {
+        $ticket = Ticket::find($request->id);
+
+        $ticket->update($request->only(['status_id']));
+        return redirect()->back();
     }
 }

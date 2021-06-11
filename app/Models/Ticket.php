@@ -64,7 +64,7 @@ class Ticket extends Model
     }
 
     public function scopeOpen($query){
-        return $query->where('status_id', '<>', Ticket::PROCESSED)->get();
+        return $query->where('status_id', '!=', Ticket::PROCESSED)->get();
     }
 
     public function getDateAttribute() {
@@ -96,7 +96,9 @@ class Ticket extends Model
     }
 
     public function scopeReadyForHR($query) {
-        return $query->where('officer_approval', '<>', Ticket::PENDING)->get();
+        return $query->where('officer_approval', '!=', Ticket::PENDING)
+                        ->where('status_id', '!=', Ticket::PROCESSED)
+                        ->get();
     }
     
 }

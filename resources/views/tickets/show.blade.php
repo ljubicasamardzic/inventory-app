@@ -12,10 +12,31 @@
                         <i class="fas fa-user mr-1"></i>
                         Ticket details
                     </h3>
-                    <button class="btn btn-primary btn-sm float-right">
-                        Take over request
-                    </button>
-                    <button class="btn btn-primary btn-sm float-right">Mark finished</button>
+                    {{-- show only if the ticket is unprocessed, since once somebody assumes responsibility over it, 
+                        somebody else should not take it over --}}
+                    @if ($ticket->status_id == App\Models\Ticket::UNPROCESSED)
+                        <form action="/tickets/update1/{{ $ticket->id }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="officer_id" value="{{ auth()->id() }}">
+                            <input type="hidden" name="id" value={{ $ticket->id }}>
+                            <button class="btn btn-primary btn-sm float-right" 
+                                    type="submit"
+                                    id="take_over_button"
+                            >
+                                Take over request
+                            </button>
+                        </form>
+                    @endif
+                    {{-- show only if the HR has made the final decision --}}
+                    @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->status_id != App\Models\Ticket::PROCESSED)
+                            <button class="btn btn-primary btn-sm float-right"
+                                    data-toggle="modal"
+                                    data-target="#mark_finished_modal" 
+                            >
+                                Mark finished
+                            </button>
+                    @endif
 
                 </div><!-- /.card-header -->
 
@@ -142,20 +163,58 @@
                                 @endif
                         </table>
                     </div>
-                    <div class="col-12">
-                        <div class="float-right">
-                            <button class="btn btn-primary mr-2 btn-sm">Approve request</button>
-                            <button class="btn btn-danger btn-sm">Reject request</button>
+                    {{-- only show these to the officer or superadmin that should approve or reject the request --}}
+                    @if ($ticket->officer_approval == App\Models\Ticket::PENDING)
+                        <div class="col-12">
+                            <div class="float-right mr-3">
+                                <button class="btn btn-danger"
+                                                    data-toggle="modal"
+                                                    data-target="#reject_request_officer_modal"                
+                                >
+                                    Reject request
+                                </button>
+                                <button class="btn btn-primary ml-3"
+                                        data-toggle="modal"
+                                        data-target="#approve_request_officer_modal"
+                                >
+                                    Approve request
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
+                
+                    {{-- buttons are visible only to HR and superadmin after the officer has either approved or rejected the request --}}
+                    @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING)
+                        <div class="col-12">
+                            <div class="float-right mr-3">
+                                <button class="btn btn-danger"
+                                        data-toggle="modal"
+                                        data-target="#reject_request_HR_modal" 
+                                >
+                                    Reject request
+                                </button>
+                                <button class="btn btn-primary ml-3"
+                                        data-toggle="modal"
+                                        data-target="#approve_request_HR_modal" 
+                                >
+                                    Approve request
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 </div><!-- /.card-body -->
             </div>
         </div>
     </div>
 
+@include('tickets/modals/reject_request_officer_modal')
+@include('tickets/modals/approve_request_officer_modal')
+@include('tickets/modals/reject_request_HR_modal')
+@include('tickets/modals/approve_request_HR_modal')
+@include('tickets/modals/mark_finished_modal')
 
 @section('additional_scripts')
-    <script src="{{ asset('js/equipment/show.js') }}"></script>
+    <script src="{{ asset('js/tickets/show.js') }}"></script>
 @endsection
 
 @endsection

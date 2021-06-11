@@ -8,6 +8,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\SerialNumberController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,12 @@ Route::resource('/tickets', TicketController::class);
 Route::resource('/serial-numbers', SerialNumberController::class);
 Route::get('/equipment-serial-numbers/{equipment}', [EquipmentController::class, 'serial_numbers']);
 
+// initial motion of an officer to take a request 
+Route::put('/tickets/update1/{id}', [TicketController::class, 'update_1']);
+// officer approves or rejects the request
+Route::put('/tickets/update2/{id}', [TicketController::class, 'update_2']);
+// HR approves or rejects the request
+Route::put('/tickets/update3/{id}', [TicketController::class, 'update_3']);
+// request is marked as finished
+Route::put('/tickets/update4/{id}', [TicketController::class, 'update_4']);
 
