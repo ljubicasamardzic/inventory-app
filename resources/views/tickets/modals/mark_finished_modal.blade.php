@@ -5,7 +5,7 @@
             @method('PUT')
             <div class="modal-content">
                 <div class="modal-header">
-                <h4 class="modal-title">Mark request as finished</h4>
+                {{-- <h4 class="modal-title">Mark request as finished</h4> --}}
                 <a type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </a>
@@ -13,12 +13,43 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="status_id" value="{{ App\Models\Ticket::PROCESSED }}">
-                    <label for="date_finished">Date finished:</label>
-                    <input type="date" name="date_finished" class="form-control">
+
+                    @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED)
+                        @if ($available_equipment == '[]')
+                        <div class="p-2">                            
+                            <p>No equipment is yet available for this request so it cannot be marked as finished.</p>
+                            <p>Please try again when the equipment arrives.</p>
+                        </div>
+                        @else 
+                            <label for="">Assign equipment:</label>
+                            <select class="form-control" name="equipment_id" id="equipment_select" onchange="availableSerialNums()">
+                                <option value="">-- Select available equipment --</option>
+                                @if ($available_equipment != '[]')
+                                    @foreach($available_equipment as $e)
+                                    <option value="{{ $e->id }}">{{ $e->full_name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <label for="serial_number_select">Serial number:</label>
+                            <select name="serial_number_id" id="serial_number_select" class="form-control">
+                                {{-- populated by AJAX function --}}
+                            </select>
+
+                            <label for="date_finished">Date finished:</label>
+                            <input type="date" name="date_finished" class="form-control">
+                        @endif
+                    @endif
+
+                    
                 </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Accept changes</button>
+                    <button type="submit" 
+                            class="btn btn-primary  
+                            @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED && $available_equipment == '[]') disabled @endif"
+                    >
+                        Accept changes
+                    </button>
                 </div>
             </div>
         </form>

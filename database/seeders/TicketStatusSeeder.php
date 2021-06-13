@@ -17,7 +17,8 @@ class TicketStatusSeeder extends Seeder
         $statuses = [
             '1' => ['name' => 'Unprocessed', 'icon' => 'badge-warning'],
             '2' => ['name' => 'In progress', 'icon' => 'badge-info'],
-            '3' => ['name' => 'Processed', 'icon' => 'badge-success']
+            '3' => ['name' => 'Waiting for equipment', 'icon' => 'badge-info'],
+            '4' => ['name' => 'Processed', 'icon' => 'badge-success']
         ];
 
         foreach ($statuses as $key => $status) {

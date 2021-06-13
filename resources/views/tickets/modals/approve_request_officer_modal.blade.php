@@ -13,6 +13,27 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="officer_approval" value="{{ App\Models\Ticket::APPROVED }}">
+
+                    @if ($ticket->isNewItemsRequest() && $ticket->isEquipmentRequest())
+                        <label for="">Assign equipment:</label>
+                        <select class="form-control" name="equipment_id" id="equipment_select" onchange="availableSerialNums()">
+                            <option value="">-- Select available equipment --</option>
+                            @if ($available_equipment != '[]')
+                                @foreach($available_equipment as $e)
+                                <option value="{{ $e->id }}">{{ $e->full_name }}</option>
+                                @endforeach
+                            @else
+                                <option value="0">Order new equipment</option>
+                            @endif
+                        </select>
+                        @if ($available_equipment != '[]')
+                            <label for="serial_number_select">Serial number:</label>
+                            <select name="serial_number_id" id="serial_number_select" class="form-control">
+                                {{-- populated by AJAX function --}}
+                            </select>
+                        @endif
+                    @endif
+                    
                     <label for="deadline">Delivery deadline:</label>
                     <input type="date" name="deadline" class="form-control">
                     <label for="price">Price (€):</label>

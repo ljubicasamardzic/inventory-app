@@ -68,11 +68,8 @@ class TicketPolicy
     }
 
     public function update2(User $user, Ticket $ticket) {
-        if ($ticket->isEquipmentRequest() && $user->isSupportOfficer()) {
-            return true;
-        } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer()) {
-            return true;
-        }
+        // allow only the officer who worked on this case to update this step
+        return $ticket->isEquipmentRequest() && $user->id == $ticket->officer->id;
     }
 
     public function update3(User $user, Ticket $ticket) {
@@ -80,10 +77,7 @@ class TicketPolicy
     }
 
     public function update4(User $user, Ticket $ticket) {
-        if ($ticket->isEquipmentRequest() && $user->isSupportOfficer()) {
-            return true;
-        } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer()) {
-            return true;
-        }
+        // allow only the officer who worked on this case to update this step
+        return $ticket->isEquipmentRequest() && $user->id == $ticket->officer->id;
     }
 }

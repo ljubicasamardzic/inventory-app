@@ -29,7 +29,8 @@ class HomeController extends Controller
                                         ->get();
 
         if ($user->isSuperAdmin()) {
-            $tickets = Ticket::query()->open();
+            $tickets = Ticket::all();
+            // $tickets = Ticket::query()->open();
         } else if ($user->isSupportOfficer()) {
             $tickets = Ticket::query()->equipmentRequests();
         } else if ($user->isAdministrativeOfficer()) {

@@ -38,7 +38,9 @@ class TicketRequest extends FormRequest
             "officer_id" => "nullable|integer",
             "HR_id" => "nullable|integer",
             "HR_approval" => "nullable|integer",
-            "officer_approval" => "nullable|integer"
+            "officer_approval" => "nullable|integer", 
+            "equipment_id" => "nullable|integer",
+            "serial_number_id" => "nullable|integer"
         ];
     }
 

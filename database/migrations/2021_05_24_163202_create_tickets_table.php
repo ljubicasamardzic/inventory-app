@@ -32,11 +32,16 @@ class CreateTicketsTable extends Migration
             // requesting office supplies
             $table->text('description_supplies')->nullable();
             $table->double('quantity')->nullable();
+
             // requesting equipment
             $table->foreignId('equipment_category_id')->nullable()->constrained('equipment_categories');
             $table->text('description_equipment')->nullable();
-            // for reporting malfunctions
+            $table->foreignId('serial_number_id')->nullable()->constrained('serial_numbers');
+            
+            // for reporting malfunctions and requesting new equipment
             $table->foreignId('equipment_id')->nullable()->constrained('equipment');
+
+            // for reporting malfunctions
             $table->text('description_malfunction')->nullable();
         });
     }

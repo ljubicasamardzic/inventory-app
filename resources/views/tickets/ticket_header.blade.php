@@ -43,21 +43,21 @@
     @if ($ticket->officer_id != null && $ticket->officer_approval == App\Models\Ticket::PENDING)
         @can('update2', $ticket)
             <div class="col-12">
-                <div class="float-right mr-3">
-                    <button class="btn btn-danger"
-                                        data-toggle="modal"
-                                        data-target="#reject_request_officer_modal"                
-                    >
-                        Reject request
-                    </button>
-                    <button class="btn btn-primary ml-3"
-                            data-toggle="modal"
-                            data-target="#approve_request_officer_modal"
-                    >
-                        Approve request
-                    </button>
+                    <div class="float-right">
+                        <button class="btn btn-sm btn-danger"
+                                            data-toggle="modal"
+                                            data-target="#reject_request_officer_modal"                
+                        >
+                            Reject request
+                        </button>
+                        <button class="btn btn-primary btn-sm ml-2"
+                                data-toggle="modal"
+                                data-target="#approve_request_officer_modal"
+                        >
+                            Approve request
+                        </button>
+                    </div>
                 </div>
-            </div>
         @endcan
     @endif
 
@@ -65,14 +65,14 @@
     @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING)
         @can('update3', $ticket)
             <div class="col-12">
-                <div class="float-right mr-3">
-                    <button class="btn btn-danger"
+                <div class="float-right">
+                    <button class="btn btn-danger btn-sm"
                             data-toggle="modal"
                             data-target="#reject_request_HR_modal" 
                     >
                         Reject request
                     </button>
-                    <button class="btn btn-primary ml-3"
+                    <button class="btn btn-primary ml-2 btn-sm"
                             data-toggle="modal"
                             data-target="#approve_request_HR_modal" 
                     >

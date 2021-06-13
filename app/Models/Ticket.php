@@ -24,12 +24,16 @@ class Ticket extends Model
     /** TICKET STATUSES **/
     const UNPROCESSED = 1;
     const IN_PROGRESS = 2;
-    const PROCESSED = 3;
+    const WAITING_FOR_EQUIPMENT = 3;
+    const PROCESSED = 4;
 
     // REQUEST STATUSES
     const PENDING = 1;
     const APPROVED = 2;
     const REJECTED = 3;
+
+    // EQUIPMENT RESERVATIONS
+    const RESERVED = 1;
 
     const dates = ['created_at', 'updated_at'];
 
@@ -41,7 +45,11 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'officer_id');
     }
 
-    public function admin() {
+    public function reservation() {
+        return $this->hasOne(Reservation::class);
+    }
+
+    public function HR() {
         return $this->belongsTo(User::class, 'HR_id');
     }
 
@@ -57,8 +65,12 @@ class Ticket extends Model
         return $this->belongsTo(RequestStatus::class, 'HR_approval');
     }
 
+    public function serial_number() {
+        return $this->belongsTo(SerialNumber::class, 'serial_number_id');
+    }
+
     public function equipment() {
-        return $this->belongsTo(Equipment::class);
+        return $this->belongsTo(Equipment::class, 'equipment_id');
     }
 
     public function equipment_category() {
