@@ -14,7 +14,7 @@
                     <input type="hidden" name="id" value="{{ $ticket->id }}">
                     <input type="hidden" name="status_id" value="{{ App\Models\Ticket::PROCESSED }}">
 
-                    @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED)
+                    @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED || $ticket->isNewEquipmentRequest() && $ticket->officer_approval == App\Models\Ticket::REJECTED && $ticket->HR_approval == App\Models\Ticket::APPROVED)
                         @if ($available_equipment == '[]')
                         <div class="p-2">                            
                             <p>No equipment is yet available for this request so it cannot be marked as finished.</p>
@@ -38,6 +38,9 @@
                             <label for="date_finished">Date finished:</label>
                             <input type="date" name="date_finished" class="form-control">
                         @endif
+                    @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED || $ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
+                        <label for="date_finished">Date finished:</label>
+                        <input type="date" name="date_finished" class="form-control">
                     @endif
 
                     

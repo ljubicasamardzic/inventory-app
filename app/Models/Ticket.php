@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Ticket extends Model
 {
@@ -107,6 +108,10 @@ class Ticket extends Model
 
     public function isNewItemsRequest() {
         return $this->ticket_type == Ticket::NEW_EQUIPMENT;
+    }
+
+    public function isNewEquipmentRequest() {
+        return $this->isNewItemsRequest() && $this->isEquipmentRequest();
     }
 
     public function scopeEquipmentRequests($query) {

@@ -37,6 +37,7 @@ class CreateTicketsTable extends Migration
             $table->foreignId('equipment_category_id')->nullable()->constrained('equipment_categories');
             $table->text('description_equipment')->nullable();
             $table->foreignId('serial_number_id')->nullable()->constrained('serial_numbers');
+            $table->foreignId('document_id')->nullable()->constrained('documents');
             
             // for reporting malfunctions and requesting new equipment
             $table->foreignId('equipment_id')->nullable()->constrained('equipment');
