@@ -47,7 +47,7 @@
                             <form action="/document-item/return/{{ $item->id }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" id="btn-return-item" class="btn btn-warning btn-flat btn-sm @cannot('update', $item) disabled @endcannot">
+                                <button type="submit" id="btn-return-item" class="btn btn-warning btn-flat btn-sm @cannot('create', App\Models\Document::class) disabled @endcannot">
                                     Return equipment
                                 </button>
                             </form>

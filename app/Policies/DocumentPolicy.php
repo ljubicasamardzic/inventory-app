@@ -28,12 +28,12 @@ class DocumentPolicy
 
     public function create(User $user)
     {
-        //
+        return $user->isSupportOfficer();
     }
 
     public function update(User $user, Document $document)
     {
-        //
+        return $user->isSupportOfficer();
     }
 
     public function delete(User $user, Document $document)
