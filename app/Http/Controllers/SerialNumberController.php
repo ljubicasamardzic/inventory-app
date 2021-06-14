@@ -97,7 +97,10 @@ class SerialNumberController extends Controller
      */
     public function destroy(SerialNumber $serialNumber)
     {
-        $serialNumber->delete();
-        return redirect()->back();
+        if (!($serialNumber->is_used)) {
+            $serialNumber->delete();
+            return redirect()->back();
+        }
+
     }
 }

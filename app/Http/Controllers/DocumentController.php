@@ -51,6 +51,8 @@ class DocumentController extends Controller
         $users = User::all();
         $equipment = Equipment::query()->available()->get();
         $items = $document->items;
+
+        // dd($items);
         $content_header = "Document details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -81,6 +83,14 @@ class DocumentController extends Controller
 
     public function destroy(Document $document)
     {
-        //
+
+        foreach($document->items as $item) {
+            $item->equipment->update(['available_quantity' => $item->equipment->available_quantity + 1]);
+            $item->delete();
+        }
+
+        if ($document->ticket != null) $document->ticket->delete();
+        $document->delete();
+        return redirect()->back();
     }
 }

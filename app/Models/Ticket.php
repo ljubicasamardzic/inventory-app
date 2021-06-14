@@ -127,5 +127,21 @@ class Ticket extends Model
                         ->where('status_id', '!=', Ticket::PROCESSED)
                         ->get();
     }
+
+    public function createDocument() {
+        return Document::create([
+            'user_id' => $this->user_id,
+            'admin_id' => $this->officer_id,
+            'date' => Carbon::now()->timestamp
+        ]);
+    }
+
+    public function createDocumentItem($document, $equipment_id, $serial_number_id) {
+        DocumentItem::create([
+            'document_id' => $document->id,
+            'equipment_id' => $equipment_id,
+            'serial_number_id' => $serial_number_id            
+        ]);
+    }
     
 }

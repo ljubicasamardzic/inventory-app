@@ -45,7 +45,8 @@
 
         </div>
     </div>
-    @include('documents.new_item_modal')
+    @include('documents/new_item_modal')
+    @include('documents/edit_item_modal')
 
     @section('additional_scripts')
         <script src="{{ asset('js/documents/create.js') }}"></script>

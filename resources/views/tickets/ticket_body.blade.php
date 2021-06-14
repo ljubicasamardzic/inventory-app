@@ -28,7 +28,11 @@
                     </tr>
                     <tr>
                         <td>Employee:</td>
-                        <td>{{ $ticket->user->name }}</td>
+                        <td>
+                            <a href="/users/{{ $ticket->user->id }}">
+                                {{ $ticket->user->name }}
+                            </a>
+                        </td>
                     </tr>
                     <tr>
                         <td>Status:</td>
@@ -80,8 +84,8 @@
                                 </tr>
                                 <tr>
                                     <td>Serial number:</td>
-                                    @if ($ticket->equipment->serial_number() != null)
-                                        <td>{{ $ticket->equipment->serial_number()->serial_number }}</td>
+                                    @if ($ticket->serial_number != null)
+                                        <td>{{ $ticket->serial_number->serial_number }}</td>
                                     @else <td>/</td>
                                     @endif
                                 </tr>
@@ -103,15 +107,19 @@
 
     <div class="col-6 table-responsive">
         <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Actions taken</h3>
+            </div>
             @if ($ticket->status_id == App\Models\Ticket::PROCESSED)
-                <div class="card-header">
-                    <h3 class="card-title">Action details</h3>
-                </div>
                 <div class="card-body">
                     <table class="table table-striped table-sm">
-                            <tr>
-                                <td>Final status:</td>
-                                <td><span class="badge {{ $ticket->HRApproval->icon }}">{{ $ticket->HRApproval->name }}</span></td>
+                        <tr>
+                            <td>Final status:</td>
+                            <td>
+                                <span class="badge {{ $ticket->HRApproval->icon }}">{{ $ticket->HRApproval->name }}</span>
+                                <span class="badge {{ $ticket->status->icon }}">{{ $ticket->status->name }}</span>
+                            </td>
+                        </tr>
                         @if ($ticket->document_id != null)
                             <tr>
                                 <td>Document ID:</td>
@@ -119,7 +127,11 @@
                             </tr>
                             <tr>
                                 <td>Assigned Equipment:</td>
-                                <td>{{ $ticket->equipment->full_name }}</td>
+                                <td>
+                                    <a href="/documents/{{ $ticket->document_id }}">
+                                        {{ $ticket->equipment->full_name }}
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Serial number:</td>

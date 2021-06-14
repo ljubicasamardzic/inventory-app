@@ -13,7 +13,11 @@
                         <tr>
                             <td>Name:</td>
                             @if ($ticket->officer != null)
-                                <td>{{ $ticket->officer->name }}</td>
+                                <td>
+                                    <a href="/users/{{ $ticket->officer->id }}">
+                                        {{ $ticket->officer->name }}
+                                    </a>
+                                </td>
                             @else <td>/</td>
                             @endif
                         </tr>
@@ -65,7 +69,11 @@
                         <tr>
                             <td>Name:</td>
                             @if ($ticket->HR != null)
-                                <td>{{ $ticket->HR->name }}</td>
+                                <td>
+                                    <a href="/users/{{ $ticket->HR->id }}">
+                                        {{ $ticket->HR->name }}
+                                    </a>
+                                </td>
                             @else <td>/</td>
                             @endif
                         </tr>

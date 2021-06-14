@@ -64,7 +64,6 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment)
     {        
-
         $content_header = "Equipment details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -118,10 +117,11 @@ class EquipmentController extends Controller
     }
 
     public function serial_numbers(Equipment $equipment) {
-        return $equipment->serial_numbers;
-
         
-
+        return $equipment->serial_numbers;
+    }
+        
+}
 //     $d = DocumentItem::query()->with('serial_number')->get();
 
 //     $key = [];
@@ -151,5 +151,4 @@ class EquipmentController extends Controller
 
         // dd($assigned_nums);
         // return($assigned_nums);
-    }
-}
+

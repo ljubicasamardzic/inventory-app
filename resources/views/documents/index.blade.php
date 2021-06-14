@@ -60,7 +60,7 @@
                                         <i class="fa fa-times"></i>
                                         DELETE
                                     </a>
-                                    <form action="/document/{{ $doc->id }}" method="POST" id="delete_form_{{ $doc->id }}">
+                                    <form action="/documents/{{ $doc->id }}" method="POST" id="delete_form_{{ $doc->id }}">
                                         @method('DELETE')
                                         @csrf
                                     </form>

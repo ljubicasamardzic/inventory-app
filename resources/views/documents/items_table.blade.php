@@ -22,6 +22,7 @@
                 <th>Returned</th>
                 <th>Returned date</th>
                 <th>Return</th>
+                <th>Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -32,7 +33,7 @@
                     @if ($item->serial_number != null)
                         <td>{{ $item->serial_number->serial_number }}</td>
                     @else
-                        <td></td> 
+                        <td>/</td> 
                     @endif
                     <td>
                         @if($item->returned)
@@ -52,6 +53,20 @@
                                 </button>
                             </form>
                         @endif
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-sm btn-flat btn-primary"
+                                id="edit_btn_{{ $item->id }}"
+                                data-equipment-id = "{{ $item->equipment_id }}"
+                                data-serial-number-id = "{{ $item->serial_number_id }}"
+                                data-toggle="modal"
+                                data-target="#edit_item_modal"
+                                @if ($item->returned) disabled @endif
+                                onclick="findId({{ $item->id }})"
+                        >
+                            <i class="fa fa-edit"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach

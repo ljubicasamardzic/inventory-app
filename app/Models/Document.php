@@ -31,4 +31,8 @@ class Document extends Model
         return $this->hasMany(DocumentItem::class);
     }
 
+    public function ticket() {
+        return $this->hasOne(Ticket::class);
+    }
+
 }

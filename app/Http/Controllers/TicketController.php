@@ -81,6 +81,8 @@ class TicketController extends Controller
     public function update_2(TicketRequest $request) {
         $ticket = Ticket::find($request->id);
 
+        //  Case 1: no available equipment for the desired item so we need to order it
+        // zero is used since ids of items start from 1
         if ($request->equipment_id == '0') {
             $request['equipment_id'] = null;
             $request['status_id'] = Ticket::WAITING_FOR_EQUIPMENT;
@@ -88,25 +90,20 @@ class TicketController extends Controller
 
         $ticket->update($request->only(['officer_approval', 'price', 'deadline', 'officer_remarks', 'equipment_id', 'serial_number_id', 'status_id']));
         
-        //  if equipment_id is set to 0, that means we want to order new equipment, 
-        // but in the database we change the field value to null so as to avoid confusion
-
         if ($request->equipment_id != null) {
-            // make a new reservation and amend the quantity of the request item
+            // make a new reservation and amend the quantity of the requested item
             $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
-            // dd($new_reservation->ticket);
             $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
         }
-        
         
         return redirect()->back();
     }
 
     public function update_3(TicketRequest $request) {
-        // dd($request);
         $ticket = Ticket::find($request->id);
 
-        if ($ticket->ticket_type == Ticket::NEW_EQUIPMENT && $ticket->equipment_id != null && $request->HR_approval == Ticket::REJECTED) {
+        // if HR rejects the request where a reservation already exists, delete it and amend the item quantity
+        if ($ticket->isNewEquipmentRequest() && $ticket->equipment_id != null && $request->HR_approval == Ticket::REJECTED) {
             $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity + 1]);
             $ticket->reservation->delete();
         }
@@ -118,79 +115,35 @@ class TicketController extends Controller
     public function update_4(TicketRequest $request) {
         $ticket = Ticket::find($request->id);
 
-        // dd($ticket);
-        // dd($request);
-
-        // if this a new equipment request and it has an equipment id, it means we only need 
-        // to create a new document and add the reserved equipment
         if ($ticket->isNewEquipmentRequest()) {
-            if ($ticket->equipment_id != null && $ticket->HR_approval == Ticket::APPROVED || $ticket->officer_approval == Ticket::REJECTED && $ticket->HR_approval == Ticket::APPROVED) {
-                // dd('here1');
-                $new_doc = Document::create([
-                    'user_id' => $ticket->user_id,
-                    'admin_id' => $ticket->officer_id,
-                    'date' => Carbon::now()->timestamp
-                ]);
+            
+            // Case 1: New equipment request with reserved items
+            // Case 2: Rejected by officer and then approved by HR in which case we still need to add equipment to the ticket 
+            // Case 3: Waited for equipment to arrive and have HR's approval
+            if ($ticket->equipment_id != null && $ticket->HR_approval == Ticket::APPROVED || $ticket->officer_approval == Ticket::REJECTED && $ticket->HR_approval == Ticket::APPROVED || $ticket->status_id == Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == Ticket::APPROVED) {
+                $new_doc = $ticket->createDocument();
         
-                if ($ticket->equipment_id != null) {
-                    $equipment_id = $ticket->equipment_id;
-                } else {
-                    $equipment_id = $request['equipment_id'];
-                }
+                // Case 2
+                $ticket->equipment_id != null ? $equipment_id = $ticket->equipment_id : $equipment_id = $request['equipment_id'];
+                $ticket->serial_number_id != null ? $serial_number_id = $ticket->serial_number_id : $serial_number_id = $request['serial_number_id'];
 
-                if ($ticket->serial_number_id != null) {
-                    $serial_number_id = $ticket->serial_number_id;
-                } else {
-                    $serial_number_id = $request['serial_number_id'];
-                }
+                $ticket->createDocumentItem($new_doc, $equipment_id, $serial_number_id);
 
-                DocumentItem::create([
-                    'document_id' => $new_doc->id,
-                    'equipment_id' => $equipment_id,
-                    'serial_number_id' => $serial_number_id            
-                ]);
-
+                // delete the reservation and stop counting it
                 if ($ticket->reservation != null) {
-                    // delete the reservation and stop counting it
                     $ticket->reservation->delete(); 
                     $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity + 1]);
                 }
 
                 $request['document_id'] = $new_doc->id; 
-
                 $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
 
                 $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity - 1]);
-                
-                // if we had waited for equipment to arrive and have HR's approval
-                // list out the available equipment so that the officer can assign it to the user and close this request  
-            } else if ($ticket->status_id == Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == Ticket::APPROVED) {
-                
-                // dd('here2');
-                $new_doc = Document::create([
-                    'user_id' => $ticket->user_id,
-                    'admin_id' => $ticket->officer_id,
-                    'date' => Carbon::now()->timestamp
-                ]);
-        
-                DocumentItem::create([
-                    'document_id' => $new_doc->id,
-                    'equipment_id' => $request->equipment_id,
-                    'serial_number_id' => $request->serial_number_id            
-                ]);
-
-                $request['document_id'] = $new_doc->id;
-
-                $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
-                $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity - 1]);
-
+            
             } else {
-                // dd('here3');
                 $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
             }
-
         } else {
-            // dd('here4');
             $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
         }
 
