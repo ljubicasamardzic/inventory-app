@@ -52,6 +52,7 @@ function findId(item_id) {
     let serial_num_id = $('#edit_btn_' + item_id).attr('data-serial-number-id');
     $('#chosen_equipment_id').val(equipment_id);
     $('#chosen_serial_num_id').val(serial_num_id);
+    $('#relevant_document_item_id').val(item_id);
 }
 
 $('#edit_item_modal').on('show.bs.modal', () => {

@@ -11,18 +11,11 @@
                         <td>{{ $ticket->id }}</td>
                     </tr>
                     <tr>
-                        <td>Ticket Type:</td>
-                        <td>
-                            @if ($ticket->ticket_type == 1) New items request
-                            @elseif ($ticket->ticket_type == 2) Repair request
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Request Type:</td>
                         <td>
-                            @if ($ticket->ticket_request_type == 1) Equipment
-                            @elseif ($ticket->ticket_request_type == 2) Office supplies
+                            @if ($ticket->isNewItemsRequest()) New Equipment
+                            @elseif ($ticket->isSuppliesRequest()) Office supplies
+                            @elseif ($ticket->isRepairRequest()) Repair request
                             @endif
                         </td>
                     </tr>

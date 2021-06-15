@@ -77,6 +77,11 @@ class DocumentItemController extends Controller
         return redirect()->back();
     }
 
+    public function update_serial_number(Request $request) {
+        DocumentItem::find($request->id)->update(['serial_number_id' => $request->serial_number_id]);
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -36,8 +36,6 @@ class Ticket extends Model
     // EQUIPMENT RESERVATIONS
     const RESERVED = 1;
 
-    const dates = ['created_at', 'updated_at'];
-
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -82,6 +80,11 @@ class Ticket extends Model
         return $query->where('status_id', '!=', Ticket::PROCESSED)->get();
     }
 
+    public function scopeOpenUserTickets($query) {
+        return $query->where('user_id', auth()->id())->get()
+                        ->where('status_id', '!=', Ticket::PROCESSED);
+    }
+
     public function getDateAttribute() {
         return $this->created_at->format('d.m.Y');
     }
@@ -112,6 +115,10 @@ class Ticket extends Model
 
     public function isNewEquipmentRequest() {
         return $this->isNewItemsRequest() && $this->isEquipmentRequest();
+    }
+
+    public function isOfficerApprovedOrderNewRequest() {
+        return $this->officer_approval == Ticket::APPROVED && $this->isNewItemsRequest() && $this->equipment_id == null;
     }
 
     public function scopeEquipmentRequests($query) {

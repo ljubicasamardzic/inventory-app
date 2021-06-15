@@ -21,6 +21,7 @@ Route::resource('/equipment', EquipmentController::class);
 Route::resource('/documents', DocumentController::class);
 Route::post('/document-items/{document}', [DocumentItemController::class, 'store']);
 Route::put('/document-item/return/{document_item}', [DocumentItemController::class, 'update']);
+Route::put('/document-item/change-serial-number', [DocumentItemController::class, 'update_serial_number']);
 Route::resource('/tickets', TicketController::class);
 Route::resource('/serial-numbers', SerialNumberController::class);
 Route::get('/equipment-serial-numbers/{equipment}', [EquipmentController::class, 'serial_numbers']);
@@ -33,4 +34,11 @@ Route::put('/tickets/update2/{id}', [TicketController::class, 'update_2']);
 Route::put('/tickets/update3/{id}', [TicketController::class, 'update_3']);
 // request is marked as finished
 Route::put('/tickets/update4/{id}', [TicketController::class, 'update_4']);
+Route::get('/tickets/{id}/export', [TicketController::class, 'export_order']);
+Route::get('/reports', [EquipmentController::class, 'reports_index']);
+
+Route::post('/reports/department', [EquipmentController::class, 'report_by_department']);
+Route::post('/reports/position', [EquipmentController::class, 'report_by_position']);
+Route::post('/reports/category', [EquipmentController::class, 'report_by_category']);
+Route::post('/reports/employee', [EquipmentController::class, 'report_by_employee']);
 

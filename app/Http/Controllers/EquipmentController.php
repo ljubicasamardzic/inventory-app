@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EquipmentRequest;
-use App\Models\DocumentItem;
-use App\Models\Document;
+use App\Models\Department;
+use App\Models\User;
 use App\Models\Equipment;
 use App\Models\EquipmentCategory;
+use App\Models\Position;
 use Illuminate\Http\Request;
+
+use App\Exports\EquipmentReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EquipmentController extends Controller
 {
@@ -64,6 +68,7 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment)
     {        
+        // dd($equipment->required_input_fields);
         $content_header = "Equipment details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -120,6 +125,151 @@ class EquipmentController extends Controller
         
         return $equipment->serial_numbers;
     }
+
+    public function reports_index() {
+        $categories = EquipmentCategory::all();
+        $departments = Department::all();
+        $positions = Position::all();
+        $users = User::all();
+        $content_header = "Reports";
+        $breadcrumbs = [
+            [ 'name' => 'Home', 'link' => '/' ],
+            [ 'name' => 'Reports', 'link' => '/reports' ]
+        ];
+        return view('equipment.reports', compact(['content_header', 'breadcrumbs', 'categories', 'departments', 'positions', 'users']));
+    }
+
+    public function report_by_department(Request $request) {
+            
+        if ($request->department_ids != null) {
+                $data = [[]];
+                foreach($request->department_ids as $department_id) {
+
+                    $department = Department::find($department_id);
+                    $data[] = [strtoupper($department->name)];
+                    $data[] = ['#', 'Equipment category', 'Equipment name', 'Serial number'];
+                    $users = $department->users;
+                    if (count($users) <= 0) $data[] = ['/', '/', '/', '/'];
+                    
+                    $counter = 0;
+                    foreach($users as $user)  {
+    
+                        $items = $user->items;
+    
+                        foreach($items as $i) {
+                            $counter += 1;
+                            $cat = $i->equipment->category->name;
+                            $name =  $i->equipment->name;
+                            $i->serial_number ? $sn = $i->serial_number->serial_number : $sn = '/';
+                            $data[] = [$counter, $cat, $name, $sn];
+                        }
+                        $data[] = [];
+                    }
+                    $title = 'DEPARTMENTS';
+                    return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_departments.xlsx');
+                }
+            } else {
+                return redirect()->back();
+            }
+
+    }
+
+    public function report_by_position(Request $request) {
+        
+        if ($request->position_ids != null) {
+            $data = [[]];
+            foreach($request->position_ids as $position_id) {
+                $position = Position::find($position_id);
+                $data[] = [strtoupper($position->name)];
+                $data[] = ['#', 'Equipment category', 'Equipment name', 'Serial number'];
+                $users = $position->users;
+                if (count($users) <= 0) $data[] = ['/', '/', '/', '/'];
+
+                $counter = 0;
+                foreach($users as $user)  {
+
+                    $items = $user->items;
+
+                    foreach($items as $i) {
+                        $counter += 1;
+                        $cat = $i->equipment->category->name;
+                        $name =  $i->equipment->name;
+                        $i->serial_number ? $sn = $i->serial_number->serial_number : $sn = '/';
+                        $data[] = [$counter, $cat, $name, $sn];
+                    }
+                    $data[] = [];
+                }
+                $title = 'POSITIONS';
+                return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_positions.xlsx');
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function report_by_category(Request $request) {
+        // dd($request);
+        if ($request->category_ids != null) {
+            $data = [[]];
+            foreach($request->category_ids as $category_id) {
+                $category = EquipmentCategory::find($category_id);
+                $data[] = [strtoupper($category->name)];
+                $data[] = ['#', 'Equipment name', 'Available quantity', 'Assigned quantity', 'Remarks'];
+                
+                $equipment = $category->equipment;
+                if (count($equipment) <= 0) $data[] = ['/', '/', '/', '/', '/'];
+
+                $counter = 0;
+                foreach($equipment as $item) {
+                    $counter += 1;
+                    $name =  $item->name;
+                    $available_quantity = $item->available_quantity; 
+                    $assigned_quantity = $item->assigned;
+                    $item->description ? $remarks = $item->description : $remarks = '/';
+                    $data[] = [$counter, $name, $available_quantity, $assigned_quantity, $remarks];
+                }
+                $data[] = [];
+            }
+            $title = 'CATEGORIES';
+            return Excel::download(new EquipmentReportExport($data, $title), 'equipment_by_categories.xlsx');
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function report_by_employee(Request $request) {
+        if ($request->employee_ids != null) {
+            $data = [[]];
+            foreach($request->employee_ids as $employee_id) {
+                $user = User::find($employee_id);
+
+                $data[] = [strtoupper($user->name)];
+                $data[] = ['#', 'Equipment category', 'Equipment name', 'Serial number', 'Date assigned'];
+                
+                if (count($user->current_items) <= 0) $data[] = ['/', '/', '/', '/', '/'];
+
+                $counter = 0;
+                // document items in which this user is referenced
+                foreach($user->current_items as $item) {
+                    $counter += 1;
+                    $cat = $item->equipment->category->name;
+                    $name =  $item->equipment->name;
+                    ($item->created_at != null) ? $date = $item->assignment_date : $date = '/';
+                    $item->serial_number ? $serial_number = $item->serial_number->serial_number : $serial_number = '/';
+                    $data[] = [$counter, $cat, $name, $serial_number, $date];
+                }
+                $data[] = [];
+            }
+            $title = 'EMPLOYEES';
+            return Excel::download(new EquipmentReportExport($data, $title), 'equipment_by_employees.xlsx');
+        } else {
+            return redirect()->back();
+        }
+    }
+
+
+
+
         
 }
 //     $d = DocumentItem::query()->with('serial_number')->get();

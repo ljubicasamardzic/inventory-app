@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
-use App\Models\Document;
-use App\Models\DocumentItem;
-use App\Models\Equipment;
 use App\Models\Reservation;
-
-use Carbon\Carbon;
-
 
 class TicketController extends Controller
 {
@@ -148,5 +145,22 @@ class TicketController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function export_order($id) {
+        $ticket = Ticket::find($id);
+
+        $data = [
+            'key' => 1,
+            'id' => $id, 
+            'officer' => $ticket->officer ? $ticket->officer->name : '/',
+            'equipment_category' => $ticket->equipment_category ? $ticket->equipment_category->name : '/', 
+            'quantity' => $ticket->quantity ? $ticket->quantity : '/', 
+            'price' => $ticket->price ? $ticket->price : '/', 
+            'remarks' => $ticket->officer_remarks ? $ticket->officer_remarks : '/', 
+            'deadline' => $ticket->deadline ? $ticket->formatted_deadline : '/'
+        ];
+        
+        return Excel::download(new OrderExport($data), 'order.xlsx');
     }
 }

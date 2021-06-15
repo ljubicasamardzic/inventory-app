@@ -54,6 +54,10 @@ class User extends Authenticatable
         return $this->hasManyThrough(DocumentItem::class, Document::class);
     }
 
+    public function current_items(){
+        return $this->hasManyThrough(DocumentItem::class, Document::class)->where('return_date', null);
+    }
+
     // admin u ovom smislu obuhvata sve korisnike koji nisu zaposleni
     public function isAdmin() {
         return in_array($this->role_id, [User::ADMINISTRATOR, User::SUPPORT_OFFICER, User::ADMINISTRATIVE_OFFICER, User::HR]);

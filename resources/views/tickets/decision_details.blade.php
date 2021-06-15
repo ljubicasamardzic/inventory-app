@@ -6,6 +6,14 @@
                     <i class="fas fa-user mr-1"></i>
                     Officer
                 </h3>
+                @if ($ticket->isOfficerApprovedOrderNewRequest())
+                    @can('view', $ticket)
+                        <a href="/tickets/{{ $ticket->id }}/export" class="btn btn-dark btn-sm float-right">
+                            <i class="fas fa-download mr-1"></i>
+                            Download
+                        </a>
+                    @endcan
+                @endif
             </div><!-- /.card-header -->
             <div class="card-body">
                 <div class="table-responsive">
@@ -26,8 +34,27 @@
                             <td><span class="badge {{ $ticket->officerApproval->icon }}">{{ $ticket->officerApproval->name }}</span></td>
                         </tr>
                         @if ($ticket->officerApproval->id == App\Models\Ticket::APPROVED) 
+                            @if ($ticket->isNewEquipmentRequest())
+                                <tr>
+                                    <td>Proposed equipment:</td>
+                                    @if ($ticket->equipment_id != null)
+                                        <td>{{ $ticket->equipment->full_name }}</td>
+                                    @else <td>Order new equipment</td>
+                                    @endif
+                                </tr>
+                                @if ($ticket->equipment_id != null)                                
+                                <tr>
+                                    <td>Serial number:</td>
+                                    @if ($ticket->serial_number != null)
+                                        <td>{{ $ticket->serial_number->serial_number }}</td>
+                                    @else <td>/</td>
+                                    @endif
+                                </tr>
+                                @endif
+                                
+                            @endif
                             <tr>
-                                <td>Price:</td>
+                                <td>Price (€):</td>
                                 @if ($ticket->price)
                                     <td>{{ $ticket->price }}</td>
                                 @else

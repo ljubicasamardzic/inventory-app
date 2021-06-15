@@ -37,7 +37,7 @@
                      with font-awesome or any other icon font library -->
                 {{-- <li class="nav-header">Opcije menija</li> --}}
 
-{{--                <li class="nav-item menu-open">--}}
+               {{-- <li class="nav-item menu-open">--}}
 {{--                    <a href="#" class="nav-link active">--}}
 {{--                        <i class="nav-icon fas fa-tachometer-alt"></i>--}}
 {{--                        <p>--}}
@@ -65,7 +65,7 @@
 {{--                            </a>--}}
 {{--                        </li>--}}
 {{--                    </ul>--}}
-{{--                </li>--}}
+{{--                </li> --}}
 
                 @can('viewAny', \App\Models\User::class)
                     <li class="nav-item">
@@ -99,6 +99,14 @@
                     </a>
                 </li>
                 @endcan
+                <li class="nav-item">
+                    <a href="/reports" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>
+                            Reports
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -24,6 +24,10 @@ class DocumentItem extends Model
         return $this->belongsTo(SerialNumber::class, 'serial_number_id');
     }
 
+    public function getAssignmentDateAttribute() {
+        return $this->created_at->format('d.m.Y');
+    }
+
     public function getReturnedAttribute(){
         return $this->return_date != null;
     }

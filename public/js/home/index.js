@@ -15,7 +15,6 @@ jQuery(function () {
             divToShow.addClass('d-none')
             divToShow.removeClass('d-block')
         }
-
     }
     
     let select = $('#ticket_request_type_id')

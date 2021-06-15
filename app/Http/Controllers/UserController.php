@@ -54,7 +54,8 @@ class UserController extends Controller
             [ 'name' => 'Employees list', 'link' => '/users' ],
             [ 'name' => 'Employee details', 'link' => '/users/'.$user->id ],
         ];
-        $items = $user->items;
+        // displaying only the currently assigned items 
+        $items = $user->current_items;
         return view('users.show', compact(['content_header', 'breadcrumbs', 'user', 'items']));
     }
 

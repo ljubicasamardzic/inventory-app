@@ -66,10 +66,9 @@
                     <tr>
                         <th>#</th>
                         <th>Request type</th>
-                        <th>Equipment type</th>
-                        <th>Employee</th>
+                        <th >Employee</th>
                         <th>Admin</th>
-                        <th>Date received</th>
+                        <th>Date of request</th>
                         <th>Officer Approval</th>
                         <th>HR approval</th>
                         <th>Status</th>
@@ -81,13 +80,9 @@
                             <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
                                 <td>{{ $key + 1 }}</td>
                                 <td>
-                                    @if ($ticket->ticket_type == 1) New items 
-                                    @elseif ($ticket->ticket_type == 2) Repair 
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($ticket->ticket_request_type == 1) Equipment
-                                    @elseif ($ticket->ticket_request_type == 2) Office supplies
+                                    @if ($ticket->isNewEquipmentRequest()) New equipment 
+                                    @elseif ($ticket->isSuppliesRequest()) Office supplies 
+                                    @elseif ($ticket->isRepairRequest()) Repair equipment
                                     @endif
                                 </td>
                                 <td>{{ $ticket->user->name }}</td>

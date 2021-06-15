@@ -37,6 +37,8 @@ class HomeController extends Controller
             $tickets = Ticket::query()->suppliesRequests();
         } else if ($user->isHR()) {
             $tickets = Ticket::query()->readyForHR();
+        } else if ($user->isEmployee()) {
+            $tickets = Ticket::query()->openUserTickets();
         } else {
             $tickets = [];
         }
