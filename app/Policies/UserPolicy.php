@@ -10,9 +10,9 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, $ability)
+    public function before(User $user)
     {
-        if ($user->isSuperAdmin()) {
+        if ($user->isSuperAdmin() || $user->isHR()) {
             return true;
         }
     }
@@ -31,27 +31,27 @@ class UserPolicy
     
     public function create(User $user)
     {
-        return $user->isHR();
+        //
     }
 
    
     public function update(User $user, User $model)
     {
-        return $user->isHR();
+        //
     }
 
     public function delete(User $user, User $model)
     {
-        return $user->isHR();
+        //
     }
 
     public function restore(User $user, User $model)
     {
-        return $user->isHR();
+        //
     }
 
     public function forceDelete(User $user, User $model)
     {
-        return $user->isHR();
+        //
     }
 }
