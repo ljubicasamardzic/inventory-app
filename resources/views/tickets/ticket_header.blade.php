@@ -6,7 +6,7 @@
     {{-- show only if the ticket is unprocessed, since once somebody assumes responsibility over it, 
         somebody else should not take it over --}}
     @if ($ticket->status_id == App\Models\Ticket::UNPROCESSED)
-        @can('update1', $ticket)
+        @can('update_1', $ticket)
             <form action="/tickets/update1/{{ $ticket->id }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -22,8 +22,8 @@
         @endcan
     @endif
     {{-- show only if the HR has made the final decision --}}
-    @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->status_id != App\Models\Ticket::PROCESSED)
-        @can('update4', $ticket)
+    @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->status_id != App\Models\Ticket::PROCESSED && $ticket->officer->id == auth()->user()->id)
+        @can('update_4', $ticket)
             <button class="btn btn-primary btn-sm float-right"
             data-toggle="modal"
             data-target="#mark_finished_modal" 
@@ -40,8 +40,8 @@
 
     {{-- only show these to the officer or superadmin that should approve or reject the request --}}
         
-    @if ($ticket->officer_id != null && $ticket->officer_approval == App\Models\Ticket::PENDING)
-        @can('update2', $ticket)
+    @if ($ticket->officer_id != null && $ticket->officer_approval == App\Models\Ticket::PENDING && $ticket->officer->id == auth()->user()->id)
+        @can('update_2', $ticket)
             <div class="col-12">
                     <div class="float-right">
                         <button class="btn btn-sm btn-danger"
@@ -62,8 +62,8 @@
     @endif
 
     {{-- buttons are visible only to HR and superadmin after the officer has either approved or rejected the request --}}
-    @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING)
-        @can('update3', $ticket)
+    @if (in_array($ticket->officer_approval, [App\Models\Ticket::APPROVED, App\Models\Ticket::REJECTED]) && $ticket->HR_approval == App\Models\Ticket::PENDING && auth()->user()->isHR())
+        @can('update_3', $ticket)
             <div class="col-12">
                 <div class="float-right">
                     <button class="btn btn-danger btn-sm"

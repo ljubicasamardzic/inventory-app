@@ -59,33 +59,39 @@ class TicketPolicy
         //
     }
 
-    public function update1(User $user, Ticket $ticket) {
-        if ($ticket->isEquipmentRequest() && $user->isSupportOfficer()) {
-            return true;
-        } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer()) {
-            return true;
-        }
+    public function update_1(User $user) {
+        // if ($ticket->isEquipmentRequest() && $user->isSupportOfficer()) {
+        //     return true;
+        // } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer()) {
+        //     return true;
+        // }
+
+        return $user->isSupportOfficer() || $user->isAdministrativeOfficer();
     }
 
-    public function update2(User $user, Ticket $ticket) {
+    public function update_2(User $user) {
         // allow only the officer who worked on this case to update this step
-        return $ticket->isEquipmentRequest() && $user->id == $ticket->officer->id;
+    //    return $user->id == $ticket->officer->id;
+        return $user->isSupportOfficer() || $user->isAdministrativeOfficer();
+
     }
 
-    public function update3(User $user, Ticket $ticket) {
-        return $user->isHr();
+    public function update_3(User $user) {
+        return $user->isHR();
     }
 
-    public function update4(User $user, Ticket $ticket) {
+    public function update_4(User $user) {
         // allow only the officer who worked on this case to update this step
-        return $ticket->isEquipmentRequest() && $user->id == $ticket->officer->id;
+        // return $user->id == $ticket->officer->id;
+        return $user->isSupportOfficer() || $user->isAdministrativeOfficer();
     }
 
-    public function export_order(User $user, Ticket $ticket) {
-        if ($ticket->isNewEquipmentRequest()) {
-            return $user->isHR() || $user->isSupportOfficer();
-        } else if ($ticket->isNewItemsRequest()) {
-            return $user->isHR() || $user->isAdministrativeOfficer();
-        }
+    public function export_order(User $user) {
+        // if ($ticket->isNewEquipmentRequest()) {
+        //     return $user->isHR() || $user->isSupportOfficer();
+        // } else if ($ticket->isNewItemsRequest()) {
+        //     return $user->isHR() || $user->isAdministrativeOfficer();
+        // }
+        return $user->isHR() || $user->isAdministrativeOfficer() || $user->isSupportOfficer();
     }
 }

@@ -68,7 +68,7 @@ class EquipmentPolicy
     }
 
     public function report_by_category() {
-        //
+        //;
     }
 
     public function report_by_employee() {

@@ -16,6 +16,22 @@ class TicketController extends Controller
         $this->authorizeResource(Ticket::class, 'ticket');
     }
 
+    protected function resourceAbilityMap()
+    {
+        return array_merge(parent::resourceAbilityMap(), [
+            'export_order' => 'export_order',
+            'update_1' => 'update_1',
+            'update_2' => 'update_2',
+            'update_3' => 'update_3',
+            'update_4' => 'update_4'
+        ]);
+    } 
+
+    protected function resourceMethodsWithoutModels()
+    {
+        return array_merge(parent::resourceMethodsWithoutModels(), ['export_order', 'update_1', 'update_2', 'update_3', 'update_4']);
+    }
+
     public function index()
     {
         //
@@ -67,7 +83,6 @@ class TicketController extends Controller
     }
 
     public function update_1(TicketRequest $request) {
-        $this->authorize('update1');
 
         $request->merge(['status_id' => Ticket::IN_PROGRESS]);
 
@@ -78,7 +93,6 @@ class TicketController extends Controller
     }
 
     public function update_2(TicketRequest $request) {
-        $this->authorize('update2');
 
         $ticket = Ticket::find($request->id);
 
@@ -101,7 +115,6 @@ class TicketController extends Controller
     }
 
     public function update_3(TicketRequest $request) {
-        $this->authorize('update3');
 
         $ticket = Ticket::find($request->id);
 
@@ -116,7 +129,6 @@ class TicketController extends Controller
     }
 
     public function update_4(TicketRequest $request) {
-        $this->authorize('update4');
 
         $ticket = Ticket::find($request->id);
 
@@ -156,7 +168,6 @@ class TicketController extends Controller
     }
 
     public function export_order($id) {
-        $this->authorize('export_order');
 
         $ticket = Ticket::find($id);
 

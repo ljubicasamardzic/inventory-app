@@ -35,8 +35,8 @@ Route::put('/tickets/update3/{id}', [TicketController::class, 'update_3']);
 // request is marked as finished
 Route::put('/tickets/update4/{id}', [TicketController::class, 'update_4']);
 Route::get('/tickets/{id}/export', [TicketController::class, 'export_order']);
-Route::get('/reports', [EquipmentController::class, 'reports_index']);
 
+Route::get('/reports', [EquipmentController::class, 'reports_index']);
 Route::post('/reports/department', [EquipmentController::class, 'report_by_department']);
 Route::post('/reports/position', [EquipmentController::class, 'report_by_position']);
 Route::post('/reports/category', [EquipmentController::class, 'report_by_category']);

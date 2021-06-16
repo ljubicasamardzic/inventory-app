@@ -19,6 +19,23 @@ class EquipmentController extends Controller
         $this->authorizeResource(Equipment::class, 'equipment');
     }
 
+    protected function resourceAbilityMap()
+    {
+        return array_merge(parent::resourceAbilityMap(), [
+            'serial_numbers' => 'serial_numbers',
+            'reports_index' => 'reports_index',
+            'report_by_department' => 'report_by_department',
+            'report_by_position' => 'report_by_position',
+            'report_by_category' => 'report_by_category',
+            'report_by_employee' => 'report_by_employee'
+        ]);
+    } 
+
+    protected function resourceMethodsWithoutModels()
+    {
+        return array_merge(parent::resourceMethodsWithoutModels(), ['serial_numbers', 'reports_index', 'report_by_department', 'report_by_position', 'report_by_category', 'report_by_employee']);
+    }
+
     public function index()
     {
         $equipment = Equipment::all();
@@ -68,7 +85,6 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment)
     {        
-        // dd($equipment->required_input_fields);
         $content_header = "Equipment details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -121,14 +137,13 @@ class EquipmentController extends Controller
         return redirect('/equipment');
     }
 
+    // nezavrsena funkcija - treba da vraca samo dostupne serijske brojeve za odredjeni komad opreme
     public function serial_numbers(Equipment $equipment) {
-        $this->authorize('serial_numbers');
 
         return $equipment->serial_numbers;
     }
 
     public function reports_index() {
-        $this->authorize('reports_index');
 
         $categories = EquipmentCategory::all();
         $departments = Department::all();
@@ -143,43 +158,41 @@ class EquipmentController extends Controller
     }
 
     public function report_by_department(Request $request) {
-        $this->authorize('report_by_department');
 
         if ($request->department_ids != null) {
-                $data = [[]];
-                foreach($request->department_ids as $department_id) {
+            $data = [[]];
+            foreach($request->department_ids as $department_id) {
 
-                    $department = Department::find($department_id);
-                    $data[] = [strtoupper($department->name)];
-                    $data[] = ['#', 'Equipment category', 'Equipment name', 'Serial number'];
-                    $users = $department->users;
-                    if (count($users) <= 0) $data[] = ['/', '/', '/', '/'];
-                    
-                    $counter = 0;
-                    foreach($users as $user)  {
-    
-                        $items = $user->items;
-    
-                        foreach($items as $i) {
-                            $counter += 1;
-                            $cat = $i->equipment->category->name;
-                            $name =  $i->equipment->name;
-                            $i->serial_number ? $sn = $i->serial_number->serial_number : $sn = '/';
-                            $data[] = [$counter, $cat, $name, $sn];
-                        }
-                        $data[] = [];
+                $department = Department::find($department_id);
+                $data[] = [strtoupper($department->name)];
+                $data[] = ['#', 'Equipment category', 'Equipment name', 'Serial number'];
+                $users = $department->users;
+                if (count($users) <= 0) $data[] = ['/', '/', '/', '/'];
+                
+                $counter = 0;
+                foreach($users as $user)  {
+
+                    $items = $user->items;
+
+                    foreach($items as $i) {
+                        $counter += 1;
+                        $cat = $i->equipment->category->name;
+                        $name =  $i->equipment->name;
+                        $i->serial_number ? $sn = $i->serial_number->serial_number : $sn = '/';
+                        $data[] = [$counter, $cat, $name, $sn];
                     }
-                    $title = 'DEPARTMENTS';
-                    return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_departments.xlsx');
                 }
-            } else {
-                return redirect()->back();
+                $data[] = [];
             }
+                $title = 'DEPARTMENTS';
+                return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_departments.xlsx');
+        } else {
+            return redirect()->back();
+        }
 
     }
 
     public function report_by_position(Request $request) {
-        $this->authorize('report_by_position');
 
         if ($request->position_ids != null) {
             $data = [[]];
@@ -202,18 +215,17 @@ class EquipmentController extends Controller
                         $i->serial_number ? $sn = $i->serial_number->serial_number : $sn = '/';
                         $data[] = [$counter, $cat, $name, $sn];
                     }
-                    $data[] = [];
                 }
+                $data[] = [];
+            }
                 $title = 'POSITIONS';
                 return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_positions.xlsx');
-            }
         } else {
             return redirect()->back();
         }
     }
 
     public function report_by_category(Request $request) {
-        $this->authorize('report_by_category');
 
         if ($request->category_ids != null) {
             $data = [[]];
@@ -244,7 +256,6 @@ class EquipmentController extends Controller
     }
 
     public function report_by_employee(Request $request) {
-        $this->authorize('report_by_employee');
 
         if ($request->employee_ids != null) {
             $data = [[]];
