@@ -19,4 +19,8 @@ class Position extends Model
     public function users() {
         return $this->hasMany(User::class, 'position_id');
     }
+
+    public function scopeIds($query) {
+        return $query->pluck('id');
+    }
 }

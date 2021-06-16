@@ -82,4 +82,8 @@ class User extends Authenticatable
     public function isEmployee() {
         return $this->role_id == User::USER;
     }
+
+    public function scopeIds($query) {
+        return $query->pluck('id');
+    }
 }

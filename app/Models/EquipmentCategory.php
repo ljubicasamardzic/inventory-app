@@ -18,4 +18,8 @@ class EquipmentCategory extends Model
     public function available_equipment(){
         return $this->hasMany(Equipment::class)->available();
     }
+
+    public function scopeIds($query) {
+        return $query->pluck('id');
+    }
 }

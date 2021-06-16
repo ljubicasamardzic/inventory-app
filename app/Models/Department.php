@@ -18,4 +18,9 @@ class Department extends Model
     public function users(){
         return $this->hasManyThrough(User::class, Position::class);
     }
+
+    public function scopeIds($query) {
+        return $query->pluck('id');
+    }
+
 }
