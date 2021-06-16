@@ -122,11 +122,14 @@ class EquipmentController extends Controller
     }
 
     public function serial_numbers(Equipment $equipment) {
-        
+        $this->authorize('serial_numbers');
+
         return $equipment->serial_numbers;
     }
 
     public function reports_index() {
+        $this->authorize('reports_index');
+
         $categories = EquipmentCategory::all();
         $departments = Department::all();
         $positions = Position::all();
@@ -140,7 +143,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_department(Request $request) {
-            
+        $this->authorize('report_by_department');
+
         if ($request->department_ids != null) {
                 $data = [[]];
                 foreach($request->department_ids as $department_id) {
@@ -175,7 +179,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_position(Request $request) {
-        
+        $this->authorize('report_by_position');
+
         if ($request->position_ids != null) {
             $data = [[]];
             foreach($request->position_ids as $position_id) {
@@ -208,7 +213,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_category(Request $request) {
-        // dd($request);
+        $this->authorize('report_by_category');
+
         if ($request->category_ids != null) {
             $data = [[]];
             foreach($request->category_ids as $category_id) {
@@ -238,6 +244,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_employee(Request $request) {
+        $this->authorize('report_by_employee');
+
         if ($request->employee_ids != null) {
             $data = [[]];
             foreach($request->employee_ids as $employee_id) {
@@ -255,8 +263,8 @@ class EquipmentController extends Controller
                     $cat = $item->equipment->category->name;
                     $name =  $item->equipment->name;
                     ($item->created_at != null) ? $date = $item->assignment_date : $date = '/';
-                    $item->serial_number ? $serial_number = $item->serial_number->serial_number : $serial_number = '/';
-                    $data[] = [$counter, $cat, $name, $serial_number, $date];
+                    $item->serial_number ? $sn = $item->serial_number->serial_number : $sn = '/';
+                    $data[] = [$counter, $cat, $name, $sn, $date];
                 }
                 $data[] = [];
             }
@@ -266,10 +274,6 @@ class EquipmentController extends Controller
             return redirect()->back();
         }
     }
-
-
-
-
         
 }
 //     $d = DocumentItem::query()->with('serial_number')->get();

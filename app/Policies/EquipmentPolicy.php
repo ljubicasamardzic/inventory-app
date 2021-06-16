@@ -50,4 +50,28 @@ class EquipmentPolicy
     {
         //
     }
+
+    public function serial_numbers() {
+        //
+    }
+
+    public function reports_index() {
+        //
+    }
+
+    public function report_by_department() {
+        //
+    }
+
+    public function report_by_position() {
+        //
+    }
+
+    public function report_by_category() {
+        //
+    }
+
+    public function report_by_employee() {
+        //
+    }
 }

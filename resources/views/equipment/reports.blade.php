@@ -22,28 +22,22 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link custom one active" id="custom-tabs-two-home-tab" data-id=first data-toggle="pill" href="#custom-tabs-two-second" role="tab" aria-controls="custom-tabs-two-second" aria-selected="true">Report by department</a>
+                            <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Report by department</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link custom two" id="custom-tabs-two-profile-tab" data-id=second data-toggle="pill" href="#custom-tabs-two-third" role="tab" aria-controls="custom-tabs-two-third" aria-selected="false">Report by positions</a>
+                            <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Report by positions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link custom three" id="custom-tabs-two-messages-tab" data-id=third data-toggle="pill" href="#custom-tabs-two-fourth" role="tab" aria-controls="custom-tabs-two-fourth" aria-selected="false">Report by categories</a>
+                            <a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Report by categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link custom four" id="custom-tabs-two-settings-tab" data-id=fourth data-toggle="pill" href="#custom-tabs-two-fifth" role="tab" aria-controls="custom-tabs-two-fifth" aria-selected="false">Report by employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/reports/all-equipment" type="button">
-                                All equipment
-                                <i class="fas fa-download ml-1"></i>
-                            </a>
+                            <a class="nav-link" id="custom-tabs-two-settings-tab" data-toggle="pill" href="#custom-tabs-two-settings" role="tab" aria-controls="custom-tabs-two-settings" aria-selected="false">Report by employees</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body mt-2">
                     <div class="tab-content" id="custom-tabs-two-tabContent">
-                        <div class="tab-pane fade active show" id="first" role="tabpanel" aria-labelledby="custom-tabs-two-second-tab">
+                        <div class="tab-pane fade active show" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
                             <div class="row">
                                 <div class="col-9">
                                         <form action="/reports/department" method="POST">
@@ -65,7 +59,7 @@
                                     </form>
                                 </div>
                         </div>
-                        <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="custom-tabs-two-third-tab">
+                        <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/position" method="POST">
@@ -89,7 +83,7 @@
                                     </form>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="third" role="tabpanel" aria-labelledby="custom-tabs-two-fourth-tab">
+                        <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/category" method="POST">
@@ -109,7 +103,7 @@
                                     </form>
                                 </div>        
                         </div>
-                        <div class="tab-pane fade" id="fourth" role="tabpanel" aria-labelledby="custom-tabs-two-fifth-tab">
+                        <div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/employee" method="POST">

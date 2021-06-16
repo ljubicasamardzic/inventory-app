@@ -90,23 +90,25 @@
                 @endcan
 
                 @can('viewAny', \App\Models\Document::class)
-                <li class="nav-item">
-                    <a href="/documents" class="nav-link {{ request()->is('documents*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-paperclip"></i>
-                        <p>
-                            Documents
-                        </p>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a href="/documents" class="nav-link {{ request()->is('documents*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-paperclip"></i>
+                            <p>
+                                Documents
+                            </p>
+                        </a>
+                    </li>
                 @endcan
-                <li class="nav-item">
-                    <a href="/reports" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-file"></i>
-                        <p>
-                            Reports
-                        </p>
-                    </a>
-                </li>
+                @can('reports_index', App\Models\Equipment::class)
+                    <li class="nav-item">
+                        <a href="/reports" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-file"></i>
+                            <p>
+                                Reports
+                            </p>
+                        </a>
+                    </li>
+                @endcan
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -80,4 +80,12 @@ class TicketPolicy
         // allow only the officer who worked on this case to update this step
         return $ticket->isEquipmentRequest() && $user->id == $ticket->officer->id;
     }
+
+    public function export_order(User $user, Ticket $ticket) {
+        if ($ticket->isNewEquipmentRequest()) {
+            return $user->isHR() || $user->isSupportOfficer();
+        } else if ($ticket->isNewItemsRequest()) {
+            return $user->isHR() || $user->isAdministrativeOfficer();
+        }
+    }
 }

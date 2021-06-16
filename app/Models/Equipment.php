@@ -11,6 +11,12 @@ class Equipment extends Model
 
     protected $guarded = [];
 
+    // Reports
+    const BY_DEPARTMENT = 1;
+    const BY_POSITION = 2;
+    const BY_CATEGORY = 3;
+    const BY_USER = 4;
+
     public function category(){
         return $this->belongsTo(EquipmentCategory::class, 'equipment_category_id');
     }
