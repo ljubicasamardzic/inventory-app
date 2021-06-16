@@ -16,22 +16,6 @@ class TicketController extends Controller
         $this->authorizeResource(Ticket::class, 'ticket');
     }
 
-    protected function resourceAbilityMap()
-    {
-        return array_merge(parent::resourceAbilityMap(), [
-            'export_order' => 'export_order',
-            'update_1' => 'update_1',
-            'update_2' => 'update_2',
-            'update_3' => 'update_3',
-            'update_4' => 'update_4'
-        ]);
-    } 
-
-    protected function resourceMethodsWithoutModels()
-    {
-        return array_merge(parent::resourceMethodsWithoutModels(), ['export_order', 'update_1', 'update_2', 'update_3', 'update_4']);
-    }
-
     public function index()
     {
         //
@@ -57,7 +41,6 @@ class TicketController extends Controller
         } else {
             $available_equipment = [];
         }
-        // dd($available_equipment);
         $content_header = "Request details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/#open_requests_id' ],
@@ -84,9 +67,10 @@ class TicketController extends Controller
 
     public function update_1(TicketRequest $request) {
 
-        $request->merge(['status_id' => Ticket::IN_PROGRESS]);
-
         $ticket = Ticket::find($request->id);
+        $this->authorize('update1', $ticket);
+
+        $request->merge(['status_id' => Ticket::IN_PROGRESS]);
 
         $ticket->update($request->only(['officer_id', 'status_id']));
         return redirect()->back();
@@ -95,6 +79,7 @@ class TicketController extends Controller
     public function update_2(TicketRequest $request) {
 
         $ticket = Ticket::find($request->id);
+        $this->authorize('update2', $ticket);
 
         //  Case 1: no available equipment for the desired item so we need to order it
         // zero is used since ids of items start from 1
@@ -117,6 +102,7 @@ class TicketController extends Controller
     public function update_3(TicketRequest $request) {
 
         $ticket = Ticket::find($request->id);
+        $this->authorize('update3', Ticket::class);
 
         // if HR rejects the request where a reservation already exists, delete it and amend the item quantity
         if ($ticket->isNewEquipmentRequest() && $ticket->equipment_id != null && $request->HR_approval == Ticket::REJECTED) {
@@ -131,6 +117,8 @@ class TicketController extends Controller
     public function update_4(TicketRequest $request) {
 
         $ticket = Ticket::find($request->id);
+
+        $this->authorize('update4', $ticket);
 
         if ($ticket->isNewEquipmentRequest()) {
             
