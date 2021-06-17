@@ -1,0 +1,14 @@
+.pagination li a,
+.pagination li span {
+    color:#212529; 
+}
+
+.pagination .page-item.active span,
+.pagination .page-item.active a:focus,
+.pagination .page-item.active a:hover,
+.pagination .page-item.active span,
+.pagination .page-item.active span:focus,
+.pagination .page-item.active span:hover {
+    background-color:#212529;
+    border-color:#212529;
+}

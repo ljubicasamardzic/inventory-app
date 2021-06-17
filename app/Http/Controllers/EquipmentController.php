@@ -11,6 +11,9 @@ use App\Models\Position;
 use Illuminate\Http\Request;
 
 use App\Exports\EquipmentReportExport;
+use App\Notifications\NewEquipmentNotification;
+use App\Notifications\RestockedNotification;
+use Illuminate\Support\Facades\Notification;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EquipmentController extends Controller
@@ -61,8 +64,10 @@ class EquipmentController extends Controller
 
     public function store(EquipmentRequest $request)
     {
-        // dd($request);
-        Equipment::query()->create($request->validated());
+        $new_equipment = Equipment::query()->create($request->validated());
+
+        $recipients = User::query()->isSupportOrSuperadmin();
+        Notification::send($recipients, new NewEquipmentNotification($new_equipment));
         return redirect(route('equipment.index'));
     }
 
@@ -91,7 +96,15 @@ class EquipmentController extends Controller
 
     public function update(EquipmentRequest $request, Equipment $equipment)
     {
+        $current_available_quantity = $equipment->available_quantity;
+        
         $equipment->update($request->validated());
+
+        if ($request->available_quantity > $current_available_quantity) {
+            $recipients = User::query()->isSupportOrSuperadmin();
+            Notification::send($recipients, new RestockedNotification($equipment));
+        }
+
         return redirect('/equipment');
     }
 

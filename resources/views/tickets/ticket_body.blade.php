@@ -6,10 +6,12 @@
             </div>
             <div class="card-body">
                 <table class="table table-striped table-sm">
-                    <tr>
-                        <td>ID</td>
-                        <td>{{ $ticket->id }}</td>
-                    </tr>
+                    @if (auth()->user()->isAdmin())
+                        <tr>
+                            <td>ID</td>
+                            <td>{{ $ticket->id }}</td>
+                        </tr>  
+                    @endif
                     <tr>
                         <td>Request Type:</td>
                         <td>
@@ -22,9 +24,12 @@
                     <tr>
                         <td>Employee:</td>
                         <td>
-                            <a href="/users/{{ $ticket->user->id }}">
-                                {{ $ticket->user->name }}
-                            </a>
+                            @if (auth()->user()->isAdmin())  
+                                <a href="/users/{{ $ticket->user->id }}">
+                                    {{ $ticket->user->name }}
+                                </a>
+                            @else  {{ $ticket->user->name }}
+                            @endif
                         </td>
                     </tr>
                     <tr>
@@ -121,9 +126,13 @@
                             <tr>
                                 <td>Assigned Equipment:</td>
                                 <td>
-                                    <a href="/documents/{{ $ticket->document_id }}">
+                                    @if (auth()->user()->isAdmin())
+                                        <a href="/documents/{{ $ticket->document_id }}">
+                                            {{ $ticket->equipment->full_name }}
+                                        </a>
+                                    @elseif (auth()->user()->isEmployee())
                                         {{ $ticket->equipment->full_name }}
-                                    </a>
+                                    @endif
                                 </td>
                             </tr>
                             <tr>
@@ -138,6 +147,12 @@
                             <td>Finished on:</td>
                             <td>{{ $ticket->finished_date }}</td>
                         </tr>
+                        @if ($ticket->final_remarks != null)
+                        <tr>
+                            <td>Final remarks:</td>
+                            <td>{{ $ticket->final_remarks }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
             @endif

@@ -29,10 +29,11 @@ class TicketPolicy
             return true;
         } else if ($user->isHR() && $ticket->officer_approval != Ticket::PENDING) {
             return true;
+        } else if ($user->isEmployee() && $ticket->user_id == $user->id) {
+            return true;
         }
 
     }
-
 
     public function create(User $user)
     {

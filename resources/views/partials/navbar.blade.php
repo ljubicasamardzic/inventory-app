@@ -47,7 +47,7 @@
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-item dropdown-header">
                     {{ auth()->user()->unreadNotifications->count() }} 
-                    @if (auth()->user()->unreadNotifications->count() == 1) Notification @else Notifications @endif
+                    @if (auth()->user()->unreadNotifications->count() == 1) new notification @else new notifications @endif
                 </span>
                 @if (auth()->user()->unreadNotifications->count() > -1)
                     @foreach (auth()->user()->unreadNotifications->take(5) as $notification)
@@ -61,8 +61,8 @@
                                     @elseif ($notification->type == 'App\Notifications\HRResponseNotification') 1 HR request review
                                     @elseif($notification->type == 'App\Notifications\TicketApprovedNotification') 1 request approved
                                     @elseif($notification->type == 'App\Notifications\TicketRejectedNotification') 1 request rejected
-                                    @elseif($notification->type == 'App\Notifications\EquipmentAssignedNotification') new equipment assigned
-                                    @elseif($notification->type == 'App\Notifications\NewEquipmentNotification') new equipment assigned
+                                    @elseif($notification->type == 'App\Notifications\NewEquipmentNotification') New equipment
+                                    @elseif($notification->type == 'App\Notifications\RestockedNotification') Equipment restocked
                                 @endif
                                 <span class="float-right text-muted text-sm">
                                     {{$notification->created_at->format('d.m.Y')}}

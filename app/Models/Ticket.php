@@ -14,6 +14,8 @@ class Ticket extends Model
     
     protected $dates = ['deadline', 'date_finished', 'created_at', 'updated_at'];
 
+    const PER_PAGE = 10;
+
     /** TICKET TYPES **/
     const NEW_EQUIPMENT = 1;
     const REPAIR_EQUIPMENT = 2;
@@ -81,7 +83,7 @@ class Ticket extends Model
     }
 
     public function scopeOpenUserTickets($query) {
-        return $query->where('user_id', auth()->id())->get()
+        return $query->where('user_id', auth()->user()->id)
                         ->where('status_id', '!=', Ticket::PROCESSED);
     }
 
@@ -134,17 +136,15 @@ class Ticket extends Model
     }
 
     public function scopeEquipmentRequests($query) {
-        return $query->where('ticket_request_type', Ticket::EQUIPMENT_REQUEST)->get();
+        return $query->where('ticket_request_type', Ticket::EQUIPMENT_REQUEST);
     }
 
     public function scopeSuppliesRequests($query) {
-        return $query->where('ticket_request_type', Ticket::OFFICE_SUPPLIES_REQUEST)->get();
+        return $query->where('ticket_request_type', Ticket::OFFICE_SUPPLIES_REQUEST);
     }
 
     public function scopeReadyForHR($query) {
-        return $query->where('officer_approval', '!=', Ticket::PENDING)
-                        ->where('status_id', '!=', Ticket::PROCESSED)
-                        ->get();
+        return $query->where('officer_approval', '!=', Ticket::PENDING);
     }
 
     public function createDocument() {

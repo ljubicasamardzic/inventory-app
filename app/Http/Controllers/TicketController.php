@@ -156,7 +156,6 @@ class TicketController extends Controller
 
                 $user = $ticket->user()->get();
                 Notification::send($user, new TicketApprovedNotification($ticket));
-                Notification::send($user, new EquipmentAssignedNotification($ticket->equipment()->get()));
             
             } else {
                 $ticket->update($request->all());

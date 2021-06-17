@@ -3,16 +3,17 @@
 
 @section('additional_styles')
     <style>
-        .clickable-row{ cursor: pointer; }
+        .clickable-row{ cursor: pointer; } 
     </style>
+
 @endsection
 
 @section('content')
     
     @if (in_array(auth()->user()->role_id, [User::ADMINISTRATOR, User::SUPPORT_OFFICER, User::ADMINISTRATIVE_OFFICER, User::HR]))
-        @include('partials.admin-dashboard')
+        @include('home.admin-dashboard')
     @else
-        @include('partials.user-dashboard')
+        @include('home.user-dashboard')
     @endif 
 
 @endsection

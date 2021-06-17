@@ -17,7 +17,8 @@
                             data-target="#modal-serial-numbers" 
                             class="float-right btn btn-sm btn-primary" 
                             @if ($equipment->required_input_fields < 1) disabled @endif 
-                            @cannot('update', $equipment) disabled @endcannot>
+                            @cannot('update', $equipment) disabled @endcannot
+                    >
                         Add serial numbers
                     </button>
                 </div><!-- /.card-header -->

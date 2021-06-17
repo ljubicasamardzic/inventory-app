@@ -88,6 +88,15 @@ class User extends Authenticatable
         return $query->pluck('id');
     }
 
+    // get all superadmins and support officers apart from the person who added the equipment
+    // or replenished the stock
+    public function scopeIsSupportOrSuperadmin($query) {
+        return $query->where('role_id', '=', User::SUPPORT_OFFICER)
+                        ->orWhere('role_id', '=', User::ADMINISTRATOR)
+                        ->where('id', '!=', auth()->user()->id)
+                        ->get(); 
+    }
+
     public function notifications()
     {
         // override the standard of returning them by created_at ASC

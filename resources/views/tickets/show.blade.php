@@ -13,8 +13,10 @@
                 <div class="card-body table-responsive">
                     @include('tickets.ticket_body')
                 </div> <!-- /.card-body -->
-            </div> 
-            @include('tickets.decision_details') 
+            </div>
+            @if (auth()->user()->isAdmin())
+                @include('tickets.decision_details') 
+            @endif 
         </div>
     </div>
 @include('tickets/modals/reject_request_officer_modal')
