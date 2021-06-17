@@ -27,6 +27,7 @@ class CreateTicketsTable extends Migration
             $table->double('price')->nullable();
             $table->timestamp('deadline')->nullable();
             $table->timestamp('date_finished')->nullable();
+            $table->text('final_remarks')->nullable();
             $table->timestamps();
 
             // requesting office supplies

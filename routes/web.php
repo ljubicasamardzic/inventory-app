@@ -41,4 +41,8 @@ Route::post('/reports/department', [EquipmentController::class, 'report_by_depar
 Route::post('/reports/position', [EquipmentController::class, 'report_by_position']);
 Route::post('/reports/category', [EquipmentController::class, 'report_by_category']);
 Route::post('/reports/employee', [EquipmentController::class, 'report_by_employee']);
+Route::post('/reports/available-equipment', [EquipmentController::class, 'report_available_equipment']);
 
+Route::get('/notifications', [HomeController::class, 'notifications']);
+
+Route::put('/notifications/{notification:uuid}', [HomeController::class, 'mark_read_notification']);

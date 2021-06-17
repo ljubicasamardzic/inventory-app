@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\DatabaseNotification;
 
 class User extends Authenticatable
 {
@@ -86,4 +87,20 @@ class User extends Authenticatable
     public function scopeIds($query) {
         return $query->pluck('id');
     }
+
+    public function notifications()
+    {
+        // override the standard of returning them by created_at ASC
+        return $this->morphMany(DatabaseNotification::class, 'notifiable')
+                            ->orderBy('read_at', 'asc')
+                            ->orderBy('created_at', 'desc');
+    }
+    public static function searchIds($request) {
+        if ($request->employee_ids != null) {
+            return $request->employee_ids;
+        } else {
+            return User::query()->ids();
+        }
+    }
+
 }

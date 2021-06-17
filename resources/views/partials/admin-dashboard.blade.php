@@ -66,7 +66,7 @@
                     <tr>
                         <th>#</th>
                         <th>Request type</th>
-                        <th >Employee</th>
+                        <th>Employee</th>
                         <th>Admin</th>
                         <th>Date of request</th>
                         <th>Officer Approval</th>

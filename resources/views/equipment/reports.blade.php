@@ -22,22 +22,25 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Report by department</a>
+                            <a class="nav-link active" id="custom-tabs-one-tab" data-toggle="pill" href="#custom-tabs-one" role="tab" aria-controls="custom-tabs-one" aria-selected="true">Report by department</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Report by positions</a>
+                            <a class="nav-link" id="custom-tabs-two-tab" data-toggle="pill" href="#custom-tabs-two" role="tab" aria-controls="custom-tabs-two" aria-selected="false">Report by positions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Report by categories</a>
+                            <a class="nav-link" id="custom-tabs-three-tab" data-toggle="pill" href="#custom-tabs-three" role="tab" aria-controls="custom-tabs-three" aria-selected="false">Report by categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-two-settings-tab" data-toggle="pill" href="#custom-tabs-two-settings" role="tab" aria-controls="custom-tabs-two-settings" aria-selected="false">Report by employees</a>
+                            <a class="nav-link" id="custom-tabs-four-tab" data-toggle="pill" href="#custom-tabs-four" role="tab" aria-controls="custom-tabs-four" aria-selected="false">Report by employees</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-five-tab" data-toggle="pill" href="#custom-tabs-five" role="tab" aria-controls="custom-tabs-five" aria-selected="false">Available equipment</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body mt-2">
                     <div class="tab-content" id="custom-tabs-two-tabContent">
-                        <div class="tab-pane fade active show" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                        <div class="tab-pane fade active show" id="custom-tabs-one" role="tabpanel" aria-labelledby="custom-tabs-one-tab">
                             <div class="row">
                                 <div class="col-9">
                                         <form action="/reports/department" method="POST">
@@ -59,7 +62,7 @@
                                     </form>
                                 </div>
                         </div>
-                        <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+                        <div class="tab-pane fade" id="custom-tabs-two" role="tabpanel" aria-labelledby="custom-tabs-two-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/position" method="POST">
@@ -83,7 +86,7 @@
                                     </form>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+                        <div class="tab-pane fade" id="custom-tabs-three" role="tabpanel" aria-labelledby="custom-tabs-three-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/category" method="POST">
@@ -103,7 +106,7 @@
                                     </form>
                                 </div>        
                         </div>
-                        <div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
+                        <div class="tab-pane fade" id="custom-tabs-four" role="tabpanel" aria-labelledby="custom-tabs-four-tab">
                             <div class="row">
                                 <div class="col-9">
                                     <form action="/reports/employee" method="POST">
@@ -113,6 +116,30 @@
                                                 <optgroup label="{{ $department->name }}">
                                                     @foreach ($department->users as $user)
                                                         <option value="{{$user->id}}">{{ $user->name }}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <button class="btn btn-primary" type="submit" style="width: 100%">
+                                                Get report
+                                                <i class="fas fa-download ml-1"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>        
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-five" role="tabpanel" aria-labelledby="custom-tabs-five-tab">
+                            <div class="row">
+                                <div class="col-9">
+                                    <form action="/reports/available-equipment" method="POST">
+                                        @csrf
+                                        <select class="equipment_multiple_slt m-0" name="equipment_ids[]" multiple="multiple" style="width: 100%">
+                                            @foreach ($categories as $category)
+                                                <optgroup label="{{ $category->name }}">
+                                                    @foreach ($category->equipment as $e)
+                                                        <option value="{{$e->id}}">{{ $e->name }}</option>
                                                     @endforeach
                                                 </optgroup>
                                             @endforeach

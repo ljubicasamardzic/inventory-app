@@ -22,4 +22,12 @@ class EquipmentCategory extends Model
     public function scopeIds($query) {
         return $query->pluck('id');
     }
+
+    public static function searchIds($request) {
+        if ($request->category_ids != null) {
+            return $request->category_ids;
+        } else {
+            return EquipmentCategory::query()->ids();
+        }
+    }
 }

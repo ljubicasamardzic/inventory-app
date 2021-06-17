@@ -23,4 +23,12 @@ class Position extends Model
     public function scopeIds($query) {
         return $query->pluck('id');
     }
+
+    public static function searchIds($request) {
+        if ($request->position_ids != null) {
+            return $request->position_ids;
+        } else {
+            return Position::query()->ids();
+        }
+    }
 }

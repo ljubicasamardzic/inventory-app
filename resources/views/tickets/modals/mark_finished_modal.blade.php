@@ -41,6 +41,9 @@
                     @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED || $ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
                         <label for="date_finished">Date finished:</label>
                         <input type="date" name="date_finished" class="form-control">
+                        @if ($ticket->HR_approval == App\Models\Ticket::REJECTED)
+                            <textarea name="final_remarks" class="form-control mt-3" placeholder="Explain to the employee why the request was denied" cols="30" rows="5"></textarea>       
+                        @endif
                     @endif
 
                     

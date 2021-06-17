@@ -24,7 +24,7 @@ class EquipmentReportExport implements FromCollection, WithHeadings, ShouldAutos
 
     public function headings():array {
         return [
-            ["ASSIGNED EQUIPMENT BY $this->title"]
+            [$this->title]
         ];
     }
 

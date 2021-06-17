@@ -121,6 +121,18 @@ class Ticket extends Model
         return $this->officer_approval == Ticket::APPROVED && $this->isNewItemsRequest() && $this->equipment_id == null;
     }
 
+    public function isHRApproved() {
+        return $this->HR_approval == Ticket::APPROVED;
+    }
+
+    public function isOfficerApproved() {
+        return $this->officer_approval == Ticket::APPROVED;
+    }
+
+    public function isWaitingForEquipment() {
+        return $this->status_id == Ticket::WAITING_FOR_EQUIPMENT;
+    }
+
     public function scopeEquipmentRequests($query) {
         return $query->where('ticket_request_type', Ticket::EQUIPMENT_REQUEST)->get();
     }

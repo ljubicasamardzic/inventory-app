@@ -50,4 +50,16 @@ class Equipment extends Model
         return $this->total_quantity - $this->serial_numbers->count();
     }
 
+    public function scopeIds($query) {
+        return $query->pluck('id');
+    }
+
+    public static function searchIds($request) {
+        if ($request->equipment_ids != null) {
+            return $request->equipment_ids;
+        } else {
+            return Equipment::query()->ids();
+        }
+    }
+
 }

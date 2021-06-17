@@ -23,4 +23,12 @@ class Department extends Model
         return $query->pluck('id');
     }
 
+    public static function searchIds($request) {
+        if ($request->department_ids != null) {
+            return $request->department_ids;
+        }  else {
+            return Department::query()->ids();
+        }
+    }
+
 }

@@ -47,11 +47,6 @@ class EquipmentController extends Controller
         return view('equipment.index', compact(['equipment', 'content_header', 'breadcrumbs']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $categories = EquipmentCategory::all();
@@ -64,12 +59,6 @@ class EquipmentController extends Controller
         return view('equipment.create', compact(['categories', 'content_header', 'breadcrumbs']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(EquipmentRequest $request)
     {
         // dd($request);
@@ -77,12 +66,6 @@ class EquipmentController extends Controller
         return redirect(route('equipment.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Equipment  $equipment
-     * @return \Illuminate\Http\Response
-     */
     public function show(Equipment $equipment)
     {        
         $content_header = "Equipment details";
@@ -94,12 +77,6 @@ class EquipmentController extends Controller
         return view('equipment.show', compact(['content_header', 'breadcrumbs', 'equipment']));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Equipment  $equipment
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Equipment $equipment)
     {
         $categories = EquipmentCategory::all();
@@ -112,25 +89,12 @@ class EquipmentController extends Controller
         return view('equipment.edit', compact(['categories', 'content_header', 'breadcrumbs', 'equipment']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Equipment  $equipment
-     * @return \Illuminate\Http\Response
-     */
     public function update(EquipmentRequest $request, Equipment $equipment)
     {
         $equipment->update($request->validated());
         return redirect('/equipment');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Equipment  $equipment
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Equipment $equipment)
     {
         $equipment->delete();
@@ -158,12 +122,7 @@ class EquipmentController extends Controller
     }
 
     public function report_by_department(Request $request) {
-        $department_ids = [];
-        if ($request->department_ids != null) {
-            $department_ids = $request->department_ids;
-        }  else {
-            $department_ids = Department::query()->ids();
-        }
+        $department_ids = Department::searchIds($request);
 
         $data = [[]];
 
@@ -188,18 +147,13 @@ class EquipmentController extends Controller
             }
             $data[] = [];
         }
-            $title = 'DEPARTMENTS';
+            $title = 'ASSIGNED EQUIPMENT BY DEPARTMENTS';
             return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_departments.xlsx');
     }
 
     public function report_by_position(Request $request) {
-        $position_ids = [];
-        if ($request->position_ids != null) {
-            $position_ids = $request->position_ids;
-        } else {
-            $position_ids = Position::query()->ids();
-        }
-
+        $position_ids = Position::searchIds($request);
+    
         $data = [[]];
         foreach($position_ids as $position_id) {
             $position = Position::find($position_id);
@@ -220,19 +174,15 @@ class EquipmentController extends Controller
             }
             $data[] = [];
         }
-            $title = 'POSITIONS';
+            $title = 'ASSIGNED EQUIPMENT BY POSITIONS';
             return Excel::download(new EquipmentReportExport($data, $title), 'assigned_equipment_by_positions.xlsx');
 
     }
 
     public function report_by_category(Request $request) {
 
-        $category_ids = [];
-        if ($request->category_ids != null) {
-                $category_ids = $request->category_ids;
-        } else {
-            $category_ids = EquipmentCategory::query()->ids();
-        }
+        $category_ids = EquipmentCategory::searchIds($request);
+        
             $data = [[]];
             foreach($category_ids as $category_id) {
                 $category = EquipmentCategory::find($category_id);
@@ -251,18 +201,14 @@ class EquipmentController extends Controller
                 }
                 $data[] = [];
             }
-            $title = 'CATEGORIES';
+            $title = 'ASSIGNED EQUIPMENT BY CATEGORIES';
             return Excel::download(new EquipmentReportExport($data, $title), 'equipment_by_categories.xlsx');
     }
 
     public function report_by_employee(Request $request) {
 
-        $employee_ids = [];
-        if ($request->employee_ids != null) {
-            $employee_ids = $request->employee_ids;
-        } else {
-            $employee_ids = User::query()->ids();
-        }
+        $employee_ids = User::searchIds($request);
+
         $data = [[]];
         foreach($employee_ids as $employee_id) {
             $user = User::find($employee_id);
@@ -282,38 +228,27 @@ class EquipmentController extends Controller
             }
             $data[] = [];
         }
-        $title = 'EMPLOYEES';
+        $title = 'ASSIGNED EQUIPMENT BY EMPLOYEES';
         return Excel::download(new EquipmentReportExport($data, $title), 'equipment_by_employees.xlsx');
+    }
+
+    public function report_available_equipment(Request $request) {
+
+        $equipment_ids = Equipment::searchIds($request);
+        
+        $data = [[]];
+
+        $counter = 0;
+        $data[] = ['#', 'Equipment name', 'Available quantity'];
+        foreach($equipment_ids as $equipment_id) {
+            $item = Equipment::find($equipment_id);
+
+            $counter += 1;
+            $data[] = [$counter, $item->name, $item->available_quantity];
+        }
+        $title = 'AVAILABLE QUANTITIES FOR ALL/SELECT EQUIPMENT';
+        return Excel::download(new EquipmentReportExport($data, $title), 'available_equipment.xlsx');
+
     }
         
 }
-//     $d = DocumentItem::query()->with('serial_number')->get();
-
-//     $key = [];
-//     $val = [];
-//     foreach ($d as $a) {
-//         $key[] = $a->serial_number->id;
-//         $val[] = $a->serial_number->serial_number;
-//     }
-
-//     dd($key, $val);
-
-//     for($i = 0; $i<count($key); $i++) {
-//         $arr = 
-//     }
-
-//     // dd($equipment->serial_numbers);
-//     $arr1 = [];
-// foreach($equipment->serial_numbers as $sn) {
-//     $arr1[] = [$sn->id => $sn->serial_number];
-// }
-
-// // dd($arr, $arr1);
-
-// dd(array_diff_assoc($arr1, $arr)); //dobijemo id od available serijskih brojeva ali nemamo njihovu vrijednost 
-
-        // $assigned_nums = $equipment->serial_numbers;
-
-        // dd($assigned_nums);
-        // return($assigned_nums);
-

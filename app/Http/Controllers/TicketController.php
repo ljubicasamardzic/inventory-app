@@ -9,6 +9,12 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
 use App\Models\Reservation;
+use App\Notifications\EquipmentAssignedNotification;
+use App\Notifications\HRResponseNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\TicketClosedNotification;
+use App\Notifications\TicketApprovedNotification;
+use App\Notifications\TicketRejectedNotification;
 
 class TicketController extends Controller
 {
@@ -111,6 +117,9 @@ class TicketController extends Controller
         }
 
         $ticket->update($request->only(['HR_approval', 'HR_id', 'HR_remarks']));
+
+        Notification::send($ticket->officer()->get(), new HRResponseNotification($ticket));
+
         return redirect()->back();
     }
 
@@ -125,7 +134,7 @@ class TicketController extends Controller
             // Case 1: New equipment request with reserved items
             // Case 2: Rejected by officer and then approved by HR in which case we still need to add equipment to the ticket 
             // Case 3: Waited for equipment to arrive and have HR's approval
-            if ($ticket->equipment_id != null && $ticket->HR_approval == Ticket::APPROVED || $ticket->officer_approval == Ticket::REJECTED && $ticket->HR_approval == Ticket::APPROVED || $ticket->status_id == Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == Ticket::APPROVED) {
+            if ($ticket->equipment_id != null && $ticket->isHRApproved() || !$ticket->isOfficerApproved() && $ticket->isHRApproved() || $ticket->isWaitingForEquipment() && $ticket->isHRApproved()) {
                 $new_doc = $ticket->createDocument();
         
                 // Case 2
@@ -141,17 +150,39 @@ class TicketController extends Controller
                 }
 
                 $request['document_id'] = $new_doc->id; 
-                $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
+                $ticket->update($request->all());
 
                 $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity - 1]);
+
+                $user = $ticket->user()->get();
+                Notification::send($user, new TicketApprovedNotification($ticket));
+                Notification::send($user, new EquipmentAssignedNotification($ticket->equipment()->get()));
             
             } else {
-                $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
+                $ticket->update($request->all());
+                Notification::send($ticket->user()->get(), new TicketRejectedNotification($ticket));
             }
-        } else {
-            $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id']));
-        }
+        } else if ($ticket->isRepairRequest()) {
+  
+            $ticket->update($request->only(['status_id', 'date_finished', 'serial_number_id', 'equipment_id', 'document_id', 'final_remarks']));
 
+            if ($ticket->isHRApproved()) {
+                Notification::send($ticket->user()->get(), new TicketApprovedNotification($ticket));
+            } else {
+                Notification::send($ticket->user()->get(), new TicketRejectedNotification($ticket));
+            }
+        } else if ($ticket->isSuppliesRequest()) {
+            
+            if ($ticket->isHRApproved()) {
+                Notification::send($ticket->user()->get(), new TicketApprovedNotification($ticket));
+            } else {
+                Notification::send($ticket->user()->get(), new TicketRejectedNotification($ticket));
+            }
+            
+            $ticket->update($request->all());
+        }
+        
+        Notification::send($ticket->HR()->get(), new TicketClosedNotification($ticket));
         return redirect()->back();
     }
 

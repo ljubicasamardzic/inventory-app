@@ -12,9 +12,12 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
 
-    public function __construct()
+    protected $TicketController;
+
+    public function __construct(TicketController $TicketController)
     {
         $this->middleware('auth');
+        $this->TicketController = $TicketController;
     }
 
     public function index()
@@ -45,4 +48,31 @@ class HomeController extends Controller
 
         return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets']));
     }
+
+    public function notifications() {
+        $content_header = "Notifications";
+        $notifications = auth()->user()->notifications()->paginate(10);
+
+        return view('notifications', compact(['notifications', 'content_header']));
+    }
+
+    public function mark_read_notification($id) {
+        dd($id, 'Home controller');
+        $notification = auth()->user()->notifications->where('id', $id)->first();
+        $notification->update(['read_at' => now()]);
+        $not_type = $notification->type;
+
+        if ($not_type == 'App\Notifications\TicketClosedNotification' || 'App\Notifications\HRResponseNotification') {
+            // show the ticket
+            $ticket = Ticket::find($notification->data['ticket']['id']);
+            return $this->TicketController->show($ticket);
+            // take the user to dashboard 
+        } else if ($not_type == 'App\Notifications\TicketApprovedNotification' || $not_type == 'App\Notifications\TicketRejectedNotification' || $not_type == 'App\Notifications\EquipmentAssignedNotification') {
+            // return redirect('/@');
+        } else if ($notification->type == 'App\Notifications\NewEquipmentNotification') {
+            dd('new equipment support');
+        }
+
+    }
+
 }
