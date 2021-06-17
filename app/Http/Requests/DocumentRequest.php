@@ -6,27 +6,37 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DocumentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
+        if($this->method() == "POST")
+            return $this->storeRules();
+        elseif($this->method() == "PUT" || $this->method() == "PATCH")
+            return $this->updateRules();
+    }
+
+    public function storeRules(){
         return [
             'user_id' => 'required|integer',
-            'date' => 'required'
+            'date' => 'required|date|before_or_equal:today'
         ];
+    }
+
+    public function updateRules(){
+        return [
+            'user_id' => 'required|integer',
+            'date' => 'required|date|before_or_equal:today'
+        ];
+    }
+
+    public function validated()
+    {
+        return $this->validate($this->rules());
     }
 
 }

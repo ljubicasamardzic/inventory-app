@@ -56,14 +56,13 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger btn-sm btn-flat @cannot('delete', $doc) disabled @endcannot" onclick="confirmDocumentDelete({{ $doc->id }}, event)">
+                                    <a class="btn btn-danger btn-sm btn-flat 
+                                            @cannot('delete', $doc) disabled @endcannot" 
+                                            onclick="fillModal({{ $doc->id }}, event)"
+                                    >
                                         <i class="fa fa-times"></i>
                                         DELETE
                                     </a>
-                                    <form action="/documents/{{ $doc->id }}" method="POST" id="delete_form_{{ $doc->id }}">
-                                        @method('DELETE')
-                                        @csrf
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -76,7 +75,7 @@
 
         </div>
     </div>
-
+@include('documents.delete-modal')
 @endsection
 
 @section('additional_scripts')

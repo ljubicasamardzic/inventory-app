@@ -23,10 +23,10 @@
                         <div class="row">
                             <div class="col-6">
                                 <label for="user_select">Employee:</label>
-                                <select name="user_id" id="user_select" class="form-control @error('user_id') is-invalid @endif">
+                                <select name="user_id" value="{{ old('user_id') }}" id="user_select" class="form-control @error('user_id') is-invalid @endif">
                                     <option value="">- select an employee -</option>
                                     @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('user_id')
@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-6">
                                 <label for="date_input">Date:</label>
-                                <input type="date" name="date" id="date_input" class="form-control @error('date') is-invalid @endif" />
+                                <input type="date" name="date" id="date_input" value="{{ old('date') }}" class="form-control @error('date') is-invalid @endif" />
                                 @error('date')
                                     <div class="invalid-feedback">
                                         {{ $message }}

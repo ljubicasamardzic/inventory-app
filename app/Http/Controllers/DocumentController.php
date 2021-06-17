@@ -41,8 +41,9 @@ class DocumentController extends Controller
 
     public function store(DocumentRequest $request)
     {
-        $request->merge(['admin_id' => auth()->id() ]);
-        Document::query()->create($request->all());
+        $request = $request->validated();
+        $request['admin_id'] = auth()->id();
+        Document::query()->create($request);
         return redirect(route('documents.index'));
     }
 
@@ -52,7 +53,6 @@ class DocumentController extends Controller
         $equipment = Equipment::query()->available()->get();
         $items = $document->items;
 
-        // dd($items);
         $content_header = "Document details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -66,24 +66,25 @@ class DocumentController extends Controller
     {
         $users = User::all();
         $equipment = Equipment::query()->available()->get();
-        $items = $document->items;
+        // $items = $document->items;
         $content_header = "Document details";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
             [ 'name' => 'Document list', 'link' => '/documents' ],
             [ 'name' => 'Document details', 'link' => '/users/'.$document->id ],
         ];
-        return view('documents.edit', compact(['content_header', 'breadcrumbs', 'document', 'users', 'items', 'equipment']));
+        return view('documents.edit', compact(['content_header', 'breadcrumbs', 'document', 'users', 'equipment']));
     }
 
-    public function update(Request $request, Document $document)
+    public function update(DocumentRequest $request, Document $document)
     {
-        //
+        $request = $request->validated();
+        $document->update($request);
+        return redirect()->back();
     }
 
     public function destroy(Document $document)
     {
-
         foreach($document->items as $item) {
             $item->equipment->update(['available_quantity' => $item->equipment->available_quantity + 1]);
             $item->delete();

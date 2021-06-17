@@ -28,8 +28,7 @@
                                 <select name="user_id" id="user_select" class="form-control @error('user_id') is-invalid @endif">
                                     <option value="">- select an employee -</option>
                                     @foreach($users as $user)
-                                        <option
-                                            value="{{ $user->id }}"
+                                        <option value="{{ $user->id }}"
                                             {{ $user->id == $document->user_id ? 'selected' : '' }}
                                         >
                                             {{ $user->name }}
@@ -52,7 +51,7 @@
                                 </div>
                                 @enderror
                             </div>
-                            <div class="col-4">
+                            <div class="col-4 d-flex flex-column justify-content-end">
                                 <button type="submit" class="btn btn-primary btn-block btn-flat mt-4">
                                     SAVE DOCUMENT DETAILS
                                 </button>
@@ -60,7 +59,7 @@
                         </div>
                     </form>
 
-                    @include('documents.items_table')
+                    {{-- @include('documents.items_table') --}}
 
                 </div><!-- /.card-body -->
             </div>
@@ -68,7 +67,7 @@
 
         </div>
     </div>
-    @include('documents.new_item_modal')
+    {{-- @include('documents.new_item_modal') --}}
 @endsection
 @section('additional_scripts')
     <script src="{{ asset('js/documents/create.js') }}"></script>
