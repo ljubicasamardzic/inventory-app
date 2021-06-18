@@ -41,15 +41,6 @@ class EquipmentController extends Controller
     public function index()
     {
         $equipment = Equipment::all();
-
-        // foreach($equipment as $item) {
-        //     $serial_nums = $item->serial_numbers;
-        //     // dd($serial_nums);
-        // $filtered = $serial_nums->filter(function($value, $key) {
-        //     return !$value->is_used;
-        // });
-        //     DD($filtered);
-        // }
         $content_header = "Equipment list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -145,7 +136,6 @@ class EquipmentController extends Controller
     }
 
     public function reports_index() {
-
         $categories = EquipmentCategory::all();
         $departments = Department::all();
         $positions = Position::all();
@@ -285,7 +275,6 @@ class EquipmentController extends Controller
         }
         $title = 'AVAILABLE QUANTITIES FOR ALL/SELECT EQUIPMENT';
         return Excel::download(new EquipmentReportExport($data, $title), 'available_equipment.xlsx');
-
     }
         
 }

@@ -57,6 +57,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Serial No.</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>

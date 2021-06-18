@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page_title', 'InventoryAPP')</title>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @include('partials.styles')
     @yield('additional_styles', '')
 </head>

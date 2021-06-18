@@ -7,7 +7,6 @@ use App\Models\Document;
 use App\Models\Equipment;
 use App\Models\User;
 use Illuminate\Http\Request;
-use SweetAlert;
 
 class DocumentController extends Controller
 {

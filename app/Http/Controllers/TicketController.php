@@ -9,7 +9,6 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
 use App\Models\Reservation;
-use App\Notifications\EquipmentAssignedNotification;
 use App\Notifications\HRResponseNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\TicketClosedNotification;
@@ -36,7 +35,13 @@ class TicketController extends Controller
     {
         $request->merge(['user_id' => auth()->id()]);
         
-        Ticket::create($request->all());
+        $create = Ticket::create($request->all());
+
+        if ($create) {
+            alert()->success('Your request has been sent!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
         return redirect()->back();
     }
 

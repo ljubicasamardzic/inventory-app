@@ -8,32 +8,17 @@ use App\Http\Requests\SerialNumberRequest;
 
 class SerialNumberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(SerialNumberRequest $request)
     { 
         $data = $request->validated();
@@ -51,50 +36,27 @@ class SerialNumberController extends Controller
         return redirect("/equipment/$equipment_id");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SerialNumber  $serialNumber
-     * @return \Illuminate\Http\Response
-     */
     public function show(SerialNumber $serialNumber)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SerialNumber  $serialNumber
-     * @return \Illuminate\Http\Response
-     */
     public function edit(SerialNumber $serialNumber)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SerialNumber  $serialNumber
-     * @return \Illuminate\Http\Response
-     */
     public function update(SerialNumberRequest $request, SerialNumber $serialNumber)
     {
-        // dd($request);
-        $serialNumber->update(['serial_number' => $request->serial_number]);
-        // dd($request->only(['serial_number']));
-        return redirect()->back();
-
+        $update = $serialNumber->update(['serial_number' => $request->serial_number]);
+        if ($update) {
+            alert()->success('Serial number updated!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
+        return redirect('/equipment');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SerialNumber  $serialNumber
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(SerialNumber $serialNumber)
     {
         if (!($serialNumber->is_used)) {
