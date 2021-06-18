@@ -58,6 +58,7 @@
                         <button type="button"
                                 class="btn btn-sm btn-flat btn-primary"
                                 id="edit_btn_{{ $item->id }}"
+                                data-val = "{{ $item->serial_number->serial_number }}"
                                 data-equipment-id = "{{ $item->equipment_id }}"
                                 data-serial-number-id = "{{ $item->serial_number_id }}"
                                 data-toggle="modal"

@@ -24,6 +24,7 @@ Route::put('/document-item/return/{document_item}', [DocumentItemController::cla
 Route::put('/document-item/change-serial-number', [DocumentItemController::class, 'update_serial_number']);
 Route::resource('/tickets', TicketController::class);
 Route::resource('/serial-numbers', SerialNumberController::class);
+
 Route::get('/equipment-serial-numbers/{equipment}', [EquipmentController::class, 'serial_numbers']);
 
 // initial motion of an officer to take a request 

@@ -22,13 +22,14 @@ function addSerialNumbers(flag = false){
        'type' : 'GET',
        'success': (response) => {
         let serial_numbers = response;
+        console.log(response);
         let options = '';
         serial_numbers.forEach((number) => {
             let selected = '';
             if(serial_num_id && serial_num_id == number.id) selected = 'selected';
             options += `<option value=\"${number.id}\" ${selected}>${number.serial_number}</option>`;
         });
-        flag == true ? $("#serial_number_select_2").html(options) : $("#serial_number_select").html(options);
+        flag == true ? $("#serial_number_select_2").append(options) : $("#serial_number_select").append(options);
        }
     });
 }
@@ -50,9 +51,16 @@ function findId(item_id) {
  
     let equipment_id = $('#edit_btn_' + item_id).attr('data-equipment-id');
     let serial_num_id = $('#edit_btn_' + item_id).attr('data-serial-number-id');
+    let serial_num_value = $('#edit_btn_' + item_id).attr('data-val');
     $('#chosen_equipment_id').val(equipment_id);
     $('#chosen_serial_num_id').val(serial_num_id);
     $('#relevant_document_item_id').val(item_id);
+
+    // adding the current value to the modal since the ajax function returns only currently available serial numbers
+    // and bc of this, does not pick up the current value
+    let opt = `<option value=\"${serial_num_id}\" selected>${serial_num_value}</option>`;
+    $('#serial_number_select_2').append(opt);
+
 }
 
 $('#edit_item_modal').on('show.bs.modal', () => {

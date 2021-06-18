@@ -44,16 +44,12 @@ class EquipmentController extends Controller
 
         // foreach($equipment as $item) {
         //     $serial_nums = $item->serial_numbers;
-
-        //     $filtered = $serial_nums->filter(function($value, $key) {
-        //         return !$value->is_used;
-        //     });
-
-        //     dd($filtered);
-
+        //     // dd($serial_nums);
+        // $filtered = $serial_nums->filter(function($value, $key) {
+        //     return !$value->is_used;
+        // });
+        //     DD($filtered);
         // }
-   
-
         $content_header = "Equipment list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -136,12 +132,16 @@ class EquipmentController extends Controller
         return redirect('/equipment');
     }
 
-    // nezavrsena funkcija - treba da vraca samo dostupne serijske brojeve za odredjeni komad opreme
     public function serial_numbers(Equipment $equipment) {
-        $all_serial_nums = $equipment->serial_numbers;
-        $filtered = $all_serial_nums->filter(function($value, $key) {
-            dd($value, $key);
-        });
+        $serial_nums = $equipment->serial_numbers;
+        
+        $result = [];
+        foreach($serial_nums as $sn) {
+            if (!$sn->is_used) {
+                $result[] = $sn;
+            }
+        }
+        return response()->json($result);
     }
 
     public function reports_index() {
