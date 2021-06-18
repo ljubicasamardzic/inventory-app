@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Equipment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use SweetAlert;
 
 class DocumentController extends Controller
 {
@@ -43,7 +44,12 @@ class DocumentController extends Controller
     {
         $request = $request->validated();
         $request['admin_id'] = auth()->id();
-        Document::query()->create($request);
+        if (Document::query()->create($request)) {
+            alert()->success('New document saved!', 'Success!');
+
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
         return redirect(route('documents.index'));
     }
 
@@ -79,7 +85,11 @@ class DocumentController extends Controller
     public function update(DocumentRequest $request, Document $document)
     {
         $request = $request->validated();
-        $document->update($request);
+        if ($document->update($request)) {
+            alert()->success('Changes to document saved!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
         return redirect()->back();
     }
 

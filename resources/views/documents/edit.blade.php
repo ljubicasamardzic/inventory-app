@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-4 d-flex flex-column justify-content-end">
                                 <button type="submit" class="btn btn-primary btn-block btn-flat mt-4">
-                                    SAVE DOCUMENT DETAILS
+                                    SAVE CHANGES
                                 </button>
                             </div>
                         </div>

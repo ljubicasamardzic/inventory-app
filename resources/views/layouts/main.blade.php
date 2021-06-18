@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page_title', 'InventoryAPP')</title>
+    <script src="{{ asset('js/app.js') }}"></script>
     @include('partials.styles')
     @yield('additional_styles', '')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+    @include('sweet::alert')
     <div class="wrapper">
 
 {{--        @include('partials.preloader')--}}

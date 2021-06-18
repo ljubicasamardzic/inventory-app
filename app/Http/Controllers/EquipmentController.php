@@ -9,7 +9,6 @@ use App\Models\Equipment;
 use App\Models\EquipmentCategory;
 use App\Models\Position;
 use Illuminate\Http\Request;
-
 use App\Exports\EquipmentReportExport;
 use App\Notifications\NewEquipmentNotification;
 use App\Notifications\RestockedNotification;
@@ -42,6 +41,19 @@ class EquipmentController extends Controller
     public function index()
     {
         $equipment = Equipment::all();
+
+        // foreach($equipment as $item) {
+        //     $serial_nums = $item->serial_numbers;
+
+        //     $filtered = $serial_nums->filter(function($value, $key) {
+        //         return !$value->is_used;
+        //     });
+
+        //     dd($filtered);
+
+        // }
+   
+
         $content_header = "Equipment list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],
@@ -65,9 +77,14 @@ class EquipmentController extends Controller
     public function store(EquipmentRequest $request)
     {
         $new_equipment = Equipment::query()->create($request->validated());
+        if ($new_equipment) {
+            $recipients = User::query()->isSupportOrSuperadmin();
+            Notification::send($recipients, new NewEquipmentNotification($new_equipment));
+            alert()->success('New equipment added!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
 
-        $recipients = User::query()->isSupportOrSuperadmin();
-        Notification::send($recipients, new NewEquipmentNotification($new_equipment));
         return redirect(route('equipment.index'));
     }
 
@@ -98,14 +115,19 @@ class EquipmentController extends Controller
     {
         $current_available_quantity = $equipment->available_quantity;
         
-        $equipment->update($request->validated());
+        $update = $equipment->update($request->validated());
 
-        if ($request->available_quantity > $current_available_quantity) {
-            $recipients = User::query()->isSupportOrSuperadmin();
-            Notification::send($recipients, new RestockedNotification($equipment));
+        if ($update) {
+            if ($request->available_quantity > $current_available_quantity) {
+                $recipients = User::query()->isSupportOrSuperadmin();
+                Notification::send($recipients, new RestockedNotification($equipment));
+            }
+            alert()->success('Equipment successfully updated!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
         }
 
-        return redirect('/equipment');
+        return redirect("/equipment/$equipment->id");
     }
 
     public function destroy(Equipment $equipment)
@@ -116,8 +138,10 @@ class EquipmentController extends Controller
 
     // nezavrsena funkcija - treba da vraca samo dostupne serijske brojeve za odredjeni komad opreme
     public function serial_numbers(Equipment $equipment) {
-
-        return $equipment->serial_numbers;
+        $all_serial_nums = $equipment->serial_numbers;
+        $filtered = $all_serial_nums->filter(function($value, $key) {
+            dd($value, $key);
+        });
     }
 
     public function reports_index() {

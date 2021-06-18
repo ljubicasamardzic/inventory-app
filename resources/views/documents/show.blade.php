@@ -45,8 +45,6 @@
 
         </div>
 
-        
-        
         @include('documents/edit_item_modal')
         @include('documents/new_item_modal')
     </div>
