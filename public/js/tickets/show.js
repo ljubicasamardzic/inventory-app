@@ -21,3 +21,31 @@ function availableSerialNums() {
        }
     });
 }
+
+$('#take_over_button').on('click', function() {
+    // e.stopPropagation();
+    // e.preventDefault();
+    swal({
+        title: 'Are you sure?',
+        icon: 'warning',
+        buttons: {
+            cancel: {
+            text: "Cancel",
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "",
+            closeModal: true
+            }},
+        }).then((value) => {
+            if (value) {
+                $('#update1-form').submit();
+        }
+    });
+});

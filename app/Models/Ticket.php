@@ -156,7 +156,7 @@ class Ticket extends Model
     }
 
     public function createDocumentItem($document, $equipment_id, $serial_number_id) {
-        DocumentItem::create([
+        return DocumentItem::create([
             'document_id' => $document->id,
             'equipment_id' => $equipment_id,
             'serial_number_id' => $serial_number_id            

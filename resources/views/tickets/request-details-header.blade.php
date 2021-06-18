@@ -7,18 +7,18 @@
         somebody else should not take it over --}}
     @if ($ticket->status_id == App\Models\Ticket::UNPROCESSED)
         @can('update1', $ticket)
-            <form action="/tickets/update1/{{ $ticket->id }}" method="POST">
+            <form action="/tickets/update1/{{ $ticket->id }}" method="POST" id="update1-form">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="officer_id" value="{{ auth()->id() }}">
                 <input type="hidden" name="id" value={{ $ticket->id }}>
-                <button class="btn btn-primary btn-sm float-right" 
-                        type="submit"
-                        id="take_over_button"
-                >
-                    Take over request
-                </button>
             </form>
+            <button class="btn btn-primary btn-sm float-right" 
+                    type="submit"
+                    id="take_over_button"
+            >
+                Take over request
+            </button>
         @endcan
     @endif
     {{-- show only if the HR has made the final decision --}}

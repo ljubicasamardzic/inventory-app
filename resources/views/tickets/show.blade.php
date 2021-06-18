@@ -8,10 +8,10 @@
         <div class="col-12">
             <div class="card">
                 
-                @include('tickets.ticket_header')
+                @include('tickets.request-details-header')
 
                 <div class="card-body table-responsive">
-                    @include('tickets.ticket_body')
+                    @include('tickets.request-details-body')
                 </div> <!-- /.card-body -->
             </div>
             @if (auth()->user()->isAdmin())
