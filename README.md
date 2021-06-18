@@ -1,1 +1,6 @@
-Zavšni projekat za Amplitudo Akademiju, generacija 2020/21. Razvoj i implementacija aplikacije za vođenje računa o inventaru firme, uključujući zaduživanje i razduživanje opreme,  zahtjeve za novu opremu i/ili popravku postojeće, kao i izvještaje po različitim parametrima. 
+Zavšni projekat za Amplitudo Akademiju, generacija 2020/21. 
+
+=> Razvoj i implementacija aplikacije za vođenje računa o inventaru firme
+=> Zaduživanje i razduživanje opreme
+=> Zahtjevi za novu opremu i/ili popravku postojeće
+=> Izvještaji o opremi na stanju i zaduženoj opremi po različitim parametrima 
