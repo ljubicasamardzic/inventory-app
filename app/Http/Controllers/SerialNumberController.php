@@ -21,19 +21,20 @@ class SerialNumberController extends Controller
 
     public function store(SerialNumberRequest $request)
     { 
+        // dd($request);
         $data = $request->validated();
-        // dd($data);
         $equipment_id = $data['equipment_id'];
         foreach($data['serial_numbers'] as $key => $num) {
             if ($num != null) {
-                 SerialNumber::query()->create([
+                SerialNumber::query()->create([
                 'equipment_id' => $equipment_id,
                 'serial_number' => $num
                 ]);
             }
-         };
+        };
+        alert()->success('Serial numbers added!', 'Success!');
 
-        return redirect("/equipment/$equipment_id");
+        // return redirect("/equipment/$equipment_id");
     }
 
     public function show(SerialNumber $serialNumber)
@@ -54,15 +55,20 @@ class SerialNumberController extends Controller
         } else {
             alert()->error('Something went wrong!', 'Oops..');
         }
-        return redirect('/equipment');
+        return redirect()->back();
     }
 
     public function destroy(SerialNumber $serialNumber)
     {
         if (!($serialNumber->is_used)) {
-            $serialNumber->delete();
-            return redirect()->back();
+            if ($serialNumber->delete()) {
+                alert()->success('Serial number deleted!', 'Success!');
+            } else {
+                alert()->error('Something went wrong!', 'Oops..');
+            }
+        } else {
+            alert()->error('You cannot delete the serial number of an equipment item that has already been assigned!', 'Oops..');
         }
-
+        return redirect()->back();
     }
 }

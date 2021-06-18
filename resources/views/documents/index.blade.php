@@ -41,8 +41,8 @@
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         @foreach($documents as $doc)
                             <tr class="clickable-row" data-href="/documents/{{ $doc->id }}" >
                                 <td>{{ $doc->id }}</td>
@@ -56,13 +56,17 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger btn-sm btn-flat 
-                                            @cannot('delete', $doc) disabled @endcannot" 
-                                            onclick="fillModal({{ $doc->id }}, event)"
-                                    >
-                                        <i class="fa fa-times"></i>
-                                        DELETE
-                                    </a>
+                                    <form action="/documents/{{ $doc->id }}" method="POST" id="delete-form-{{$doc->id}}">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                        <a class="btn btn-danger btn-sm btn-flat delete-confirm"
+                                                @cannot('delete', $doc) disabled @endcannot" 
+                                                data-id = {{ $doc->id }}
+                                        >
+                                            <i class="fa fa-times"></i>
+                                            DELETE
+                                        </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -75,7 +79,7 @@
 
         </div>
     </div>
-@include('documents.delete-modal')
+
 @endsection
 
 @section('additional_scripts')

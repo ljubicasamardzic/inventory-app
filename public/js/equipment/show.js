@@ -1,3 +1,6 @@
+// ajax is used for serial numbers since the modal would otherwise close when an error occurs
+// this way ajax keeps the modal open and displays the error messages 
+
 function handleErrorMessages(err_array) {
     for (let i = 0; i < err_array.length; i++) {
         // string split at the blank spaces so that we can get the second element and change it 
@@ -67,16 +70,44 @@ function getInputValues(e) {
     });
 }
 
+// form for adding serial numbers 
 const form = $('#serial_numbers_form');
 form.on('submit', getInputValues);
 
-function confirmSerialNumberDelete(num_id, event){
-    event.stopPropagation();
-    if(confirm('Da li ste sigurni?')){
-        console.log("#delete_form_"+num_id);
-        $("#delete_form_"+num_id).submit();
-    }
-}
+// for deleting serial nums
+$('.confirm-delete-btn').on('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    // getting the id from the button that caused the event to fire
+    let id = $(this).attr('data-id');
+    console.log($(this), id);
+    swal({
+        title: 'Are you sure?',
+        text: "The action is irreversible.",
+        icon: 'warning',
+        dangerMode: true,
+        buttons: {
+            cancel: {
+            text: "Cancel",
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "",
+            closeModal: true
+            }},
+        }).then((value) => {
+            if (value) {
+            $("#delete_form_"+ id).submit();
+        }
+    });
+});
+
 $('.clickable-row').click((e) => {
     window.location.href = $(e.currentTarget).data('href');
 });

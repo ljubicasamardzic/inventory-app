@@ -78,13 +78,13 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a class="btn btn-danger btn-sm btn-flat" onclick="confirmSerialNumberDelete({{ $sn->id }}, event)">
-                                                    <i class="fa fa-times"></i>
-                                                </a>
                                                 <form action="/serial-numbers/{{ $sn->id }}" method="POST" id="delete_form_{{ $sn->id }}">
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>
+                                                <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn" data-id={{ $sn->id }}>
+                                                    <i class="fa fa-times"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -14,6 +14,8 @@ use App\Notifications\NewEquipmentNotification;
 use App\Notifications\RestockedNotification;
 use Illuminate\Support\Facades\Notification;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+
 
 class EquipmentController extends Controller
 {
@@ -114,12 +116,26 @@ class EquipmentController extends Controller
             alert()->error('Something went wrong!', 'Oops..');
         }
 
-        return redirect("/equipment/$equipment->id");
+        return redirect("/equipment");
     }
 
     public function destroy(Equipment $equipment)
     {
-        $equipment->delete();
+        DB::beginTransaction();
+        foreach($equipment->serial_numbers as $sn) {
+            if (!$sn->delete()) {
+                DB::rollBack();
+                alert()->error('Something went wrong!', 'Oops..');
+            }
+        }
+        if ($equipment->delete()) {
+            DB::commit();
+            alert()->success('Equipment and its serial numbers successfully deleted!', 'Success!');
+        } else {
+            DB::rollBack();
+            alert()->error('Something went wrong!', 'Oops..');
+        }
+    
         return redirect('/equipment');
     }
 

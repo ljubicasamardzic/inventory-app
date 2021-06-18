@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Equipment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DocumentController extends Controller
 {
@@ -45,7 +46,6 @@ class DocumentController extends Controller
         $request['admin_id'] = auth()->id();
         if (Document::query()->create($request)) {
             alert()->success('New document saved!', 'Success!');
-
         } else {
             alert()->error('Something went wrong!', 'Oops..');
         }
@@ -92,15 +92,35 @@ class DocumentController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Document $document)
+    public function destroy(Document $document, Request $request)
     {
+        DB::beginTransaction();
         foreach($document->items as $item) {
-            $item->equipment->update(['available_quantity' => $item->equipment->available_quantity + 1]);
-            $item->delete();
+            $update = $item->equipment->update(['available_quantity' => $item->equipment->available_quantity + 1]);
+            if ($update) {
+                $item->delete();
+            } else {
+                DB::rollBack();
+                alert()->error('Something went wrong!', 'Oops..');
+            }
         }
 
-        if ($document->ticket != null) $document->ticket->delete();
-        $document->delete();
+        if ($document->ticket != null) {
+            $delete_ticket = $document->ticket->delete();
+            if (!$delete_ticket) {
+                DB::rollBack();
+                alert()->error('Something went wrong!', 'Oops..');
+            }
+        }
+
+        if ($document->delete()) {
+            DB::commit();
+            alert()->success('Document and related info deleted!', 'Success!');
+        } else {
+            DB::rollBack();
+            alert()->error('Something went wrong!', 'Oops..');
+        }
+
         return redirect()->back();
     }
 }

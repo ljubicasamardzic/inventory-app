@@ -60,7 +60,10 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger btn-sm btn-flat @cannot('delete', $e) disabled @endcannot" onclick="confirmEquipmentDelete({{ $e->id }}, event)">
+                                    <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn 
+                                                @cannot('delete', $e) disabled @endcannot"
+                                                data-id={{ $e->id }}
+                                    >
                                         <i class="fa fa-times"></i>
                                         DELETE
                                     </a>
