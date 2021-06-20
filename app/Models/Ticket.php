@@ -16,6 +16,7 @@ class Ticket extends Model
 
     const PER_PAGE = 10;
 
+    protected $primary_key = 'id';
     /** TICKET TYPES **/
     const NEW_EQUIPMENT = 1;
     const REPAIR_EQUIPMENT = 2;
@@ -72,6 +73,10 @@ class Ticket extends Model
 
     public function equipment() {
         return $this->belongsTo(Equipment::class, 'equipment_id');
+    }
+
+    public function document_item() {
+        return $this->belongsTo(DocumentItem::class, 'document_item_id');
     }
 
     public function equipment_category() {
@@ -147,6 +152,47 @@ class Ticket extends Model
         return $query->where('officer_approval', '!=', Ticket::PENDING);
     }
 
+    public function scopeSearch($query, $request) {
+        return $query->join('users', 'users.id', '=', 'tickets.user_id')
+                ->leftJoin('users as u', 'u.id', '=', 'tickets.officer_id')
+                ->leftJoin('users as HR', 'HR.id', '=', 'tickets.HR_id')
+                ->where(function($query) use ($request) {
+                    $query->when($request->search_text, function($query) use($request) { 
+                        $term = strtolower($request->search_text);
+                        $query->whereRaw("lower(users.name) LIKE '%{$term}%'")
+                                ->orWhereRaw("lower(u.name) LIKE '%{$term}%'");
+                    });
+                })
+                ->when($request->search_status_id, function($query) use($request) { 
+                    $query->where("status_id", "=", $request->search_status_id);
+                })
+                ->where(function($query) use ($request) {
+                    $query->when($request->search_checkbox, function($query) use($request) {
+                        $query->where("officer_id", "=", $request->search_checkbox)
+                                ->orWhere("HR_id", "=", $request->search_checkbox);
+                    });
+                })
+                ->select('tickets.*');
+    }
+
+    public function scopeProcessedRepairTickets($query, $request) {
+        return $query->join('document_items', 'document_items.id', '=', 'tickets.document_item_id')
+                        ->join('equipment', 'equipment.id', '=', 'document_items.equipment_id')
+                        ->join('equipment_categories', 'equipment_categories.id', '=', 'equipment.equipment_category_id')
+                        ->where('ticket_type', '=', Ticket::REPAIR_EQUIPMENT)
+                        ->where('status_id', '=', Ticket::PROCESSED)
+                        ->where('HR_approval', '=', Ticket::APPROVED)
+                        ->where(function($query) use ($request) {
+                            $query->when($request->equipment_search, function($query) use ($request) {
+                                $term = strtolower($request->equipment_search);
+                                $query->whereRaw("lower(equipment.name) LIKE '%{$term}%'")
+                                        ->orWhereRaw("lower(equipment_categories.name) LIKE '%{$term}%'");
+                            });
+                        })
+                        ->select('tickets.*')
+                        ->paginate(Ticket::PER_PAGE);
+    }
+    
     public function createDocument() {
         return Document::create([
             'user_id' => $this->user_id,

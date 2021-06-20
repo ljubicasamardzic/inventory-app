@@ -7,23 +7,23 @@
             @else All requests
             @endif
         </h3>
-        <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-            <i class="fas fa-minus"></i>
-        </button>
-        </div>
     </div>
      <!-- /.card-header -->
     <div class="card-body p-0">
         <div class="table-responsive">
+            @include('home.search-all')
           <table class="table table-hover m-0">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Request type</th>
+                        {{-- @if (auth()->user()->isEmployee() && $ticket->isRepairRequest())
+                            <th>Equipment</th>
+                            <th>Serial number</th>
+                        @endif --}}
                         @if (auth()->user()->isAdmin())
                         <th>Employee</th>
-                        <th>Admin</th>
+                        <th>Officer</th>
                         @endif
                         <th>Date of request</th>
                         <th>Date finished</th>
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
               <tbody>
-              @if ($tickets != null)
+              @if ($tickets != null || $tickets = [])
                   @foreach ($tickets as $key => $ticket)
                       <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
                           <td>{{ $key + 1 }}</td>
@@ -45,6 +45,15 @@
                               @elseif ($ticket->isRepairRequest()) Repair equipment
                               @endif
                           </td>
+                          {{-- @if (auth()->user()->isEmployee() && $ticket->isRepairRequest())
+                            <td>{{ $ticket->document_item->equipment->full_name }}</td>
+                            <td>
+                                @if ($ticket->document_item->serial_number != null)
+                                    {{ $ticket->document_item->serial_number->serial_number }}
+                                @endif
+                            </td>
+                              
+                          @endif --}}
                           @if (auth()->user()->isAdmin())
                             <td>{{ $ticket->user->name }}</td>
                             <td>
@@ -54,7 +63,12 @@
                                 @endif
                             </td>
                           @endif
-                          <td>{{ $ticket->date }}</td>
+                          <td>
+                              @if ($ticket->created_at != null)
+                              {{ $ticket->date }}
+                              @else /
+                              @endif
+                          </td>
                           <td>
                               @if ($ticket->date_finished != null)
                                   {{ $ticket->finished_date }}
@@ -73,7 +87,7 @@
             </tbody>
           </table>
           <div class="d-flex flex-row justify-content-center mt-3">
-              {{ $tickets->links() }}
+              {{ $tickets->appends(request()->except('page'))->links() }}
           </div>
         </div>
         <!-- /.table-responsive -->

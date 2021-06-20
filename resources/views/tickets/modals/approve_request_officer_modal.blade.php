@@ -26,12 +26,6 @@
                                 <option value="0">Order new equipment</option>
                             @endif
                         </select>
-                        @if ($available_equipment != '[]')
-                            <label for="serial_number_select">Serial number:</label>
-                            <select name="serial_number_id" id="serial_number_select" class="form-control">
-                                {{-- populated by AJAX function --}}
-                            </select>
-                        @endif
                     @endif
                     
                     <label for="deadline">Delivery deadline:</label>

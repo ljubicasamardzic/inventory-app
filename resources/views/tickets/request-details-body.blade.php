@@ -3,6 +3,19 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Ticket details</h3>
+                @if ($ticket->user_id == auth()->id() && $ticket->status_id == App\Models\Ticket::UNPROCESSED)
+                    <button class="btn btn-primary float-right"
+                            data-toggle="modal"
+                            @if ($ticket->isNewItemsRequest())
+                                data-target="#edit_equipment_modal"
+                            @elseif ($ticket->isRepairRequest())
+                                data-target="#edit_malfunction_modal"
+                            @endif
+                            onclick="showData({{ $ticket->ticket_request_type }})"
+                    >
+                        <i class="fa fa-edit"></i>
+                    </button>
+                @endif
             </div>
             <div class="card-body">
                 <table class="table table-striped table-sm">
@@ -15,7 +28,7 @@
                     <tr>
                         <td>Request Type:</td>
                         <td>
-                            @if ($ticket->isNewItemsRequest()) New Equipment
+                            @if ($ticket->isNewEquipmentRequest()) New Equipment
                             @elseif ($ticket->isSuppliesRequest()) Office supplies
                             @elseif ($ticket->isRepairRequest()) Repair request
                             @endif
@@ -75,15 +88,15 @@
                             @elseif ($ticket->isRepairRequest())
                                 <tr>
                                     <td>Malfunctioning equipment:</td>
-                                    @if ($ticket->equipment != null)
-                                        <td>{{ $ticket->equipment->full_name }}</td>
+                                    @if ($ticket->document_item != null)
+                                        <td>{{ $ticket->document_item->equipment->full_name }}</td>
                                     @else <td>/</td>
                                     @endif
                                 </tr>
                                 <tr>
                                     <td>Serial number:</td>
-                                    @if ($ticket->serial_number != null)
-                                        <td>{{ $ticket->serial_number->serial_number }}</td>
+                                    @if ($ticket->document_item->serial_number != null)
+                                        <td>{{ $ticket->document_item->serial_number->serial_number }}</td>
                                     @else <td>/</td>
                                     @endif
                                 </tr>

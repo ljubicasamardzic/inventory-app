@@ -42,16 +42,6 @@
                                     @else <td>Order new equipment</td>
                                     @endif
                                 </tr>
-                                @if ($ticket->equipment_id != null)                                
-                                <tr>
-                                    <td>Serial number:</td>
-                                    @if ($ticket->serial_number != null)
-                                        <td>{{ $ticket->serial_number->serial_number }}</td>
-                                    @else <td>/</td>
-                                    @endif
-                                </tr>
-                                @endif
-                                
                             @endif
                             <tr>
                                 <td>Price (€):</td>

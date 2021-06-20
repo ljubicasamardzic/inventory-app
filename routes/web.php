@@ -27,6 +27,7 @@ Route::resource('/serial-numbers', SerialNumberController::class);
 
 Route::get('/equipment-serial-numbers/{equipment}', [EquipmentController::class, 'serial_numbers']);
 
+
 // initial motion of an officer to take a request 
 Route::put('/tickets/update1/{id}', [TicketController::class, 'update_1']);
 // officer approves or rejects the request

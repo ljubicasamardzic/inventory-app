@@ -42,7 +42,7 @@ class TicketPolicy
 
     public function update(User $user, Ticket $ticket)
     {
-        //
+        return $user->isEmployee(); 
     }
 
     public function delete(User $user, Ticket $ticket)

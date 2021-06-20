@@ -24,9 +24,12 @@
 @include('tickets/modals/reject_request_HR_modal')
 @include('tickets/modals/approve_request_HR_modal')
 @include('tickets/modals/mark_finished_modal')
+@include('tickets/modals/edit_equipment_modal')
+@include('tickets/modals/edit_malfunction_modal')
 
 @section('additional_scripts')
     <script src="{{ asset('js/tickets/show.js') }}"></script>
+    {{-- <script src="{{ asset('js/home/index.js') }}"></script> --}}
 @endsection
 
 @endsection

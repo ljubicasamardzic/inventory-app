@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
+use App\Models\EquipmentCategory;
 use App\Models\Reservation;
 use App\Notifications\HRResponseNotification;
 use Illuminate\Support\Facades\Notification;
@@ -34,6 +35,7 @@ class TicketController extends Controller
 
     public function store(TicketRequest $request)
     {
+        // dd($request);
         $request->merge(['user_id' => auth()->id()]);
         
         $create = Ticket::create($request->all());
@@ -48,6 +50,10 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        $equipment = $ticket->user->current_items;
+        // dd($equipment);
+        $equipment_categories = EquipmentCategory::all();
+
         if ($ticket->equipment_category_id != null) {
             $available_equipment = $ticket->equipment_category->available_equipment;        
         } else {
@@ -59,7 +65,7 @@ class TicketController extends Controller
             // [ 'name' => 'Ticket list', 'link' => '/equipment' ],
             [ 'name' => 'Ticket details', 'link' => '/tickets/'.$ticket->id ],
         ];
-        return view('tickets.show', compact(['content_header', 'breadcrumbs', 'ticket', 'available_equipment']));
+        return view('tickets.show', compact(['content_header', 'breadcrumbs', 'ticket', 'available_equipment', 'equipment_categories', 'equipment']));
     }
 
     public function edit(Ticket $ticket)
@@ -67,9 +73,36 @@ class TicketController extends Controller
         //
     }
 
-    public function update(Request $request, Ticket $ticket)
+    public function update(TicketRequest $request, Ticket $ticket)
     {
-        // dd($request);
+        // dd($request, $ticket);
+        if ($request->ticket_type == Ticket::NEW_EQUIPMENT && $request->ticket_request_type == Ticket::EQUIPMENT_REQUEST) {
+            // important to specify what exactly we are sending since information from different request types could be saved in the request
+            $request['description_supplies'] = null;
+            $request['quantity'] = null;
+            $request['serial_number_id'] = null;
+            $request['equipment_id'] = null;
+            $request['description_malfunction'] = null;
+
+            $ticket->update($request->all());
+        } else if ($request->ticket_type == Ticket::NEW_EQUIPMENT && $request->ticket_request_type == Ticket::OFFICE_SUPPLIES_REQUEST) {
+            $request['equipment_category_id'] = null;
+            $request['description_equipment'] = null;
+            $request['serial_number_id'] = null;
+            $request['equipment_id'] = null;
+            $request['description_malfunction'] = null;
+
+            $ticket->update($request->all());
+        } else if ($request->ticket_type == Ticket::REPAIR_EQUIPMENT) {
+            // dd('edit3 - repair request',$request);
+            $request['equipment_category_id'] = null;
+            $request['description_equipment'] = null;
+            $request['description_supplies'] = null;
+            $request['quantity'] = null;
+            $ticket->update($request->all());
+        }
+
+        return redirect()->back();
     }
 
     public function destroy(Ticket $ticket)
@@ -81,17 +114,18 @@ class TicketController extends Controller
 
         $ticket = Ticket::find($request->id);
         $this->authorize('update1', $ticket);
-
+        
         $request->merge(['status_id' => Ticket::IN_PROGRESS]);
-
+        
         $ticket->update($request->only(['officer_id', 'status_id']));
-
+        
         alert()->info('You have taken over the handling of this request.');
         return redirect()->back();
     }
-
+    
     public function update_2(TicketRequest $request) {
-
+        
+        // dd($request, 'update2');
         $ticket = Ticket::find($request->id);
         $this->authorize('update2', $ticket);
 
@@ -108,7 +142,7 @@ class TicketController extends Controller
 
         if ($update) {
             // dd('two');
-            if ($request->equipment_id != null) {
+            if ($ticket->isNewEquipmentRequest()) {
                 // make a new reservation and amend the quantity of the requested item
                 $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
                 if ($new_reservation) {
@@ -170,6 +204,7 @@ class TicketController extends Controller
     }
 
     public function update_4(TicketRequest $request) {
+        // dd($request, 'update4');
 
         $ticket = Ticket::find($request->id);
 

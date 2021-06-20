@@ -1,7 +1,8 @@
-<div class="modal fade show" id="modal-equipment" aria-modal="true" role="dialog">
+<div class="modal fade show" id="edit_equipment_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog">
-        <form method="POST" action="/tickets">
+        <form method="POST" action="/tickets/{{ $ticket->id }}">
             @csrf
+            @method('PUT')
             <div class="modal-content">
                 <div class="modal-header">
                 <h4 class="modal-title">Request equipment</h4>
@@ -28,20 +29,19 @@
                                     class="form-control" 
                                     name="description_supplies" 
                                     id="supplies_desc" 
-                                    placeholder="Explain what you need"
-                                    @error('description_supplies') is-invalid @enderror" 
+                                    placeholder="Explain what you need" 
+                                    @if ($ticket->description_supplies != null)
+                                        value="{{ $ticket->description_supplies }}"
+                                    @endif
                             >
-                            @error('description_supplies')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
                             <input type="number" 
-                                    class="form-control mt-3 
+                            @if ($ticket->quantity != null)
+                                value="{{ $ticket->quantity }}"
+                            @endif
+                                    class="form-control mt-3 @error('quantity') is-invalid @enderror" 
                                     name="quantity" 
                                     id="supplies_quantity" 
                                     placeholder="Quantity"
-                                    @error('quantity') is-invalid @enderror" 
                             >
                             @error('quantity')
                             <div class="invalid-feedback">
@@ -50,31 +50,18 @@
                             @enderror
                     </div>
                     <div class="col-12 mt-3 d-none" id="equipment_div">
-                        <select name="equipment_category_id" 
-                                id="equipment_category_id" 
-                                class="form-control 
-                                @error('equipment_category_id') is-invalid @enderror"
-                        >
-                            <option value="">-- select equipment --</option>
-                            @if ($equipment_categories)
+                        <select name="equipment_category_id" id="equipment_category_id" class="form-control @error('equipment_category_id') is-invalid @enderror">
+                            <option value="">-- select equipment --</option>                            
                                 @foreach ($equipment_categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option {{ ($ticket->equipment_category_id != null && $ticket->equipment_category_id == $category->id) ? 'selected' : '' }} value={{ $category->id }}>{{$category->name}}</option>
                                 @endforeach
-                            @endif
                         </select> 
                         @error('equipment_category_id')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                         @enderror
-                        <textarea name="description_equipment" 
-                            id="equipment_desc" 
-                            placeholder="Additional remarks" 
-                            cols="30" 
-                            class="form-control mt-3" 
-                            rows="3"
-                        >
-                        </textarea>
+                        <textarea name="description_equipment" placeholder="Additional remarks" cols="30" class="form-control mt-3" rows="3">{{ $ticket->description_equipment }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

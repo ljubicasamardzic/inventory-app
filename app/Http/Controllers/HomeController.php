@@ -7,6 +7,7 @@ use App\Models\Equipment;
 use App\Models\User;
 use App\Models\EquipmentCategory;
 use App\Models\Ticket;
+use App\Models\TicketStatus;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,33 +24,36 @@ class HomeController extends Controller
         $this->EquipmentController = $EquipmentController;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request);
         $user = User::query()->find(auth()->id());
-        $equipment = $user->items;
+        $equipment = $user->current_items;
         $equipment_categories = EquipmentCategory::all();
+        $ticket_statuses = TicketStatus::all();
+        $processed_repair_tickets = Ticket::query()->processedRepairTickets($request);
 
+        // dd($processed_repair_tickets);
         $categories = EquipmentCategory::query()
                                         ->whereHas('available_equipment')
                                         ->with('available_equipment')
                                         ->get();
 
         if ($user->isSuperAdmin()) {
-            $tickets = Ticket::query()->paginate(Ticket::PER_PAGE);
-            // $tickets = Ticket::query()->open();
+            $tickets = Ticket::query()->search($request)->paginate(Ticket::PER_PAGE);
         } else if ($user->isSupportOfficer()) {
-            $tickets = Ticket::query()->equipmentRequests()->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->equipmentRequests()->search($request)->paginate(Ticket::PER_PAGE);
         } else if ($user->isAdministrativeOfficer()) {
-            $tickets = Ticket::query()->suppliesRequests()->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->suppliesRequests()->search($request)->paginate(Ticket::PER_PAGE);
         } else if ($user->isHR()) {
-            $tickets = Ticket::query()->readyForHR()->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->readyForHR()->search($request)->paginate(Ticket::PER_PAGE);
         } else if ($user->isEmployee()) {
-            $tickets = Ticket::query()->openUserTickets()->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->openUserTickets()->search($request)->paginate(Ticket::PER_PAGE);
         } else {
             $tickets = [];
         }
 
-        return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets']));
+       return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
     }
 
     public function notifications() {

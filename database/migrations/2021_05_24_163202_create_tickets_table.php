@@ -40,10 +40,11 @@ class CreateTicketsTable extends Migration
             $table->foreignId('serial_number_id')->nullable()->constrained('serial_numbers');
             $table->foreignId('document_id')->nullable()->constrained('documents');
             
-            // for reporting malfunctions and requesting new equipment
+            // for requesting new equipment
             $table->foreignId('equipment_id')->nullable()->constrained('equipment');
 
             // for reporting malfunctions
+            $table->foreignId('document_item_id')->nullable()->constrained('document_items');
             $table->text('description_malfunction')->nullable();
         });
     }

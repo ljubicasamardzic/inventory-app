@@ -1,3 +1,4 @@
+// FOR ASSIGNING EQUIPMENT WITH PARTICULAR SERIAL NUMBERS 
 function availableSerialNums() {
 
     let equipment_id = $("#equipment_select").val();
@@ -13,7 +14,7 @@ function availableSerialNums() {
         let serial_numbers = response;
         let options = '';
         serial_numbers.forEach((number) => {
-            let selected = '';
+            // let selected = '';
             // if(equipment_id && equipment_id == number.equipment_id) selected = 'selected';
             options += `<option value=\"${number.id}\">${number.serial_number}</option>`;
         });
@@ -22,9 +23,8 @@ function availableSerialNums() {
     });
 }
 
+// TAKE OVER BUTTON
 $('#take_over_button').on('click', function() {
-    // e.stopPropagation();
-    // e.preventDefault();
     swal({
         title: 'Are you sure?',
         icon: 'warning',
@@ -49,3 +49,47 @@ $('#take_over_button').on('click', function() {
         }
     });
 });
+
+//  EDIT MODALS
+function showAndHide(divToShow, divToHide, close=false) {
+        
+    if (close == false) {
+        divToHide.addClass('d-none')
+        divToHide.removeClass('d-block')
+    
+        divToShow.addClass('d-block')
+        divToShow.removeClass('d-none')
+    } else if (close == true) {
+        divToHide.addClass('d-none')
+        divToHide.removeClass('d-block')
+
+        divToShow.addClass('d-none')
+        divToShow.removeClass('d-block')
+    }
+}
+    
+let select = $('#ticket_request_type_id')
+let supplies_div = $('#supplies_div')
+let equipment_div =  $('#equipment_div')
+
+// unlike for creating a new request, in this case I don't empty the input fields when they change the type of request, 
+// so that the user would be able to change their mind multiple times and still retain the original data
+// instead, in the controller, I check the type of request and based on that pass on the pertinent data
+    select.on('change', () => {
+       if (select.val() == '1') {
+           showAndHide(equipment_div, supplies_div)
+       } else if (select.val() == '2') {
+          showAndHide(supplies_div, equipment_div)
+       } else if (select.val() == '') {
+            showAndHide(equipment_div, supplies_div, true)
+       }
+    });
+    
+// for editing - based on the already selected request type, display the right fields
+function showData(ticket_request_type_id) {
+    select.val(ticket_request_type_id).change();
+}
+
+
+
+

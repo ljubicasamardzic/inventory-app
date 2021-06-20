@@ -1,7 +1,8 @@
-<div class="modal fade show" id="modal-report-malfunction" aria-modal="true" role="dialog">
+<div class="modal fade show" id="edit_malfunction_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog">
-        <form method="POST" action="/tickets">
+        <form method="POST" action="/tickets/{{ $ticket->id }}">
             @csrf
+            @method('PUT')
             <div class="modal-content">
                 <div class="modal-header">
                 <h4 class="modal-title">Report equipment malfunction</h4>
@@ -12,26 +13,25 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="ticket_type" value="2">
                     <input type="hidden" name="ticket_request_type" value="1">
-                    <input type="hidden" id="user_id_malfunction_modal" value={{ auth()->id() }}>
                     <div class="col-12">
-                        <select name="document_item_id" class="form-control  @error('document_item_id') is-invalid @enderror">
-                            <option value="">-- select equipment --</option>
-                            @foreach ($equipment as $item)
-                            {{-- sending document id so that we can access both the equipmebnt id and serial num in the ticket --}}
-                                <option value="{{ $item->id }}">
+                        <select name="document_item_id" class="form-control @error('document_item_id') is-invalid @enderror">
+                            @if ($equipment != null)
+                                @foreach ($equipment as $item)
+                                <option value="{{ $item->id }}" {{ ($ticket->document_item != null && $ticket->document_item->id == $item->id) ? 'selected' : '' }}>
                                     {{ $item->equipment->full_name }} 
                                     @if ($item->serial_number != null)
-                                        ({{ $item->serial_number->serial_number }})
+                                        ({{$item->serial_number->serial_number}})
                                     @endif
                                 </option>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </select>
-                        {{-- @error('equipment_id')
+                        {{-- @error('document_item_id')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>                        
-                        @enderror   --}}
-                        <textarea name="description_malfunction" placeholder="Explain equipment malfunction" cols="30" class="form-control mt-3" rows="3"></textarea>
+                        @enderror          --}}
+                        <textarea name="description_malfunction" placeholder="Explain equipment malfunction" cols="30" class="form-control mt-3" rows="3">{{$ticket->description_malfunction}}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

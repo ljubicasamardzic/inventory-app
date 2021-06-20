@@ -38,12 +38,24 @@
                             <label for="date_finished">Date finished:</label>
                             <input type="date" name="date_finished" class="form-control">
                         @endif
-                    @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED || $ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
+                    @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED)
                         <label for="date_finished">Date finished:</label>
                         <input type="date" name="date_finished" class="form-control">
                         @if ($ticket->HR_approval == App\Models\Ticket::REJECTED)
                             <textarea name="final_remarks" class="form-control mt-3" placeholder="Explain to the employee why the request was denied" cols="30" rows="5"></textarea>       
                         @endif
+                    @elseif ($ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
+                    <label for="serial_number_select">Assign serial number:</label>
+                    <select name="serial_number_id" id="serial_number_select" class="form-control">
+                        @if ($ticket->equipment != null && $ticket->equipment->serial_numbers != null)
+                            <option value="">-- available serial numbers --</option>
+                            @foreach ($ticket->equipment->serial_numbers as $sn)
+                                <option value="{{ $sn->id }}">{{ $sn->serial_number }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    <label for="date_finished">Date finished:</label>
+                    <input type="date" name="date_finished" class="form-control">
                     @endif
 
                     
