@@ -75,7 +75,6 @@ class TicketController extends Controller
 
     public function update(TicketRequest $request, Ticket $ticket)
     {
-        // dd($request, $ticket);
         if ($request->ticket_type == Ticket::NEW_EQUIPMENT && $request->ticket_request_type == Ticket::EQUIPMENT_REQUEST) {
             // important to specify what exactly we are sending since information from different request types could be saved in the request
             $request['description_supplies'] = null;
@@ -84,7 +83,12 @@ class TicketController extends Controller
             $request['equipment_id'] = null;
             $request['description_malfunction'] = null;
 
-            $ticket->update($request->all());
+            if ($ticket->update($request->all())) {
+                alert()->success('You have successfully updated your request!', 'Success!');
+            } else {
+                alert()->error('Something went wrong!', 'Oops..');
+            }
+            
         } else if ($request->ticket_type == Ticket::NEW_EQUIPMENT && $request->ticket_request_type == Ticket::OFFICE_SUPPLIES_REQUEST) {
             $request['equipment_category_id'] = null;
             $request['description_equipment'] = null;
@@ -92,14 +96,22 @@ class TicketController extends Controller
             $request['equipment_id'] = null;
             $request['description_malfunction'] = null;
 
-            $ticket->update($request->all());
+            if ($ticket->update($request->all())) {
+                alert()->success('You have successfully updated your request!', 'Success!');
+            } else {
+                alert()->error('Something went wrong!', 'Oops..');
+            } 
         } else if ($request->ticket_type == Ticket::REPAIR_EQUIPMENT) {
-            // dd('edit3 - repair request',$request);
             $request['equipment_category_id'] = null;
             $request['description_equipment'] = null;
             $request['description_supplies'] = null;
             $request['quantity'] = null;
-            $ticket->update($request->all());
+
+            if ($ticket->update($request->all())) {
+                alert()->success('You have successfully updated your request!', 'Success!');
+            } else {
+                alert()->error('Something went wrong!', 'Oops..');
+            }
         }
 
         return redirect()->back();
