@@ -25,6 +25,10 @@ class Equipment extends Model
         return $this->hasMany(SerialNumber::class);
     }
 
+    public function document_items() {
+        return $this->hasMany(DocumentItem::class);
+    }
+
     public function getShortDescriptionAttribute(){
         if(strlen($this->description) < 25) return $this->description;
         else return substr($this->description, 0, 25).'...';

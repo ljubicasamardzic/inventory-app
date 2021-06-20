@@ -50,7 +50,7 @@ $('#take_over_button').on('click', function() {
     });
 });
 
-//  EDIT MODALS
+//  EDIT USER DECISION MODALS
 function showAndHide(divToShow, divToHide, close=false) {
         
     if (close == false) {
@@ -85,9 +85,69 @@ let equipment_div =  $('#equipment_div')
        }
     });
     
-// for editing - based on the already selected request type, display the right fields
+// for editing user ticket - based on the already selected request type, display the right fields
 function showData(ticket_request_type_id) {
     select.val(ticket_request_type_id).change();
+}
+
+// for editing officer response 
+
+// grab the divs which we will either show or hide
+let equipment_div_officer_edit = $('#equipment-div-officer-edit');
+let details_div_officer_edit = $('#details-div-officer-edit');
+
+function officerEditDisplay(ticket_type, ticket_request_type, flag=false, officer_approval = null) {
+
+        /** TICKET TYPES **/
+        // const NEW_EQUIPMENT = 1;
+        // const REPAIR_EQUIPMENT = 2;
+    
+        // /** TICKET REQUEST TYPES **/
+        // const EQUIPMENT_REQUEST = 1;
+        // const OFFICE_SUPPLIES_REQUEST = 2;
+    
+        // REQUEST STATUSES
+        // const PENDING = 1;
+        // const APPROVED = 2;
+        // const REJECTED = 3;
+
+    if (flag == true) {
+        officer_approval = $('#officer_approval_select').val();
+    }
+    //new equipment request
+    if (ticket_type == 1) {
+        // if approved
+        if (officer_approval == 2) {
+            equipment_div_officer_edit.removeClass('d-none');
+            details_div_officer_edit.removeClass('d-none');
+            // if rejected
+        } else if (officer_approval == 3) {
+            equipment_div_officer_edit.addClass('d-none');
+            details_div_officer_edit.addClass('d-none');
+        }
+        // repair equipment request
+    }  else if (ticket_type == 2) {
+        // if approved
+        if (officer_approval == 2) {
+            equipment_div_officer_edit.addClass('d-none');
+            details_div_officer_edit.removeClass('d-none');
+            // if rejected
+        } else if (officer_approval == 3) {
+            equipment_div_officer_edit.addClass('d-none');
+            details_div_officer_edit.addClass('d-none');
+        }
+        //  office supplies request     
+    } else if (ticket_request_type == 2) {
+        // if approved
+        if (officer_approval == 2) {
+            equipment_div_officer_edit.addClass('d-none');
+            details_div_officer_edit.removeClass('d-none');
+            // if rejected
+        } else if (officer_approval == 3) {
+            equipment_div_officer_edit.addClass('d-none');
+            details_div_officer_edit.addClass('d-none');
+        }
+    }
 }
 
 

@@ -50,7 +50,9 @@
                         @if ($ticket->equipment != null && $ticket->equipment->serial_numbers != null)
                             <option value="">-- available serial numbers --</option>
                             @foreach ($ticket->equipment->serial_numbers as $sn)
-                                <option value="{{ $sn->id }}">{{ $sn->serial_number }}</option>
+                                @if (!$sn->is_used)
+                                    <option value="{{ $sn->id }}">{{ $sn->serial_number }}</option>   
+                                @endif
                             @endforeach
                         @endif
                     </select>

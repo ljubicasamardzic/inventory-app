@@ -128,9 +128,17 @@ class EquipmentController extends Controller
                 alert()->error('Something went wrong!', 'Oops..');
             }
         }
+
+        foreach($equipment->document_items as $item) {
+            if (!$item->delete()) {
+                DB::rollBack();
+                alert()->error('Something went wrong!', 'Oops..');
+            }
+        }
+
         if ($equipment->delete()) {
             DB::commit();
-            alert()->success('Equipment and its serial numbers successfully deleted!', 'Success!');
+            alert()->success('Equipment, serial numbers and related document items successfully deleted!', 'Success!');
         } else {
             DB::rollBack();
             alert()->error('Something went wrong!', 'Oops..');

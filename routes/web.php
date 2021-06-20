@@ -27,7 +27,6 @@ Route::resource('/serial-numbers', SerialNumberController::class);
 
 Route::get('/equipment-serial-numbers/{equipment}', [EquipmentController::class, 'serial_numbers']);
 
-
 // initial motion of an officer to take a request 
 Route::put('/tickets/update1/{id}', [TicketController::class, 'update_1']);
 // officer approves or rejects the request
@@ -37,6 +36,12 @@ Route::put('/tickets/update3/{id}', [TicketController::class, 'update_3']);
 // request is marked as finished
 Route::put('/tickets/update4/{id}', [TicketController::class, 'update_4']);
 Route::get('/tickets/{id}/export', [TicketController::class, 'export_order']);
+
+// edit officer's decision
+Route::put('/tickets/update-officer-decision/{id}', [TicketController::class, 'update_officer_decision']);
+Route::put('/tickets/update_HR_decision/{id}', [TicketController::class, 'update_HR_decision']);
+
+
 
 Route::get('/reports', [EquipmentController::class, 'reports_index']);
 Route::post('/reports/department', [EquipmentController::class, 'report_by_department']);

@@ -6,6 +6,17 @@
                     <i class="fas fa-user mr-1"></i>
                     Officer
                 </h3>
+                {{-- only the person who took over the request can change it at this point, not even the superadmin is allowed to change somebody else's decision --}}
+                @if ($ticket->officer_approval != App\Models\Ticket::PENDING && $ticket->HR_approval == App\Models\Ticket::PENDING && auth()->id() == $ticket->officer_id)
+                    <button  
+                            class="btn btn-primary btn-sm float-right ml-2"
+                            data-toggle="modal"
+                            data-target="#update_officer_decision"
+                            onclick="officerEditDisplay({{$ticket->ticket_type}}, {{$ticket->ticket_request_type}}, false, {{$ticket->officer_approval}})"
+                    >
+                        <i class="fas fa-edit mr-1"></i>
+                    </button>
+                @endif
                 @if ($ticket->isOfficerApprovedOrderNewRequest())
                     @can('view', $ticket)
                         <a href="/tickets/{{ $ticket->id }}/export" class="btn btn-dark btn-sm float-right">
@@ -78,7 +89,17 @@
                 <h3 class="card-title">
                     <i class="fas fa-user mr-1"></i>
                     HR
-                </h3>        
+                </h3>
+                 {{-- only the person who took over the request can change it at this point, not even the superadmin is allowed to change somebody else's decision --}}
+                @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->date_finished == null && auth()->id() == $ticket->HR_id)
+                    <button  
+                        class="btn btn-primary btn-sm float-right ml-2"
+                        data-toggle="modal"
+                        data-target="#update_HR_decision"
+                    >
+                        <i class="fas fa-edit mr-1"></i>
+                    </button>
+                @endif        
             </div><!-- /.card-header -->
             <div class="card-body">
                 <div class="table-responsive">

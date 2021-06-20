@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h3 class="card-title">Ticket details</h3>
                 @if ($ticket->user_id == auth()->id() && $ticket->status_id == App\Models\Ticket::UNPROCESSED)
-                    <button class="btn btn-primary float-right"
+                    <button class="btn btn-primary float-right btn-sm"
                             data-toggle="modal"
                             @if ($ticket->isNewItemsRequest())
                                 data-target="#edit_equipment_modal"
@@ -51,7 +51,11 @@
                     </tr>
                     <tr>
                         <td>Request date:</td>
-                        <td>{{ $ticket->date }}</td>
+                        <td>
+                            @if ($ticket->created_at != null)
+                                {{ $ticket->date }}
+                            @endif
+                        </td>
                     </tr>
                     @if ($ticket->isSuppliesRequest())
                             <tr>

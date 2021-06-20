@@ -26,6 +26,8 @@
 @include('tickets/modals/mark_finished_modal')
 @include('tickets/modals/edit_equipment_modal')
 @include('tickets/modals/edit_malfunction_modal')
+@include('tickets/modals/update_officer_decision_modal')
+@include('tickets/modals/update_HR_decision_modal')
 
 @section('additional_scripts')
     <script src="{{ asset('js/tickets/show.js') }}"></script>

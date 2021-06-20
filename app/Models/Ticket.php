@@ -16,7 +16,7 @@ class Ticket extends Model
 
     const PER_PAGE = 10;
 
-    protected $primary_key = 'id';
+    // protected $primary_key = 'id';
     /** TICKET TYPES **/
     const NEW_EQUIPMENT = 1;
     const REPAIR_EQUIPMENT = 2;

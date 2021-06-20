@@ -137,7 +137,6 @@ class TicketController extends Controller
     
     public function update_2(TicketRequest $request) {
         
-        // dd($request, 'update2');
         $ticket = Ticket::find($request->id);
         $this->authorize('update2', $ticket);
 
@@ -150,13 +149,12 @@ class TicketController extends Controller
 
         DB::beginTransaction();
         $update = $ticket->update($request->all());
-        // dd('one');
 
         if ($update) {
-            // dd('two');
-            if ($ticket->isNewEquipmentRequest()) {
+            if ($ticket->isNewEquipmentRequest() && $ticket->officer_approval == Ticket::APPROVED && $ticket->status_id != Ticket::WAITING_FOR_EQUIPMENT) {
                 // make a new reservation and amend the quantity of the requested item
                 $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
+                // dd($new_reservation->ticket->equipment);
                 if ($new_reservation) {
 
                     $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
@@ -311,6 +309,122 @@ class TicketController extends Controller
         return redirect()->back();
     }
 
+    // UPDATE OFFICER DECISION
+    public function update_officer_decision($id, Request $request) {
+        // dd($id, $request);
+        $ticket = Ticket::find($id);
+        
+        if ($ticket->isNewEquipmentRequest()) {
+            if ($ticket->officer_approval == Ticket::APPROVED && $request->officer_approval == Ticket::APPROVED) {
+                // make sure the status is right if the equipment is being waited for
+                if ($request->equipment_id == null) {
+                    $request['status_id'] = Ticket::WAITING_FOR_EQUIPMENT;
+                } else if ($request->equipment_id != null) {
+                    $request['status_id'] = Ticket::IN_PROGRESS;
+                }
+
+                // if it happens that the request was approved but that there was no available equipment 
+                // and then the equipment arrives, we must make a new reservation 
+                if ($ticket->equipment_id == null && $request->equipment_id != null) {
+                    $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
+                    
+                    // firstly update the ticket 
+                    $ticket->update($request->all());
+
+                    // then update the quantity
+                    $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
+                
+                }
+
+                // if the ticket changes from approved to rejected
+            } else if ($ticket->officer_approval == Ticket::APPROVED && $request->officer_approval == Ticket::REJECTED) {
+                 // check if there is a reservation and delete it
+                 if ($ticket->reservation != null) {
+                    
+                    $update = $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity + 1]);
+                    
+                    if ($update) {
+                        $ticket->reservation->delete();
+                    }
+                }
+                // if the request used to wait for new equipment, change that status now that it is rejected
+                if ($ticket->status_id == Ticket::WAITING_FOR_EQUIPMENT) {
+                    $request['status_id'] = Ticket::IN_PROGRESS;
+                }   
+
+                $request['equipment_id'] = null;
+                $request['deadline'] = null;
+                $request['price'] = null;
+                $ticket->update($request->all());
+            } else if ($ticket->officer_approval == Ticket::REJECTED && $request->officer_approval == Ticket::REJECTED) {
+                $request['equipment_id'] = null;
+                $request['deadline'] = null;
+                $request['price'] = null;
+                $ticket->update($request->all());
+            } else if ($ticket->officer_approval == Ticket::REJECTED && $request->officer_approval == Ticket::APPROVED) {
+                
+                $ticket->update($request->all());
+
+                if ($ticket->equipment_id != null) {
+                    // make a reservation 
+                    $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
+                    // dd($new_reservation->ticket->equipment);
+                    
+                    $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
+                    
+                } else if ($ticket->equipment_id == null) {
+                    // no equipment id means that the equipment is being waited for 
+                    $ticket->update(['status_id' => Ticket::WAITING_FOR_EQUIPMENT]);
+                }
+                
+            }
+
+        } else if ($ticket->isRepairRequest() || $ticket->isSuppliesRequest()) {
+            if ($request->officer_approval == Ticket::APPROVED) {
+                $ticket->update($request->all());
+            } else if ($request->officer_approval == Ticket::REJECTED) {
+                // delete everything that could be filled if the request was changed from approved to rejected
+                $request['deadline'] = null;
+                $request['price'] = null;
+                $ticket->update($request->all());
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    public function update_HR_decision($id, Request $request) {
+        $ticket = Ticket::find($id);
+
+        // Case 1: only the comment differs
+        if ($ticket->HR_approval == Ticket::APPROVED && $request->HR_approval == Ticket::APPROVED) {
+            $ticket->update($request->all());
+            // Case 2: check if a reservation has been made and delete it
+        } else if ($ticket->HR_approval == Ticket::APPROVED && $request->HR_approval == Ticket::REJECTED) {
+            if ($ticket->reservation != null) {
+                $update_quantity = $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity + 1]);
+                if ($update_quantity) $ticket->reservation->delete();
+            }
+            
+            $ticket->update($request->all());
+
+            // Case 3: make a reservation if necessary (perhaps one had been deleted if the ticket was firstly rejected by the HR)
+        } else if ($ticket->HR_approval == Ticket::REJECTED && $request->HR_approval == Ticket::APPROVED) {
+            if ($ticket->equipment_id != null && $ticket->reservation == null) {
+                $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
+                    
+                $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
+            }
+            $ticket->update($request->all());
+            // Case 4: probably only comment changed
+        } else if ($ticket->HR_approval == Ticket::REJECTED && $request->HR_approval == Ticket::APPROVED) {
+            $ticket->update($request->all());
+        }
+
+        return redirect()->back();
+    }
+
+    // export new order details 
     public function export_order($id) {
 
         $ticket = Ticket::find($id);
