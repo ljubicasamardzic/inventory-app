@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Document;
 use App\Models\Equipment;
 use App\Models\User;
 use App\Models\EquipmentCategory;

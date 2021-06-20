@@ -16,6 +16,10 @@ class DocumentItem extends Model
         return $this->belongsTo(Document::class);
     }
 
+    public function ticket() {
+        return $this->hasOne(Ticket::class);
+    }
+
     public function equipment(){
         return $this->belongsTo(Equipment::class);
     }

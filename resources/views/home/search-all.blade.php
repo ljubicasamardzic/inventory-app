@@ -1,11 +1,26 @@
 <form action="/" method="GET">
     <div class="row d-flex flex-row justify-content-end mb-3 mx-2">
         @if (auth()->user()->isAdmin())
-            <div class="col-3">
-                <input type="text" name="search_text" placeholder="Search by employee or officer" class="form-control" value="{{ request('search_text') }}">
+            <div class="col-2">
+                <input type="text" name="search_text" placeholder="Enter your search term" class="form-control" value="{{ request('search_text') }}">
             </div>      
         @endif
-        <div class="col-3">
+        <div class="col-2">
+            <select name="ticket_type_id" class="form-control">
+                <option value="">-- ticket type --</option>
+                <option value="1"
+                    {{ request('ticket_type_id') == App\Models\Ticket::NEW_EQUIPMENT ? 'selected' : ''}}
+                >
+                    New equipment/office supplies
+                </option>
+                <option value="2"
+                    {{ request('ticket_type_id') == App\Models\Ticket::REPAIR_EQUIPMENT ? 'selected' : ''}}
+                >
+                Repair equipment
+                </option>
+            </select>
+        </div>
+        <div class="col-2">
             <select name="search_status_id" class="form-control">
                 <option value="">-- ticket status --</option>
                 @foreach ($ticket_statuses as $status)

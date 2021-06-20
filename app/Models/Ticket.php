@@ -156,12 +156,19 @@ class Ticket extends Model
         return $query->join('users', 'users.id', '=', 'tickets.user_id')
                 ->leftJoin('users as u', 'u.id', '=', 'tickets.officer_id')
                 ->leftJoin('users as HR', 'HR.id', '=', 'tickets.HR_id')
+                ->leftJoin('request_statuses as req_st', 'req_st.id', '=', 'tickets.HR_approval')
+                ->leftJoin('request_statuses as rs', 'rs.id', '=', 'tickets.officer_approval')
                 ->where(function($query) use ($request) {
                     $query->when($request->search_text, function($query) use($request) { 
                         $term = strtolower($request->search_text);
                         $query->whereRaw("lower(users.name) LIKE '%{$term}%'")
-                                ->orWhereRaw("lower(u.name) LIKE '%{$term}%'");
+                                ->orWhereRaw("lower(u.name) LIKE '%{$term}%'")
+                                ->orWhereRaw("lower(req_st.name) LIKE '%{$term}%'")
+                                ->orWhereRaw("lower(rs.name) LIKE '%{$term}%'");
                     });
+                })
+                ->when($request->ticket_type_id, function($query) use ($request) {
+                    $query->where("ticket_type", "=", $request->ticket_type_id);
                 })
                 ->when($request->search_status_id, function($query) use($request) { 
                     $query->where("status_id", "=", $request->search_status_id);

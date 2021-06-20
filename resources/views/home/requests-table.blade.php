@@ -17,10 +17,6 @@
                     <tr>
                         <th>#</th>
                         <th>Request type</th>
-                        {{-- @if (auth()->user()->isEmployee() && $ticket->isRepairRequest())
-                            <th>Equipment</th>
-                            <th>Serial number</th>
-                        @endif --}}
                         @if (auth()->user()->isAdmin())
                         <th>Employee</th>
                         <th>Officer</th>
@@ -45,15 +41,6 @@
                               @elseif ($ticket->isRepairRequest()) Repair equipment
                               @endif
                           </td>
-                          {{-- @if (auth()->user()->isEmployee() && $ticket->isRepairRequest())
-                            <td>{{ $ticket->document_item->equipment->full_name }}</td>
-                            <td>
-                                @if ($ticket->document_item->serial_number != null)
-                                    {{ $ticket->document_item->serial_number->serial_number }}
-                                @endif
-                            </td>
-                              
-                          @endif --}}
                           @if (auth()->user()->isAdmin())
                             <td>{{ $ticket->user->name }}</td>
                             <td>

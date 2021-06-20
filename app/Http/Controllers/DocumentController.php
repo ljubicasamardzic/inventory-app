@@ -92,14 +92,17 @@ class DocumentController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Document $document, Request $request)
+    public function destroy(Document $document)
     {
         DB::beginTransaction();
         foreach($document->items as $item) {
+            if ($item->ticket != null) {
+                $delete_ticket = $item->ticket->delete();
+            }
             $update = $item->equipment->update(['available_quantity' => $item->equipment->available_quantity + 1]);
-            if ($update) {
-                $item->delete();
-            } else {
+            $delete_item = $item->delete();
+            
+            if (!($update && $delete_item)) {
                 DB::rollBack();
                 alert()->error('Something went wrong!', 'Oops..');
             }
