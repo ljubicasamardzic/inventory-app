@@ -33,12 +33,12 @@ class DocumentPolicy
 
     public function update(User $user, Document $document)
     {
-        return $user->isSupportOfficer();
+        return $user->isSupportOfficer() && $document->admin_id == $user->id;
     }
 
     public function delete(User $user, Document $document)
     {
-        //
+        return $user->isSupportOfficer() && $document->admin_id == $user->id;
     }
 
     public function restore(User $user, Document $document)

@@ -53,13 +53,15 @@ function findId(item_id) {
     let serial_num_id = $('#edit_btn_' + item_id).attr('data-serial-number-id');
     let serial_num_value = $('#edit_btn_' + item_id).attr('data-val');
     $('#chosen_equipment_id').val(equipment_id);
-    $('#chosen_serial_num_id').val(serial_num_id);
+    if (serial_num_value != null) {
+        $('#chosen_serial_num_id').val(serial_num_id);
+        let opt = `<option value=\"${serial_num_id}\" selected>${serial_num_value}</option>`;
+        $('#serial_number_select_2').append(opt);
+    }
     $('#relevant_document_item_id').val(item_id);
 
     // adding the current value to the modal since the ajax function returns only currently available serial numbers
     // and bc of this, does not pick up the current value
-    let opt = `<option value=\"${serial_num_id}\" selected>${serial_num_value}</option>`;
-    $('#serial_number_select_2').append(opt);
 
 }
 

@@ -60,7 +60,7 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
-                                        <a class="btn btn-danger btn-sm btn-flat delete-confirm"
+                                        <a class="btn btn-danger btn-sm btn-flat delete-confirm
                                                 @cannot('delete', $doc) disabled @endcannot" 
                                                 data-id = {{ $doc->id }}
                                         >

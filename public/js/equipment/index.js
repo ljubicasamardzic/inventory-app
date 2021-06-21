@@ -6,7 +6,7 @@ $('.confirm-delete-btn').on('click', function(e) {
     let id = $(this).attr('data-id');
     swal({
         title: 'Are you sure?',
-        text: "The action will also delete serial numbers related to this equipment.",
+        text: "The action will also delete serial numbers, tickets and document items related to this equipment.",
         icon: 'warning',
         dangerMode: true,
         buttons: {

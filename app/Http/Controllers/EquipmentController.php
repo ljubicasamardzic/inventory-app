@@ -123,6 +123,12 @@ class EquipmentController extends Controller
     {
         DB::beginTransaction();
         foreach($equipment->serial_numbers as $sn) {
+            if ($sn->ticket) {
+                if(!$sn->ticket->delete()) {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
+            }
             if (!$sn->delete()) {
                 DB::rollBack();
                 alert()->error('Something went wrong!', 'Oops..');
@@ -130,15 +136,32 @@ class EquipmentController extends Controller
         }
 
         foreach($equipment->document_items as $item) {
+            if ($item->ticket) {
+                if (!$item->ticket->delete()) {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
+            }
+
             if (!$item->delete()) {
                 DB::rollBack();
                 alert()->error('Something went wrong!', 'Oops..');
             }
         }
 
+        if ($equipment->tickets) {
+            foreach($equipment->tickets as $ticket) {
+                if (!$ticket->delete()) {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
+                
+            }
+        }
+
         if ($equipment->delete()) {
             DB::commit();
-            alert()->success('Equipment, serial numbers and related document items successfully deleted!', 'Success!');
+            alert()->success('Equipment, serial numbers, any tickets and related document items successfully deleted!', 'Success!');
         } else {
             DB::rollBack();
             alert()->error('Something went wrong!', 'Oops..');

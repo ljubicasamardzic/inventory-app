@@ -8,6 +8,7 @@ use App\Models\EquipmentCategory;
 use App\Models\Ticket;
 use App\Models\TicketStatus;
 use Illuminate\Http\Request;
+use App\Http\Requests\PasswordRequest;
 
 class HomeController extends Controller
 {
@@ -104,6 +105,29 @@ class HomeController extends Controller
         $user = User::find($user_id);
         $user->unreadNotifications->markAsRead();
         return redirect()->back();
+    }
+
+    public function edit_password() {
+        $content_header = "Change password";
+
+        $breadcrumbs = [
+            [ 'name' => 'Home', 'link' => '/' ],
+            [ 'name' => 'Change password', 'link' => '/edit_password' ],
+        ];
+        return view('home.edit_password', compact(['content_header', 'breadcrumbs']));
+    }
+
+    public function update_password(PasswordRequest $request) {
+        $validated = $request->validated();
+        $update = User::find($request->validated())->first()->update(['password' => $validated['new_password']]);
+
+        if ($update) {
+            alert()->success('Password updated!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
+
+        return redirect('/');
     }
 
 }

@@ -19,4 +19,8 @@ class SerialNumber extends Model
                 ->count() > 0;
     }
 
+    public function ticket() {
+        return $this->hasOne(Ticket::class, 'serial_number_id');
+    }
+
 }

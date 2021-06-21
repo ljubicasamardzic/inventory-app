@@ -4,7 +4,8 @@
             Document Items
             @can('create', \App\Models\Document::class)
                 <button type="button"
-                class="btn btn-sm btn-flat btn-primary float-right"
+                class="btn btn-sm btn-flat btn-primary float-right
+                @cannot('update', $document) disabled @endcannot"
                 data-toggle="modal"
                 data-target="#new_item_modal"
                 >
@@ -48,7 +49,7 @@
                             <form action="/document-item/return/{{ $item->id }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" id="btn-return-item" class="btn btn-warning btn-flat btn-sm @cannot('create', App\Models\Document::class) disabled @endcannot">
+                                <button type="submit" id="btn-return-item" class="btn btn-warning btn-flat btn-sm @cannot('update', $document) disabled @endcannot">
                                     Return equipment
                                 </button>
                             </form>
@@ -56,9 +57,12 @@
                     </td>
                     <td>
                         <button type="button"
-                                class="btn btn-sm btn-flat btn-primary"
+                                class="btn btn-sm btn-flat btn-primary
+                                @cannot('update', $document) disabled @endcannot"
                                 id="edit_btn_{{ $item->id }}"
-                                data-val = "{{ $item->serial_number->serial_number }}"
+                                @if ($item->serial_number != null)
+                                    data-val = "{{ $item->serial_number->serial_number }}"
+                                @endif
                                 data-equipment-id = "{{ $item->equipment_id }}"
                                 data-serial-number-id = "{{ $item->serial_number_id }}"
                                 data-toggle="modal"

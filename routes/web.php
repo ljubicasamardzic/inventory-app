@@ -52,3 +52,6 @@ Route::get('/notifications', [HomeController::class, 'notifications']);
 Route::put('/notifications/{notification:uuid}', [HomeController::class, 'mark_read_notification']);
 Route::put('/mark_all_notifications_read/{user_id}', [HomeController::class, 'mark_notifications_read']);
 
+Route::get('/edit_password', [HomeController::class, 'edit_password'])->name('edit_password');
+Route::put('/update_password', [HomeController::class, 'update_password']);
+

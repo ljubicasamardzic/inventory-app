@@ -44,4 +44,21 @@ jQuery(function () {
             emptyFields()
        }
     });
+
+    
 });
+
+function viewPassword(password, status) {
+    // check which exact field should be shown/hidden
+    let password_text =  $('#' + password);
+    // check if password should be shown in plain text or not
+    let showStatus = $('#' + status);
+
+    if (password_text.css('-webkit-text-security') == 'none' ) {
+        password_text.css('-webkit-text-security', 'disc');
+        showStatus.className='fa fa-eye-slash';
+    } else {
+        password_text.css('-webkit-text-security', 'none');
+        showStatus.className='fa fa-eye';
+    }
+}

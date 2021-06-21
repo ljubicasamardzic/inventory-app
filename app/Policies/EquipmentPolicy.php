@@ -51,8 +51,8 @@ class EquipmentPolicy
         //
     }
 
-    public function serial_numbers() {
-        //
+    public function serial_numbers(User $user) {
+        return $user->isSupportOfficer();
     }
 
     public function reports_index() {

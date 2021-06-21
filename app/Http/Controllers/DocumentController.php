@@ -64,7 +64,7 @@ class DocumentController extends Controller
             [ 'name' => 'Document list', 'link' => '/documents' ],
             [ 'name' => 'Document details', 'link' => '/users/'.$document->id ],
         ];
-        return view('documents.show', compact(['content_header', 'breadcrumbs', 'document', 'users', 'items', 'equipment']));
+        return view('documents.show', compact(['content_header', 'breadcrumbs', 'document', 'users', 'items', 'equipment', 'document']));
     }
 
     public function edit(Document $document)

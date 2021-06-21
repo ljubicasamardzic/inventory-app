@@ -30,6 +30,10 @@ class Equipment extends Model
         return $this->hasMany(DocumentItem::class);
     }
 
+    public function tickets() {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function getShortDescriptionAttribute(){
         if(strlen($this->description) < 25) return $this->description;
         else return substr($this->description, 0, 25).'...';
@@ -44,7 +48,10 @@ class Equipment extends Model
     }
 
     public function getAssignedAttribute() {
-        return DocumentItem::query()->where('equipment_id', $this->id)->count();
+        return DocumentItem::query()    
+                                ->where('equipment_id', $this->id)
+                                ->where('return_date', null)
+                                ->count();
     }
 
     public function getTotalQuantityAttribute() {
