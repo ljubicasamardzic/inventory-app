@@ -119,7 +119,13 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
-        //
+        if ($ticket->delete()) {
+            alert()->success('You have successfully deleted your request!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
+
+        return redirect('/');
     }
 
     public function update_1(TicketRequest $request) {
@@ -186,7 +192,7 @@ class TicketController extends Controller
     public function update_3(TicketRequest $request) {
 
         $ticket = Ticket::find($request->id);
-        $this->authorize('update3', Ticket::class);
+        $this->authorize('update3', $ticket);
 
         DB::beginTransaction();
         // if HR rejects the request where a reservation already exists, delete it and amend the item quantity

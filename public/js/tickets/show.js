@@ -150,6 +150,40 @@ function officerEditDisplay(ticket_type, ticket_request_type, flag=false, office
     }
 }
 
+$('.confirm-delete-btn').on('click', function(e) {
+    // e.stopPropagation();
+    // e.preventDefault();
+    // getting the id from the button that caused the event to fire
+    let id = $(this).attr('data-id');
+    swal({
+        title: 'Are you sure?',
+        text: "All information about this request will be deleted.",
+        icon: 'warning',
+        dangerMode: true,
+        buttons: {
+            cancel: {
+            text: "Cancel",
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "",
+            closeModal: true
+            }},
+        }).then((value) => {
+            if (value) {
+            $("#delete_form_"+ id).submit();
+        }
+    });
+});
+
+
+
 
 
 

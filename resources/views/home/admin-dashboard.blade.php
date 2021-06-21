@@ -9,6 +9,11 @@
         @if (auth()->user()->isSuperAdmin() || auth()->user()->isSupportOfficer() || auth()->user()->isHR())
             @include('home.repair-requests-table')
         @endif
+
+        @include('home.assigned_equipment')
+
+        @include('home/modals.modal-malfunction')
+        @include('home/modals.modal-equipment')        
        
     </div>
 </div>

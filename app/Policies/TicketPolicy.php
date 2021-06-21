@@ -10,8 +10,9 @@ class TicketPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user) {
-        if ($user->isSuperAdmin()) {
+    public function before(User $user, $ability) {
+        $abilities = ['viewAny', 'view', "create", "delete", 'export_order', 'restore', 'forceDelete'];
+        if ($user->isSuperAdmin() && in_array($ability, $abilities) ) {
             return true;
         }
     }
@@ -31,23 +32,25 @@ class TicketPolicy
             return true;
         } else if ($user->isEmployee() && $ticket->user_id == $user->id) {
             return true;
+        } else if ($user->id == $ticket->user_id) {
+            return true;
         }
 
     }
 
     public function create(User $user)
     {
-        return $user->isEmployee(); 
+        return ($user->isEmployee() || $user->isSupportOfficer() || $user->isAdministrativeOfficer() || $user->isHR());
     }
 
     public function update(User $user, Ticket $ticket)
     {
-        return $user->isEmployee(); 
+        return $user->id == $ticket->user_id;
     }
 
     public function delete(User $user, Ticket $ticket)
     {
-        //
+        return $user->id == $ticket->user_id;
     }
 
     public function restore(User $user, Ticket $ticket)
@@ -60,10 +63,13 @@ class TicketPolicy
         //
     }
 
+    // admins as well as the superamin cannot review the ticket they themselves sent 
     public function update1(User $user, Ticket $ticket) {
-        if ($ticket->isEquipmentRequest() && $user->isSupportOfficer()) {
+        if ($ticket->isEquipmentRequest() && $user->isSupportOfficer() && $user->id != $ticket->user_id) {
             return true;
-        } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer()) {
+        } else if ($ticket->isSuppliesRequest() && $user->isAdministrativeOfficer() && $user->id != $ticket->user_id) {
+            return true;
+        } else if ($user->isSuperAdmin() && $user->id != $ticket->user_id) {
             return true;
         }
     }
@@ -74,8 +80,8 @@ class TicketPolicy
 
     }
 
-    public function update3(User $user) {
-        return $user->isHR();
+    public function update3(User $user, Ticket $ticket) {
+        return ($user->isHR() || $user->isSuperAdmin()) && $user->id != $ticket->user_id;
     }
 
     public function update4(User $user, Ticket $ticket) {

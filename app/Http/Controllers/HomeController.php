@@ -26,7 +26,6 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request);
         $user = User::query()->find(auth()->id());
         $equipment = $user->current_items;
         $equipment_categories = EquipmentCategory::all();

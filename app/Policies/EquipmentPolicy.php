@@ -74,4 +74,8 @@ class EquipmentPolicy
     public function report_by_employee() {
         //
     }
+
+    public function report_available_equipment() {
+        //
+    }
 }

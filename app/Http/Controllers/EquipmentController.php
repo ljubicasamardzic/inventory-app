@@ -183,6 +183,8 @@ class EquipmentController extends Controller
     }
 
     public function reports_index() {
+        $this->authorize('reports_index', Equipment::class);
+
         $categories = EquipmentCategory::all();
         $departments = Department::all();
         $positions = Position::all();
@@ -196,6 +198,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_department(Request $request) {
+        $this->authorize('report_by_department', Equipment::class);
+
         $department_ids = Department::searchIds($request);
 
         $data = [[]];
@@ -226,6 +230,8 @@ class EquipmentController extends Controller
     }
 
     public function report_by_position(Request $request) {
+        $this->authorize('report_by_position', Equipment::class);
+
         $position_ids = Position::searchIds($request);
     
         $data = [[]];
@@ -254,6 +260,7 @@ class EquipmentController extends Controller
     }
 
     public function report_by_category(Request $request) {
+        $this->authorize('report_by_category', Equipment::class);
 
         $category_ids = EquipmentCategory::searchIds($request);
         
@@ -280,6 +287,7 @@ class EquipmentController extends Controller
     }
 
     public function report_by_employee(Request $request) {
+        $this->authorize('report_by_employee', Equipment::class);
 
         $employee_ids = User::searchIds($request);
 
@@ -307,6 +315,7 @@ class EquipmentController extends Controller
     }
 
     public function report_available_equipment(Request $request) {
+        $this->authorize('report_available_equipment', Equipment::class);
 
         $equipment_ids = Equipment::searchIds($request);
         
