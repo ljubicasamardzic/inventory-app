@@ -41,8 +41,6 @@ Route::get('/tickets/{id}/export', [TicketController::class, 'export_order']);
 Route::put('/tickets/update-officer-decision/{id}', [TicketController::class, 'update_officer_decision']);
 Route::put('/tickets/update_HR_decision/{id}', [TicketController::class, 'update_HR_decision']);
 
-
-
 Route::get('/reports', [EquipmentController::class, 'reports_index']);
 Route::post('/reports/department', [EquipmentController::class, 'report_by_department']);
 Route::post('/reports/position', [EquipmentController::class, 'report_by_position']);
@@ -51,5 +49,6 @@ Route::post('/reports/employee', [EquipmentController::class, 'report_by_employe
 Route::post('/reports/available-equipment', [EquipmentController::class, 'report_available_equipment']);
 
 Route::get('/notifications', [HomeController::class, 'notifications']);
-
 Route::put('/notifications/{notification:uuid}', [HomeController::class, 'mark_read_notification']);
+Route::put('/mark_all_notifications_read/{user_id}', [HomeController::class, 'mark_notifications_read']);
+

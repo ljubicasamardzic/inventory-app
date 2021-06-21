@@ -9,6 +9,7 @@ class Equipment extends Model
 {
     use HasFactory;
 
+    const PER_PAGE = 10;
     protected $guarded = [];
 
     // Reports

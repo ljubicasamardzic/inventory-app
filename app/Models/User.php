@@ -19,6 +19,8 @@ class User extends Authenticatable
     const ADMINISTRATIVE_OFFICER = 4;
     const HR = 5;
 
+    const PER_PAGE = 10;
+
     protected $fillable = [
         'name',
         'email',

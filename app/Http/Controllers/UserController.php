@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = User::all();
+        $users = User::paginate(User::PER_PAGE);
         $content_header = "Employees list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],

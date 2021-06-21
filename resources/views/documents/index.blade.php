@@ -72,7 +72,9 @@
                         @endforeach
                         </tbody>
                     </table>
-
+                    <div class="d-flex flex-row justify-content-center mt-3">
+                        {{ $documents->links() }}
+                    </div>
                 </div><!-- /.card-body -->
             </div>
             <!-- /.card -->

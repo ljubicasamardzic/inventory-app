@@ -42,7 +42,7 @@ class EquipmentController extends Controller
 
     public function index()
     {
-        $equipment = Equipment::all();
+        $equipment = Equipment::paginate(Equipment::PER_PAGE);
         $content_header = "Equipment list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],

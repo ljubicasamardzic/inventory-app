@@ -9,6 +9,8 @@ class Document extends Model
 {
     use HasFactory;
 
+    const PER_PAGE = 10;
+
     protected $guarded = [];
     protected $dates = ['date', 'created_at', 'updated_at'];
 //    protected $casts = [

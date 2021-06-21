@@ -19,7 +19,7 @@ class DocumentController extends Controller
 
     public function index()
     {
-        $documents = Document::all();
+        $documents = Document::paginate(Document::PER_PAGE);
         $content_header = "Documents list";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],

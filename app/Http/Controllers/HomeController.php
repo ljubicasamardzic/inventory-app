@@ -100,4 +100,10 @@ class HomeController extends Controller
 
     }
 
+    public function mark_notifications_read($user_id) {
+        $user = User::find($user_id);
+        $user->unreadNotifications->markAsRead();
+        return redirect()->back();
+    }
+
 }
