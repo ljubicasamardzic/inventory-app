@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
               <tbody>
-              @if ($tickets != null || $tickets = [])
+              @if ($tickets->count() > 0)
                   @foreach ($tickets as $key => $ticket)
                       <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
                           <td>{{ $key + 1 }}</td>
@@ -69,7 +69,10 @@
                           <td><span class="badge {{ $ticket->status->icon }}">{{ $ticket->status->name }}</span></td>
                       </tr>
                   @endforeach
-              @else There are no requests at this time. 
+              @else <tr>
+                        <td></td>
+                        <td>There are no requests at this time.</td>
+                    </tr> 
               @endif
             </tbody>
           </table>

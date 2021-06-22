@@ -74,7 +74,7 @@
                                                         <option value="{{$position->id}}">{{ $position->name }}</option>
                                                     @endforeach
                                                 </optgroup>
-                                                @endforeach
+                                            @endforeach
                                         </select>
                                         </div>
                                         <div class="col-3">

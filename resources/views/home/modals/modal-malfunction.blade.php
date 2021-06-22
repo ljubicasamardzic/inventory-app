@@ -12,12 +12,11 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="ticket_type" value="2">
                     <input type="hidden" name="ticket_request_type" value="1">
-                    {{-- <input type="hidden" id="user_id_malfunction_modal" value={{ auth()->id() }}> --}}
                     <div class="col-12">
                         <select name="document_item_id" class="form-control  @error('document_item_id') is-invalid @enderror">
                             <option value="">-- select equipment --</option>
                             @foreach ($equipment as $item)
-                            {{-- sending document id so that we can access both the equipmebnt id and serial num in the ticket --}}
+                            {{-- sending document id so that we can access both the equipment id and serial num in the ticket --}}
                                 <option value="{{ $item->id }}">
                                     {{ $item->equipment->full_name }} 
                                     @if ($item->serial_number != null)

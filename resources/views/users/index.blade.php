@@ -56,7 +56,11 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger btn-sm btn-flat @if($user->id == auth()->id()) disabled @endif @cannot('delete', $user) disabled @endcannot" onclick="confirmUserDelete({{ $user->id }}, event)">
+                                    <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn 
+                                        @if($user->id == auth()->id()) disabled @endif 
+                                        @cannot('delete', $user) disabled @endcannot"
+                                        data-id={{ $user->id }}
+                                    >
                                         <i class="fa fa-times"></i>
                                         DELETE
                                     </a>

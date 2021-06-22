@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'position_id',
+        'role_id'
     ];
 
     protected $hidden = [
@@ -51,6 +52,10 @@ class User extends Authenticatable
 
     public function documents(){
         return $this->hasMany(Document::class);
+    }
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
     }
 
     public function items(){

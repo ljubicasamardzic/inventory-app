@@ -173,10 +173,13 @@ class Ticket extends Model
                 ->when($request->search_status_id, function($query) use($request) { 
                     $query->where("status_id", "=", $request->search_status_id);
                 })
+                // option mine finds both tickets where the user in question is admin or user
+                // this way admins can more easily browse through the tickets they sent within one table 
                 ->where(function($query) use ($request) {
                     $query->when($request->search_checkbox, function($query) use($request) {
                         $query->where("officer_id", "=", $request->search_checkbox)
-                                ->orWhere("HR_id", "=", $request->search_checkbox);
+                                ->orWhere("HR_id", "=", $request->search_checkbox)
+                                ->orWhere("user_id", "=", $request->search_checkbox);
                     });
                 })
                 ->select('tickets.*');

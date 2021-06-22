@@ -29,12 +29,11 @@
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
-                                @error(' equipment_category_id')
+                                @error('equipment_category_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
-
                             </div>
                             <div class="col-4">
                                 <label for="position_select">Name:</label>
@@ -45,15 +44,6 @@
                                     </div>
                                 @enderror
                             </div>
-{{--                            <div class="col-3">--}}
-{{--                                <label for="serial_number_input">Serial number:</label>--}}
-{{--                                <input type="text" name="serial_number" class="form-control  @error('serial_number') is-invalid @endif " placeholder="Enter serial number" id="serial_number_input">--}}
-{{--                                @error('serial_number')--}}
-{{--                                <div class="invalid-feedback">--}}
-{{--                                    {{ $message }}--}}
-{{--                                </div>--}}
-{{--                                @enderror--}}
-{{--                            </div>--}}
                             <div class="col-4">
                                 <label for="available_quantity_input">Available quantity:</label>
                                 <input type="number" step="1" min="0" name="available_quantity" class="form-control  @error('available_quantity') is-invalid @endif " placeholder="Enter quantity" id="available_quantity_input">

@@ -11,6 +11,7 @@ class DocumentPolicy
     use HandlesAuthorization;
 
     public function before($user) {
+        
         if ($user->isSuperAdmin()) {
             return true;
         } 

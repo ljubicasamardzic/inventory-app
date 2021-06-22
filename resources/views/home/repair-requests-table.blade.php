@@ -23,9 +23,8 @@
                     </tr>
                 </thead>
               <tbody>
-              @if ($processed_repair_tickets != null || $processed_repair_tickets = '')
+              @if ($processed_repair_tickets->count() > 0)
                   @foreach ($processed_repair_tickets as $key => $ticket)
-                  {{-- {{$ticket->id}} --}}
                       <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $ticket->user->name }}</td>
@@ -53,7 +52,10 @@
                             <td></td>
                       </tr>
                   @endforeach
-              @else There are no requests at this time. 
+              @else <tr> 
+                  <td></td>
+                  <td>There are no requests at this time.</td>
+                  </tr> 
               @endif
             </tbody>
           </table>

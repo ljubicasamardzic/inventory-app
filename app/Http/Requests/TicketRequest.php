@@ -37,17 +37,25 @@ class TicketRequest extends FormRequest
     public function updateRules() {
         return [
             "officer_id" => "nullable|exists:users,id",
+            "officer_approval" => "nullable|exists:request_statuses,id", 
+            "officer_remarks" => "nullable", 
             "HR_id" => "nullable|exists:users,id",
             "HR_approval" => "nullable|exists:request_statuses,id",
-            "officer_approval" => "nullable|exists:request_statuses,id", 
+            "HR_remarks" => "nullable",
             "equipment_id" => "nullable|integer",
             "serial_number_id" => "nullable|exists:serial_numbers,id",
             "description_supplies" => "nullable",
+            "document_item_id" => "nullable|exists:document_items,id",
             "equipment_category_id" => "nullable|exists:equipment_categories,id",
             "description_equipment" => "nullable",
             "quantity" => "nullable|numeric",
             "description_malfunction" => "nullable",
-            "document_item_id" => "nullable|exists:document_items,id"
+            "document_item_id" => "nullable|exists:document_items,id",
+            "final_remarks" => "nullable", 
+            "price" => "nullable|numeric",
+            "date_finished" => "nullable|date|before_or_equal:today",
+            "deadline" => "nullable|date|after_or_equal:today"
+
         ];
     }
 

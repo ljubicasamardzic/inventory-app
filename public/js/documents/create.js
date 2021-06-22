@@ -73,3 +73,36 @@ $('#edit_item_modal').on('hide.bs.modal', () => {
     $("#serial_number_select_2").html('');
 });
 
+$('.return-equipment-btn').on('click', function(e) {
+    // e.stopPropagation();
+    // e.preventDefault();
+    // getting the id from the button that caused the event to fire
+    let id = $(this).attr('data-id');
+    console.log(id)
+    swal({
+        title: 'Are you sure?',
+        text: "This action is irreversible.",
+        icon: 'warning',
+        dangerMode: true,
+        buttons: {
+            cancel: {
+            text: "Cancel",
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "",
+            closeModal: true
+            }},
+        }).then((value) => {
+            if (value) {
+            $("#return_equipment_"+ id).submit();
+        }
+    });
+});
+

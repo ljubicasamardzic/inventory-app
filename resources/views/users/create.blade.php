@@ -79,6 +79,21 @@
 
                             </div>
                             <div class="col-4">
+                                <label for="role_select">Role:</label>
+                                <select name="role_id" id="role_select" class="form-control @error('role_id') is-invalid @endif">
+                                    <option value="">- select a role -</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('role_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+                            <div class="offset-4 col-4">
                                 <button type="submit" class="btn btn-primary btn-block btn-flat mt-4">
                                     SAVE EMPLOYEE DETAILS
                                 </button>

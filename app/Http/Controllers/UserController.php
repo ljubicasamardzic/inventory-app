@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\DocumentItem;
 use App\Models\Position;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -30,6 +31,7 @@ class UserController extends Controller
 
     public function create()
     {
+        $roles = Role::all();
         $departments = Department::all();
         $content_header = "Add New Employee";
         $breadcrumbs = [
@@ -37,12 +39,18 @@ class UserController extends Controller
             [ 'name' => 'Employees list', 'link' => '/users' ],
             [ 'name' => 'New Employee', 'link' => '/users/create' ],
         ];
-        return view('users.create', compact(['departments', 'content_header', 'breadcrumbs']));
+        return view('users.create', compact(['departments', 'content_header', 'breadcrumbs', 'roles']));
     }
 
     public function store(UserRequest $request)
     {
-        User::query()->create($request->validated());
+        // dd($request, $request->validated());
+        $new_user = User::query()->create($request->validated());
+        if ($new_user) {
+            alert()->success('New user added!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
         return redirect(route('users.index'));
     }
 
@@ -62,6 +70,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $roles = Role::all();
         $departments = Department::all();
         $content_header = "Edit Employee details";
         $user->append('department_id');
@@ -70,19 +79,28 @@ class UserController extends Controller
             [ 'name' => 'Employees list', 'link' => '/users' ],
             [ 'name' => 'Edit Employee details', 'link' => '/users/'.$user->id.'/edit' ],
         ];
-        return view('users.edit', compact(['departments', 'content_header', 'breadcrumbs', 'user']));
+        return view('users.edit', compact(['departments', 'content_header', 'breadcrumbs', 'user', 'roles']));
     }
 
     public function update(UserRequest $request, User $user)
     {
-        $user->update($request->except(['password']));
+        $update = $user->update($request->except(['password']));
+        if ($update) {
+            alert()->success('User data updated!', 'Success!');
+        } else {
+            alert()->error('Something went wrong!', 'Oops..');
+        }
         return redirect('/users');
     }
 
     public function destroy(User $user)
     {
-        if($user->id != auth()->id()){
-            $user->delete();
+        if($user->id != auth()->id()) {
+            if ($user->documents->count() > 0 || $user->tickets->count() > 0) {
+                alert()->error('You must first delete documents and/or tickets related to this user!', 'Oops..');
+            } else if ($user->delete()) {
+                alert()->success('User deleted!', 'Success!');
+            }
         }
         return redirect('/users');
     }

@@ -37,6 +37,7 @@ class UserRequest extends FormRequest
             'password' => 'required|min:8|max:255',
             'position_id' => 'required|integer',
             'department_id' => 'nullable',
+            'role_id' => 'required'
         ];
     }
 
@@ -47,6 +48,7 @@ class UserRequest extends FormRequest
             'password' => 'nullable',
             'position_id' => 'required|integer',
             'department_id' => 'nullable',
+            'role_id' => 'required|integer'
         ];
     }
 

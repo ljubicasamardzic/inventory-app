@@ -9,6 +9,7 @@ function fillPositions(position_id = null){
        'url' : '/positions-by-department/'+department_id,
        'type' : 'GET',
        'success': (response) => {
+           console.log(response);
            let positions = response;
            let options = '';
            positions.forEach((position) => {

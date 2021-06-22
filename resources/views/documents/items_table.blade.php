@@ -46,13 +46,18 @@
                     <td>{{ $item->returned_date_formated }}</td>
                     <td>
                         @if(!$item->returned)
-                            <form action="/document-item/return/{{ $item->id }}" method="POST">
+                            <form action="/document-item/return/{{ $item->id }}" method="POST" id="return_equipment_{{ $item->id }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" id="btn-return-item" class="btn btn-warning btn-flat btn-sm @cannot('update', $document) disabled @endcannot">
-                                    Return equipment
-                                </button>
                             </form>
+                            <button type="button" 
+                                    id="btn-return-item" 
+                                    class="btn btn-warning return-equipment-btn btn-flat btn-sm 
+                                    @cannot('update', $document) disabled @endcannot"
+                                    data-id="{{ $item->id }}"
+                            >
+                                Return equipment
+                            </button>
                         @endif
                     </td>
                     <td>

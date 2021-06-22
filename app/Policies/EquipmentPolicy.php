@@ -52,7 +52,7 @@ class EquipmentPolicy
     }
 
     public function serial_numbers(User $user) {
-        return $user->isSupportOfficer();
+        return $user->isAdmin();
     }
 
     public function reports_index() {
