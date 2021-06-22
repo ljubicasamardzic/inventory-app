@@ -14,7 +14,7 @@ class EquipmentCategorySeeder extends Seeder
      */
     public static function run()
     {
-        $data = ['Monitor', 'Laptop', 'Kućište', 'Tastatura', 'Miš'];
+        $data = ['Monitor', 'Laptop', 'Computer case', 'Keyboard', 'Mouse'];
         foreach ($data as $category) {
             EquipmentCategory::query()->create(['name' => $category]);
         }

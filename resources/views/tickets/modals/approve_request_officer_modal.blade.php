@@ -16,7 +16,11 @@
 
                     @if ($ticket->isNewItemsRequest() && $ticket->isEquipmentRequest())
                         <label for="">Assign equipment:</label>
-                        <select class="form-control" name="equipment_id" id="equipment_select" onchange="availableSerialNums()">
+                        <select class="form-control @error('equipment_id') is-invalid @enderror" 
+                                name="equipment_id" 
+                                id="equipment_select" 
+                                {{-- onchange="availableSerialNums()" --}}
+                        >
                             <option value="">-- Select available equipment --</option>
                             @if ($available_equipment != '[]')
                                 @foreach($available_equipment as $e)
@@ -26,12 +30,27 @@
                                 <option value="0">Order new equipment</option>
                             @endif
                         </select>
+                        @error('equipment_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>                        
+                        @enderror
                     @endif
                     
                     <label for="deadline">Delivery deadline:</label>
-                    <input type="date" name="deadline" class="form-control">
+                    <input type="date" name="deadline" class="form-control @error('deadline') is-invalid @enderror">
+                    @error('deadline')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>                        
+                    @enderror
                     <label for="price">Price (€):</label>
-                    <input type="number" name="price" class="form-control">
+                    <input type="number" name="price" class="form-control @error('deadline') is-invalid @enderror">
+                    @error('price')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>                        
+                    @enderror
                     <label for="officer_remarks">Remarks:</label>
                     <textarea name="officer_remarks" cols="30" rows="5" class="form-control"></textarea>
                 </div>

@@ -35,7 +35,6 @@ class TicketController extends Controller
 
     public function store(TicketRequest $request)
     {
-        // dd($request);
         $request->merge(['user_id' => auth()->id()]);
         
         $create = Ticket::create($request->all());
@@ -50,6 +49,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        // dd($ticket->equipment, $ticket->equipment->serial_numbers);
         $equipment = $ticket->user->current_items;
         // dd($equipment);
         $equipment_categories = EquipmentCategory::all();
@@ -142,7 +142,7 @@ class TicketController extends Controller
     }
     
     public function update_2(TicketRequest $request) {
-        
+        // dd($request);
         $ticket = Ticket::find($request->id);
         $this->authorize('update2', $ticket);
 
@@ -316,7 +316,7 @@ class TicketController extends Controller
     }
 
     // UPDATE OFFICER DECISION
-    public function update_officer_decision($id, Request $request) {
+    public function update_officer_decision($id, TicketRequest $request) {
         // dd($id, $request);
         $ticket = Ticket::find($id);
         
@@ -339,7 +339,6 @@ class TicketController extends Controller
 
                     // then update the quantity
                     $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
-                
                 }
 
                 // if the ticket changes from approved to rejected
@@ -382,7 +381,6 @@ class TicketController extends Controller
                     // no equipment id means that the equipment is being waited for 
                     $ticket->update(['status_id' => Ticket::WAITING_FOR_EQUIPMENT]);
                 }
-                
             }
 
         } else if ($ticket->isRepairRequest() || $ticket->isSuppliesRequest()) {
@@ -399,7 +397,7 @@ class TicketController extends Controller
         return redirect()->back();
     }
 
-    public function update_HR_decision($id, Request $request) {
+    public function update_HR_decision($id, TicketRequest $request) {
         $ticket = Ticket::find($id);
 
         // Case 1: only the comment differs

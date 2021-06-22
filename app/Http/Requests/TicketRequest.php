@@ -25,22 +25,29 @@ class TicketRequest extends FormRequest
             "ticket_type" => "required|integer",
             "ticket_request_type" => "required|integer",
             "description_supplies" => "nullable",
-            "equipment_category_id" => "nullable|integer",
+            "equipment_category_id" => "nullable|exists:equipment_categories,id",
             "description_equipment" => "nullable",
             "quantity" => "nullable|numeric",
-            "equipment_id" => "nullable|integer",
-            "description_malfunction" => "nullable"
+            "equipment_id" => "nullable|exists:equipment,id",
+            "description_malfunction" => "nullable",
+            "document_item_id" => "nullable|exists:document_items,id"
         ];
     }
 
     public function updateRules() {
         return [
-            "officer_id" => "nullable|integer",
-            "HR_id" => "nullable|integer",
-            "HR_approval" => "nullable|integer",
-            "officer_approval" => "nullable|integer", 
+            "officer_id" => "nullable|exists:users,id",
+            "HR_id" => "nullable|exists:users,id",
+            "HR_approval" => "nullable|exists:request_statuses,id",
+            "officer_approval" => "nullable|exists:request_statuses,id", 
             "equipment_id" => "nullable|integer",
-            "serial_number_id" => "nullable|integer"
+            "serial_number_id" => "nullable|exists:serial_numbers,id",
+            "description_supplies" => "nullable",
+            "equipment_category_id" => "nullable|exists:equipment_categories,id",
+            "description_equipment" => "nullable",
+            "quantity" => "nullable|numeric",
+            "description_malfunction" => "nullable",
+            "document_item_id" => "nullable|exists:document_items,id"
         ];
     }
 

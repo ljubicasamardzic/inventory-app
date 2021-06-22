@@ -22,7 +22,7 @@
                         </div>
                         @else 
                             <label for="">Assign equipment:</label>
-                            <select class="form-control" name="equipment_id" id="equipment_select" onchange="availableSerialNums()">
+                            <select class="form-control" name="equipment_id" id="equipment_select1" onchange="availableSerialNums('equipment_select1', 'serial_number_select1')">
                                 <option value="">-- Select available equipment --</option>
                                 @if ($available_equipment != '[]')
                                     @foreach($available_equipment as $e)
@@ -31,7 +31,7 @@
                                 @endif
                             </select>
                             <label for="serial_number_select">Serial number:</label>
-                            <select name="serial_number_id" id="serial_number_select" class="form-control">
+                            <select name="serial_number_id" id="serial_number_select1" class="form-control">
                                 {{-- populated by AJAX function --}}
                             </select>
 

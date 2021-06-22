@@ -12,7 +12,7 @@
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="ticket_type" value="2">
                     <input type="hidden" name="ticket_request_type" value="1">
-                    <input type="hidden" id="user_id_malfunction_modal" value={{ auth()->id() }}>
+                    {{-- <input type="hidden" id="user_id_malfunction_modal" value={{ auth()->id() }}> --}}
                     <div class="col-12">
                         <select name="document_item_id" class="form-control  @error('document_item_id') is-invalid @enderror">
                             <option value="">-- select equipment --</option>
@@ -26,11 +26,11 @@
                                 </option>
                             @endforeach
                         </select>
-                        {{-- @error('equipment_id')
+                         @error('document_item_id')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>                        
-                        @enderror   --}}
+                        @enderror
                         <textarea name="description_malfunction" placeholder="Explain equipment malfunction" cols="30" class="form-control mt-3" rows="3"></textarea>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 // FOR ASSIGNING EQUIPMENT WITH PARTICULAR SERIAL NUMBERS 
-function availableSerialNums() {
+function availableSerialNums(equipment_div, serial_nums_div) {
 
-    let equipment_id = $("#equipment_select").val();
+    let equipment_id = $("#" + equipment_div).val();
     if(equipment_id == ''){
-        $("#serial_number_select").html('');
+        $("#" + serial_nums_div).html('');
         return;
     }
 
@@ -18,7 +18,7 @@ function availableSerialNums() {
             // if(equipment_id && equipment_id == number.equipment_id) selected = 'selected';
             options += `<option value=\"${number.id}\">${number.serial_number}</option>`;
         });
-        $("#serial_number_select").html(options);
+        $("#" + serial_nums_div).html(options);
        }
     });
 }

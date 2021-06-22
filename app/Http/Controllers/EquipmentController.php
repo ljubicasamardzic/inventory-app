@@ -170,7 +170,9 @@ class EquipmentController extends Controller
         return redirect('/equipment');
     }
 
-    public function serial_numbers(Equipment $equipment) {
+    public function serial_numbers($id) {
+        $equipment = Equipment::find($id);
+        
         $serial_nums = $equipment->serial_numbers;
         
         $result = [];
