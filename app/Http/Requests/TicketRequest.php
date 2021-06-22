@@ -53,7 +53,7 @@ class TicketRequest extends FormRequest
             "document_item_id" => "nullable|exists:document_items,id",
             "final_remarks" => "nullable", 
             "price" => "nullable|numeric",
-            "date_finished" => "nullable|date|before_or_equal:today",
+            "date_finished" => "nullable|date|before_or_equal:today|after_or_equal:created_at",
             "deadline" => "nullable|date|after_or_equal:today"
 
         ];

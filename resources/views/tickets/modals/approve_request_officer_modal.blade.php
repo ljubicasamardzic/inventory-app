@@ -40,16 +40,16 @@
                     <label for="deadline">Delivery deadline:</label>
                     <input type="date" name="deadline" class="form-control @error('deadline') is-invalid @enderror">
                     @error('deadline')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>                        
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>                        
                     @enderror
                     <label for="price">Price (€):</label>
                     <input type="number" name="price" class="form-control @error('deadline') is-invalid @enderror">
                     @error('price')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>                        
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>                        
                     @enderror
                     <label for="officer_remarks">Remarks:</label>
                     <textarea name="officer_remarks" cols="30" rows="5" class="form-control"></textarea>

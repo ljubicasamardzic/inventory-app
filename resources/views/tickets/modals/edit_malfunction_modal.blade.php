@@ -26,11 +26,6 @@
                                 @endforeach
                             @endif
                         </select>
-                        {{-- @error('document_item_id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>                        
-                        @enderror          --}}
                         <textarea name="description_malfunction" placeholder="Explain equipment malfunction" cols="30" class="form-control mt-3" rows="3">{{$ticket->description_malfunction}}</textarea>
                     </div>
                 </div>

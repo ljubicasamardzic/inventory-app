@@ -22,7 +22,11 @@
                         </div>
                         @else 
                             <label for="">Assign equipment:</label>
-                            <select class="form-control" name="equipment_id" id="equipment_select1" onchange="availableSerialNums('equipment_select1', 'serial_number_select1')">
+                            <select class="form-control @error('equipment_id') is-invalid @enderror" 
+                                    name="equipment_id" 
+                                    id="equipment_select1" 
+                                    onchange="availableSerialNums('equipment_select1', 'serial_number_select1')"
+                            >
                                 <option value="">-- Select available equipment --</option>
                                 @if ($available_equipment != '[]')
                                     @foreach($available_equipment as $e)
@@ -30,23 +34,43 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('equipment_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                             <label for="serial_number_select">Serial number:</label>
-                            <select name="serial_number_id" id="serial_number_select1" class="form-control">
+                            <select name="serial_number_id" id="serial_number_select1" class="form-control  @error('serial_number_id') is-invalid @enderror">
                                 {{-- populated by AJAX function --}}
                             </select>
+                            @error('serial_number_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
                             <label for="date_finished">Date finished:</label>
-                            <input type="date" name="date_finished" class="form-control">
+                            <input type="date" name="date_finished" class="form-control @error('date_finished') is-invalid @enderror">
+                            @error('date_finished')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         @endif
                     @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED)
                         <label for="date_finished">Date finished:</label>
-                        <input type="date" name="date_finished" class="form-control">
+                        <input type="date" name="date_finished" class="form-control @error('date_finished') is-invalid @enderror">
                         @if ($ticket->HR_approval == App\Models\Ticket::REJECTED)
                             <textarea name="final_remarks" class="form-control mt-3" placeholder="Explain to the employee why the request was denied" cols="30" rows="5"></textarea>       
                         @endif
+                        @error('date_finished')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                        @enderror
                     @elseif ($ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
                     <label for="serial_number_select">Assign serial number:</label>
-                    <select name="serial_number_id" id="serial_number_select" class="form-control">
+                    <select name="serial_number_id" id="serial_number_select" class="form-control @error('serial_number_id') is-invalid @enderror">
                         @if ($ticket->equipment != null && $ticket->equipment->serial_numbers != null)
                             <option value="">-- available serial numbers --</option>
                             @foreach ($ticket->equipment->serial_numbers as $sn)
@@ -54,10 +78,20 @@
                                     <option value="{{ $sn->id }}">{{ $sn->serial_number }}</option>   
                                 @endif
                             @endforeach
+                            @error('serial_number_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         @endif
                     </select>
                     <label for="date_finished">Date finished:</label>
-                    <input type="date" name="date_finished" class="form-control">
+                    <input type="date" name="date_finished" class="form-control @error('date_finished') is-invalid @enderror">
+                    @error('date_finished')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     @endif
 
                     
@@ -66,7 +100,7 @@
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>
                     <button type="submit" 
                             class="btn btn-primary  
-                            @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED && $available_equipment == '[]') disabled @endif"
+                            @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED && $available_equipment->count() == 0) disabled @endif"
                     >
                         Accept changes
                     </button>

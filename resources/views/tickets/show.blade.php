@@ -3,7 +3,9 @@
 @section('page_title', 'Request details')
 
 @section('content')
-    
+    @foreach ($errors as $item)
+        {{ $item }}
+    @endforeach
     <div class="row">
         <div class="col-12">
             <div class="card">
