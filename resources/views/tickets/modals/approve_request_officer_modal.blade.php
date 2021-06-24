@@ -11,8 +11,9 @@
                 </a>
                 </div>
                 <div class="row modal-body" id="modal-body">
-                    <input type="hidden" name="id" value="{{ $ticket->id }}">
-                    <input type="hidden" name="officer_approval" value="{{ App\Models\Ticket::APPROVED }}">
+                    <input type="hidden" name="id" id="ticket_id_approve_officer" value="{{ $ticket->id }}">
+                    <input type="hidden" name="officer_approval" id="officer_approval_value" value="{{ App\Models\Ticket::APPROVED }}">
+                    <input type="hidden" id="token_approve_officer" name="_token" value="{{ csrf_token() }}">
 
                     @if ($ticket->isNewItemsRequest() && $ticket->isEquipmentRequest())
                         <label for="">Assign equipment:</label>
@@ -38,25 +39,25 @@
                     @endif
                     
                     <label for="deadline">Delivery deadline:</label>
-                    <input type="date" name="deadline" class="form-control @error('deadline') is-invalid @enderror">
+                    <input type="date" name="deadline" id="deadline_approve_officer" class="form-control @error('deadline') is-invalid @enderror">
                     @error('deadline')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>                        
                     @enderror
                     <label for="price">Price (€):</label>
-                    <input type="number" name="price" class="form-control @error('deadline') is-invalid @enderror">
+                    <input type="number" min=0 step=0.01 name="price" id="price_approve_officer" class="form-control @error('deadline') is-invalid @enderror">
                     @error('price')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>                        
                     @enderror
                     <label for="officer_remarks">Remarks:</label>
-                    <textarea name="officer_remarks" cols="30" rows="5" class="form-control"></textarea>
+                    <textarea name="officer_remarks" id="officer_remarks_approve" cols="30" rows="5" class="form-control"></textarea>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Approve request</button>
+                    <button type="button" class="btn btn-primary" id="approve_button_officer">Approve request</button>
                 </div>
             </div>
         </form>

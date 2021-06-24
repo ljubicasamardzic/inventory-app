@@ -114,7 +114,7 @@ class TicketController extends Controller
             }
         }
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function destroy(Ticket $ticket)
@@ -186,7 +186,7 @@ class TicketController extends Controller
             alert()->error('Something went wrong!', 'Oops..');
         }
         
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function update_3(TicketRequest $request) {
@@ -445,5 +445,12 @@ class TicketController extends Controller
         ];
         
         return Excel::download(new OrderExport($data), 'order.xlsx');
+    }
+
+
+
+    public function test(Request $request) {
+        $result = $request->ticket_type;
+        return response()->json($result);
     }
 }

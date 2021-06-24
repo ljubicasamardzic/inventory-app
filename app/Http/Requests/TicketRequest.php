@@ -52,10 +52,9 @@ class TicketRequest extends FormRequest
             "description_malfunction" => "nullable",
             "document_item_id" => "nullable|exists:document_items,id",
             "final_remarks" => "nullable", 
-            "price" => "nullable|numeric",
+            "price" => "nullable|numeric|min:0",
             "date_finished" => "nullable|date|before_or_equal:today|after_or_equal:created_at",
             "deadline" => "nullable|date|after_or_equal:today"
-
         ];
     }
 

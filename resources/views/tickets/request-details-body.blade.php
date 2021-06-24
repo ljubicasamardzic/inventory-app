@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h3 class="card-title">Ticket details</h3>
                 @if ($ticket->user_id == auth()->id() && $ticket->status_id == App\Models\Ticket::UNPROCESSED)
-                
+                {{-- delete request --}}
                 <a class="btn btn-danger btn-sm float-right ml-2 confirm-delete-btn 
                     @cannot('delete', $ticket) disabled @endcannot"
                     data-id={{ $ticket->id }}
@@ -16,6 +16,7 @@
                     @csrf
                 </form>
 
+                {{-- edit request --}}
                 <button class="btn btn-primary float-right btn-sm"
                             data-toggle="modal"
                             @if ($ticket->isNewItemsRequest())

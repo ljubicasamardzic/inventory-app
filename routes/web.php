@@ -55,3 +55,4 @@ Route::put('/mark_all_notifications_read/{user_id}', [HomeController::class, 'ma
 Route::get('/edit_password', [HomeController::class, 'edit_password'])->name('edit_password');
 Route::put('/update_password', [HomeController::class, 'update_password']);
 
+Route::post('/test/{id}', [TicketController::class, 'test']);
