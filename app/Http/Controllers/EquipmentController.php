@@ -215,7 +215,7 @@ class EquipmentController extends Controller
             $counter = 0;
             foreach($users as $user)  {
 
-                $items = $user->items;
+                $items = $user->current_items;
 
                 foreach($items as $i) {
                     $counter += 1;
@@ -245,7 +245,7 @@ class EquipmentController extends Controller
 
             $counter = 0;
             foreach($users as $user)  {
-                $items = $user->items;
+                $items = $user->current_items;
                 foreach($items as $i) {
                     $counter += 1;
                     $cat = $i->equipment->category->name;
@@ -324,12 +324,12 @@ class EquipmentController extends Controller
         $data = [[]];
 
         $counter = 0;
-        $data[] = ['#', 'Equipment name', 'Available quantity'];
+        $data[] = ['#', 'Equipment category', 'Equipment name', 'Available quantity'];
         foreach($equipment_ids as $equipment_id) {
             $item = Equipment::find($equipment_id);
-
+            $category = $item->category->name;
             $counter += 1;
-            $data[] = [$counter, $item->name, $item->available_quantity];
+            $data[] = [$counter, $category, $item->name, $item->available_quantity];
         }
         $title = 'AVAILABLE QUANTITIES FOR ALL/SELECT EQUIPMENT';
         return Excel::download(new EquipmentReportExport($data, $title), 'available_equipment.xlsx');

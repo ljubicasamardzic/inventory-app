@@ -10,11 +10,12 @@ class DocumentPolicy
 {
     use HandlesAuthorization;
 
-    public function before($user) {
+    public function before($user, $ability) {
         
-        if ($user->isSuperAdmin()) {
+        $abilities = ['viewAny', 'view', 'create', 'restore', 'forceDelete'];
+        if ($user->isSuperAdmin() && in_array($ability, $abilities) ) {
             return true;
-        } 
+        }
     }
 
     public function viewAny(User $user)
@@ -34,12 +35,12 @@ class DocumentPolicy
 
     public function update(User $user, Document $document)
     {
-        return $user->isSupportOfficer() && $document->admin_id == $user->id;
+        return $user->isSupportOfficer() && $document->admin_id == $user->id || $user->isSuperAdmin() && $document->user_id != $user->id;
     }
 
     public function delete(User $user, Document $document)
     {
-        return $user->isSupportOfficer() && $document->admin_id == $user->id;
+        return $user->isSupportOfficer() && $document->admin_id == $user->id || $user->isSuperAdmin() && $document->user_id != $user->id;
     }
 
     public function restore(User $user, Document $document)

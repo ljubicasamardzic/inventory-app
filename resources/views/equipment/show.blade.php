@@ -69,8 +69,8 @@
                                             <td>
                                                 <a 
                                                     type="button"
-                                                    class="btn btn-primary btn-sm btn-flat callModal
-                                                    @cannot('update', $equipment) disabled @endcannot"  
+                                                    class="btn btn-primary btn-sm btn-flat callModal"
+                                                    @cannot('update', $equipment) disabled @endcannot  
                                                     data-toggle="modal" 
                                                     data-target="#modal-serial-numbers-edit"
                                                     data-id = {{ $sn->id }}
@@ -83,8 +83,8 @@
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>
-                                                <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn
-                                                            @cannot('update', $equipment) disabled @endcannot" 
+                                                <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn"
+                                                    @cannot('update', $equipment) disabled @endcannot 
                                                     data-id={{ $sn->id }}
                                                 >
                                                     <i class="fa fa-times"></i>

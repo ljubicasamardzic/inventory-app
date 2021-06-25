@@ -75,18 +75,18 @@ class TicketPolicy
     }
 
     public function update2(User $user, Ticket $ticket) {
-        // allow only the officer who worked on this case to update this step
-        return $user->id == $ticket->officer->id;
+        // allow only the officer who worked on this case to update this step or the superadmin, as long as he/she did not sent the ticket
+        return $user->id == $ticket->officer->id || $user->isSuperAdmin() && $ticket->user_id != $user->id;
 
     }
-
     public function update3(User $user, Ticket $ticket) {
-        return ($user->isHR() || $user->isSuperAdmin()) && $user->id != $ticket->user_id;
+        // allow only the officer who worked on this case to update this step or the superadmin, as long as he/she did not sent the ticket
+        return $user->isHR() || $user->isSuperAdmin() && $ticket->user_id != $user->id;
     }
 
     public function update4(User $user, Ticket $ticket) {
-        // allow only the officer who worked on this case to update this step
-        return $user->id == $ticket->officer->id || $user->isSuperAdmin();
+        // allow only the officer who worked on this case to update this step or the superadmin, as long as he/she did not sent the ticket
+        return $user->id == $ticket->officer->id || $user->isSuperAdmin() && $ticket->user_id != $user->id;
     }
 
     public function export_order(User $user, Ticket $ticket) {
@@ -97,6 +97,7 @@ class TicketPolicy
         }
     }
 
+    // only the HR/admin who made the decision can change it 
     public function update_officer_decision(User $user, Ticket $ticket) {
         return $ticket->officer_id == $user->id;
     }

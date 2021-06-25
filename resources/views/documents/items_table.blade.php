@@ -4,8 +4,8 @@
             Document Items
             @can('create', \App\Models\Document::class)
                 <button type="button"
-                class="btn btn-sm btn-flat btn-primary float-right
-                @cannot('update', $document) disabled @endcannot"
+                class="btn btn-sm btn-flat btn-primary float-right"
+                @cannot('update', $document) disabled @endcannot
                 data-toggle="modal"
                 data-target="#new_item_modal"
                 >
@@ -52,8 +52,8 @@
                             </form>
                             <button type="button" 
                                     id="btn-return-item" 
-                                    class="btn btn-warning return-equipment-btn btn-flat btn-sm 
-                                    @cannot('update', $document) disabled @endcannot"
+                                    class="btn btn-warning return-equipment-btn btn-flat btn-sm" 
+                                    @cannot('update', $document) disabled @endcannot
                                     data-id="{{ $item->id }}"
                             >
                                 Return equipment
@@ -62,8 +62,8 @@
                     </td>
                     <td>
                         <button type="button"
-                                class="btn btn-sm btn-flat btn-primary
-                                @cannot('update', $document) disabled @endcannot"
+                                class="btn btn-sm btn-flat btn-primary"
+                                @cannot('update', $document) disabled @endcannot
                                 id="edit_btn_{{ $item->id }}"
                                 @if ($item->serial_number != null)
                                     data-val = "{{ $item->serial_number->serial_number }}"

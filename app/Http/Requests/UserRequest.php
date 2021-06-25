@@ -36,7 +36,7 @@ class UserRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|min:8|max:255',
             'position_id' => 'required|integer',
-            'department_id' => 'nullable',
+            'department_id' => 'required|integer',
             'role_id' => 'required'
         ];
     }
@@ -47,7 +47,7 @@ class UserRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'nullable',
             'position_id' => 'required|integer',
-            'department_id' => 'nullable',
+            'department_id' => 'required|integer',
             'role_id' => 'required|integer'
         ];
     }

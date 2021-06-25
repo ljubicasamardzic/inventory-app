@@ -49,6 +49,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+
         // dd($ticket->equipment, $ticket->equipment->serial_numbers);
         $equipment = $ticket->user->current_items;
         // dd($equipment);
@@ -253,8 +254,10 @@ class TicketController extends Controller
                 }
 
                 $request['document_id'] = $new_doc->id; 
+                $request['document_item_id'] = $create_doc_item->id;
                 
-                $update1 = $ticket->update($request->all());
+                // we keep note of the doc id, instead of keeping the serial num directly on the ticket
+                $update1 = $ticket->update($request->except('serial_number_id'));
 
                 $quantity_update = $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity - 1]);
 

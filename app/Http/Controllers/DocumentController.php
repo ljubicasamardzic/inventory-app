@@ -30,7 +30,9 @@ class DocumentController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        // no user can add documents to themselves
+        // because nobody (not even the superadmin) can handle their own requests, they cannot add documents to themselves either
+        $users = User::query()->where('id', '!=', auth()->id())->get();
         $content_header = "Add New Document";
         $breadcrumbs = [
             [ 'name' => 'Home', 'link' => '/' ],

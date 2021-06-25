@@ -7,15 +7,14 @@ use Illuminate\Database\Seeder;
 
 class DepartmentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public static function run()
-    {
-        Department::query()->create([
-            'name' => 'Delivery'
-        ]);
+
+    public static function run() {
+        $departments = ['Delivery', 'HR', 'Marketing'];
+
+        foreach($departments as $d) {
+            Department::query()->create([
+                'name' => $d
+            ]);
+        }
     }
 }

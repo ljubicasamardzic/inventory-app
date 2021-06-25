@@ -16,7 +16,10 @@ class PositionSeeder extends Seeder
     {
         $positions = [
             ['name' => 'Frontend Developer', 'department_id' => 1],
-            ['name' => 'Backend Developer', 'department_id' => 1]
+            ['name' => 'Backend Developer', 'department_id' => 1],
+            ['name' => 'Marketing manager', 'department_id' => 3],
+            ['name' => 'HR manager', 'department_id' => 2],
+
         ];
         foreach ($positions as $position) {
             Position::query()->create($position);

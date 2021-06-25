@@ -91,7 +91,7 @@
                     HR
                 </h3>
                  {{-- only the person who took over the request can change it at this point, not even the superadmin is allowed to change somebody else's decision --}}
-                @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->date_finished == null && auth()->id() == $ticket->HR_id)
+                @if ($ticket->HR_approval != App\Models\Ticket::PENDING && $ticket->status_id != App\Models\Ticket::PROCESSED && auth()->id() == $ticket->HR_id)
                     <button  
                         class="btn btn-primary btn-sm float-right ml-2"
                         data-toggle="modal"

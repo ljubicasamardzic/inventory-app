@@ -67,3 +67,11 @@
     </div>
       <!-- /.card-footer -->
 </div>
+
+@if ($flag == 'true')
+<script>
+    document.getElementById('open_requests_id').scrollIntoView({
+        behavior: "smooth"
+    });
+</script>
+@endif

@@ -199,9 +199,8 @@ function handleErrorsOfficer(err_array, deadline, price) {
         price.after(error);
         price.classList.add("is-invalid");
     }
-    
 }
-// APPROVE OFFICER DECISION
+// OFFICER APPROVE
 $('#approve_button_officer').on('click', function(e) {
     e.preventDefault();
     let id = $('#ticket_id_approve_officer').val();
@@ -217,7 +216,7 @@ $('#approve_button_officer').on('click', function(e) {
         'type': 'PUT',
         'data': {id:id, officer_approval:officer_approval, equipment_id:equipment_id, deadline:deadline, price:price, officer_remarks:officer_remarks, _token:token},
         'success': (res) => {
-            console.log('success');
+            // console.log('success');
             window.location.reload();
         },
         'error': (res) => { 
@@ -235,6 +234,29 @@ $('#approve_button_officer').on('click', function(e) {
         }            
 
         handleErrorsOfficer(err_array, 'deadline_approve_officer', 'price_approve_officer'); 
+    } 
+
+    });
+});
+
+// OFFICER REJECT]
+$('#reject-btn-officer').on('click', function(e) {
+    e.preventDefault();
+    let id = $('#ticket_id_reject_officer').val();
+    let officer_approval = $('#officer_reject_value').val();
+    let token = $('#token_reject_officer').val();
+    let officer_remarks = $('#officer_remarks_reject').val();
+
+    $.ajax({
+        'url': '/tickets/update2/' + id,
+        'type': 'PUT',
+        'data': {id:id, officer_approval:officer_approval, officer_remarks:officer_remarks, _token:token},
+        'success': (res) => {
+            // console.log('success');
+            window.location.reload();
+        },
+        'error': (res) => { 
+            // no special errors to handle in this case
     } 
 
     });

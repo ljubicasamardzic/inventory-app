@@ -52,30 +52,13 @@ class HomeController extends Controller
             $tickets = [];
         }
 
-        // if (count($request->all()) > 0) {
-        //     return redirect()->route('home', 
-        //     [   'categories' => $categories,
-        //         'equipment' => $equipment,
-        //         'equipment_categories' => $equipment_categories,
-        //         'tickets' => $tickets,
-        //         'ticket_statuses' => $ticket_statuses,
-        //         'processed_repair_tickets' => $processed_repair_tickets
-        //     ]);
-
-        //     // return redirect('/#requests_table')->with([
-        //     //     'categories' => $categories,
-        //     //     'equipment' => $equipment,
-        //     //     'equipment_categories' => $equipment_categories,
-        //     //     'tickets' => $tickets,
-        //     //     'ticket_statuses' => $ticket_statuses,
-        //     //     'processed_repair_tickets' => $processed_repair_tickets
-        //     // ]);
-        //     //  compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
-
-        // } else {
-            return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
-        // }
-
+        $flag = '';
+        if (count($request->all()) > 0) {
+            $flag = 'true';
+        }
+        
+        return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets', 'flag']));
+    
     }
 
     public function notifications() {
@@ -114,11 +97,22 @@ class HomeController extends Controller
         if (in_array($not_type, [$closed, $approved, $rejected, $HR_responded])) {
             // show the ticket
             $ticket = Ticket::find($notification->data['ticket']['id']);
-            return $this->TicketController->show($ticket);
+            if ($ticket == null) {
+                alert()->error('The ticket no longer exists!', 'Oops..');
+                return redirect()->route('home');
+            } else {
+                return $this->TicketController->show($ticket);
+            }
         }  else if ($not_type == $new_equipment || $not_type == $restocked) {
             // show the newly arrived equipment
             $equipment = Equipment::find($notification->data['equipment']['id']);
-            return $this->EquipmentController->show($equipment);
+
+            if ($equipment == null) {
+                alert()->error('The equipment no longer exists!', 'Oops..');
+                return redirect()->route('home');
+            } else {
+                return $this->EquipmentController->show($equipment);
+            }
         }
 
     }

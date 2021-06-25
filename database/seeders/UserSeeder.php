@@ -34,8 +34,22 @@ class UserSeeder extends Seeder
                 'name' => 'Ivana Milicic',
                 'email' => 'ivana@mail.com',
                 'password' => Hash::make('12345678'),
-                'position_id' => 2,
+                'position_id' => 4,
                 'role_id' => 5,
+            ],
+            '3' => [
+                'name' => 'Bojana Milicic',
+                'email' => 'bojana@mail.com',
+                'password' => Hash::make('12345678'),
+                'position_id' => 3,
+                'role_id' => 4,
+            ],
+            '4' => [
+                'name' => 'Ana Milicic',
+                'email' => 'ana@mail.com',
+                'password' => Hash::make('12345678'),
+                'position_id' => 3,
+                'role_id' => 3,
             ]
         ];
 

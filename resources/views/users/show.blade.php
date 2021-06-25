@@ -26,7 +26,7 @@
                                     <td>{{ $user->id }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Ime i prezime</td>
+                                    <td>First and last name:</td>
                                     <td>{{ $user->name }}</td>
                                 </tr>
                                 <tr>
@@ -34,12 +34,16 @@
                                     <td>{{ $user->email }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Sektor:</td>
+                                    <td>Department:</td>
                                     <td>{{ $user->department_name }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Pozicija:</td>
+                                    <td>Position:</td>
                                     <td>{{ $user->position->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Role:</td>
+                                    <td>{{ $user->role->name }}</td>
                                 </tr>
                             </table>
                         </div>

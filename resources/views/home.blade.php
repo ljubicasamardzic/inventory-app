@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    
+   
     @if (in_array(auth()->user()->role_id, [User::ADMINISTRATOR, User::SUPPORT_OFFICER, User::ADMINISTRATIVE_OFFICER, User::HR]))
         @include('home.admin-dashboard')
     @else

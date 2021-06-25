@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         @can('viewAny', \App\Models\Equipment::class)
-            @include('home.available_items_search')
+            @include('home.available_items')
         @endcan
         
         @include('home.requests-table')

@@ -167,15 +167,20 @@
                             </tr>
                             <tr>
                                 <td>Serial number:</td>
-                                @if ($ticket->serial_number != null)
-                                    <td>{{ $ticket->serial_number->serial_number }}</td>
+                                @if ($ticket->document_item_id != null)
+                                    <td>{{ $ticket->document_item->serial_number->serial_number }}</td>
                                 @else <td>/</td>
                                 @endif
                             </tr>
                         @endif
                         <tr>
                             <td>Finished on:</td>
-                            <td>{{ $ticket->finished_date }}</td>
+                            <td>
+                                @if ($ticket->date_finished != null)
+                                    {{ $ticket->finished_date }}
+                                @else /
+                                @endif
+                            </td>
                         </tr>
                         @if ($ticket->final_remarks != null)
                         <tr>

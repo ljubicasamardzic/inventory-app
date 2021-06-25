@@ -15,7 +15,6 @@
                     <input type="hidden" name="id" id="id_mark_finished" value="{{ $ticket->id }}">
                     <input type="hidden" id="token_mark_finished" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="status_id" id="status_id_mark_finished" value="{{ App\Models\Ticket::PROCESSED }}">
-
                     @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED || $ticket->isNewEquipmentRequest() && $ticket->officer_approval == App\Models\Ticket::REJECTED && $ticket->HR_approval == App\Models\Ticket::APPROVED)
                         @if ($available_equipment == '[]')
                         <div class="p-2">                            
@@ -48,7 +47,7 @@
                             <textarea name="final_remarks" id="final_remarks_mark_finished" class="form-control mt-3" placeholder="Explain to the employee why the request was denied" cols="30" rows="5"></textarea>       
                         @endif
                         
-                    @elseif ($ticket->isNewEquipmentRequest() && $ticket->status_id == App\Models\Ticket::IN_PROGRESS)
+                    @elseif ($ticket->isNewEquipmentRequest() && $ticket->equipment_id != null && $ticket->HR_approval == App\Models\Ticket::APPROVED)
                         <label for="serial_number_select">Assign serial number:</label>
                         <select name="serial_number_id" id="serial_number_select2" class="form-control">
                             @if ($ticket->equipment != null && $ticket->equipment->serial_numbers != null)
@@ -60,7 +59,7 @@
                                 @endforeach
                             @endif
                         </select>
-                        @endif
+                    @endif
                         <label for="date_finished">Date finished:</label>
                         <input type="date" 
                             name="date_finished" 
