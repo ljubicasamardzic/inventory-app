@@ -52,7 +52,30 @@ class HomeController extends Controller
             $tickets = [];
         }
 
-       return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
+        // if (count($request->all()) > 0) {
+        //     return redirect()->route('home', 
+        //     [   'categories' => $categories,
+        //         'equipment' => $equipment,
+        //         'equipment_categories' => $equipment_categories,
+        //         'tickets' => $tickets,
+        //         'ticket_statuses' => $ticket_statuses,
+        //         'processed_repair_tickets' => $processed_repair_tickets
+        //     ]);
+
+        //     // return redirect('/#requests_table')->with([
+        //     //     'categories' => $categories,
+        //     //     'equipment' => $equipment,
+        //     //     'equipment_categories' => $equipment_categories,
+        //     //     'tickets' => $tickets,
+        //     //     'ticket_statuses' => $ticket_statuses,
+        //     //     'processed_repair_tickets' => $processed_repair_tickets
+        //     // ]);
+        //     //  compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
+
+        // } else {
+            return view('home', compact(['categories', 'equipment', 'equipment_categories', 'tickets', 'ticket_statuses', 'processed_repair_tickets']));
+        // }
+
     }
 
     public function notifications() {

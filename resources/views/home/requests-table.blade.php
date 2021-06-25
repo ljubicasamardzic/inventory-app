@@ -12,7 +12,7 @@
     <div class="card-body p-0">
         <div class="table-responsive">
             @include('home.search-all')
-          <table class="table table-hover m-0">
+          <table class="table table-hover m-0" id="requests_table">
                 <thead>
                     <tr>
                         <th>#</th>

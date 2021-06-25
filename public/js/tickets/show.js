@@ -105,11 +105,7 @@ function officerEditDisplay(ticket_type, ticket_request_type, flag=false, office
         // /** TICKET REQUEST TYPES **/
         // const EQUIPMENT_REQUEST = 1;
         // const OFFICE_SUPPLIES_REQUEST = 2;
-    
-        // REQUEST STATUSES
-        // const PENDING = 1;
-        // const APPROVED = 2;
-        // const REJECTED = 3;
+
 
     if (flag == true) {
         officer_approval = $('#officer_approval_select').val();
@@ -182,37 +178,6 @@ $('.confirm-delete-btn').on('click', function(e) {
     });
 });
 
-// edit user equipment modal 
-// did not cover errors since these input fields do not have any particular rules seeing that they are nullable
-
-$('#submit_btn_edit_equipment').on('click', function(e) {
-e.preventDefault();
-alert('click');
-
-let ticket_id = $(this).attr('data-id');
-let ticket_type = $('#ticket_type').val();
-let ticket_request_type = $('#ticket_request_type_id').val();
-let description_supplies = $('#supplies_desc').val();
-let quantity = $('#supplies_quantity').val();
-let equipment_category_id = $('#equipment_category_id').val();
-let description_equipment = $('#description_equipment').val();
-let token = $('#token_edit_equipment').val();
-
-// console.log(ticket_id, ticket_type, ticket_request_type, description_supplies, quantity, equipment_category_id, description_equipment, token);
-
-    $.ajax({
-            'url': '/tickets/' + ticket_id,
-            'type': 'PUT',
-            'data': {ticket_type:ticket_type, ticket_request_type:ticket_request_type, description_supplies:description_supplies, 
-                quantity:quantity, equipment_category_id:equipment_category_id, description_equipment:description_equipment, _token:token},
-            'success': (res) => {
-                window.location.reload();
-            },
-            'error': (res) => {            
-           } 
-
-    });
-});
 function createErrorMessage(error_text) {
     let error_message = document.createElement('p');
     error_message.innerHTML = error_text;
@@ -220,9 +185,9 @@ function createErrorMessage(error_text) {
     error_message.classList.add('invalid-feedback');
     return error_message;
 }
-function handleErrorsOfficerApproval(err_array) {
-    var deadline = $('#deadline_approve_officer')[0];
-    var price = $('#price_approve_officer')[0];
+function handleErrorsOfficer(err_array, deadline, price) {
+    var deadline = $('#' + deadline)[0];
+    var price = $('#' + price)[0];
     
     if (err_array['deadline']) {
         let error = createErrorMessage(err_array['deadline']);
@@ -236,7 +201,7 @@ function handleErrorsOfficerApproval(err_array) {
     }
     
 }
-// approve request officer
+// APPROVE OFFICER DECISION
 $('#approve_button_officer').on('click', function(e) {
     e.preventDefault();
     let id = $('#ticket_id_approve_officer').val();
@@ -246,8 +211,6 @@ $('#approve_button_officer').on('click', function(e) {
     let deadline = $('#deadline_approve_officer').val();
     let price = $('#price_approve_officer').val();
     let officer_remarks = $('#officer_remarks_approve').val();
-
-    // console.log(id, officer_approval, token, equipment_id, deadline, price, officer_remarks);
 
     $.ajax({
         'url': '/tickets/update2/' + id,
@@ -271,12 +234,105 @@ $('#approve_button_officer').on('click', function(e) {
             err_array[key] = (errors[key][0]);
         }            
 
-        handleErrorsOfficerApproval(err_array); 
+        handleErrorsOfficer(err_array, 'deadline_approve_officer', 'price_approve_officer'); 
     } 
 
+    });
 });
+
+// EDIT OFFICER DECISION
+$('#submit_btn_update_officer').on('click', function(e) {
+    e.preventDefault();
+    let id = $('#id_edit_officer').val();
+    let officer_approval = $('#officer_approval_select').val();
+    let equipment_id = $('#equipment_select_update_officer').val();
+    let deadline = $('#deadline_edit_officer').val();
+    let price = $('#price_edit_officer').val();
+    let officer_remarks = $('#officer_remarks_edit').val();
+    let token = $('#token_edit_officer').val();
+
+    console.log(id, officer_approval, equipment_id, deadline, price, officer_remarks, token);
+    $.ajax({
+        'url': '/tickets/update-officer-decision/' + id,
+        'type': 'PUT',
+        'data': {id:id, officer_approval:officer_approval, equipment_id:equipment_id, deadline:deadline, price:price, officer_remarks:officer_remarks, _token:token},
+        'success': (res) => {
+            console.log('success', res);
+            window.location.reload();
+        },
+        'error': (res) => { 
+            // console.log(res);
+        // remove all errors 
+        $('.invalid-feedback').remove();
+        $(".is-invalid").removeClass('is-invalid');
+
+        let errors = res['responseJSON']['errors'];
+        console.log(errors);
+        let err_array = [];
+
+        // get error messages and push them into an array
+        for (let key in errors) {
+            err_array[key] = (errors[key][0]);
+        }            
+
+        handleErrorsOfficer(err_array, 'deadline_edit_officer', 'price_edit_officer'); 
+        }
+    }); 
 });
 
+// MARK FINISHED
 
+function handleErrorsFinished(err_array) {
+    let date_finished = $('#date_finished_mark_finished')[0];
 
+    if (err_array['date_finished']) {
+        let error = createErrorMessage(err_array['date_finished']);
+        date_finished.after(error);
+        date_finished.classList.add("is-invalid");
+    }
+}
 
+$('#btn_submit_mark_finished').on('click', function(e) {
+    e.preventDefault();
+    let id = $('#id_mark_finished').val();
+    let token = $('#token_mark_finished').val();
+    let status_id = $('#status_id_mark_finished').val();
+    let equipment_id = $('#equipment_select1').val();
+    let serial_number_id;
+    if ($('#serial_number_select1').val() != null) {
+        serial_number_id = $('#serial_number_select1').val();
+    } else if ($('#serial_number_select2').val() != null) {
+        serial_number_id = $('#serial_number_select2').val();
+    }
+    let final_remarks = $('#final_remarks_mark_finished').val();
+    let date_finished = $('#date_finished_mark_finished').val();
+
+    $.ajax({
+        'url': '/tickets/update4/' + id,
+        'type': 'PUT',
+        'data': {id:id, status_id:status_id, equipment_id:equipment_id, serial_number_id:serial_number_id, date_finished:date_finished, _token:token, final_remarks:final_remarks},
+        'success': (res) => {
+            console.log('success', res);
+            window.location.reload();
+        },
+        'error': (res) => { 
+        // console.log(res);
+        // remove all errors 
+        $('.invalid-feedback').remove();
+        $(".is-invalid").removeClass('is-invalid');
+
+        let errors = res['responseJSON']['errors'];
+        console.log(errors);
+        let err_array = [];
+
+        // get error messages and push them into an array
+        for (let key in errors) {
+            err_array[key] = (errors[key][0]);
+        }            
+
+        handleErrorsFinished(err_array); 
+        }
+    }); 
+    // console.log(id, token, status_id, equipment_id, serial_number_id, date_finished);
+
+});

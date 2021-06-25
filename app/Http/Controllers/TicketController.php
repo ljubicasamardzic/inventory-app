@@ -75,6 +75,7 @@ class TicketController extends Controller
 
     public function update(TicketRequest $request, Ticket $ticket)
     {
+        // dd($request);
         if ($request->ticket_type == Ticket::NEW_EQUIPMENT && $request->ticket_request_type == Ticket::EQUIPMENT_REQUEST) {
             // important to specify what exactly we are sending since information from different request types could be saved in the request
             $request['description_supplies'] = null;
@@ -114,7 +115,7 @@ class TicketController extends Controller
             }
         }
 
-        // return redirect()->back();
+        return redirect()->back();
     }
 
     public function destroy(Ticket $ticket)
@@ -142,7 +143,7 @@ class TicketController extends Controller
     }
     
     public function update_2(TicketRequest $request) {
-        // dd($request);
+        // called bu ajax
         $ticket = Ticket::find($request->id);
         $this->authorize('update2', $ticket);
 
@@ -220,19 +221,19 @@ class TicketController extends Controller
     }
 
     public function update_4(TicketRequest $request) {
-        // dd($request, 'update4');
+        // called by ajax
 
         $ticket = Ticket::find($request->id);
 
         $this->authorize('update4', $ticket);
 
+        DB::beginTransaction();
         if ($ticket->isNewEquipmentRequest()) {
             
             // Case 1: New equipment request with reserved items
             // Case 2: Rejected by officer and then approved by HR in which case we still need to add equipment to the ticket 
             // Case 3: Waited for equipment to arrive and have HR's approval
             if ($ticket->equipment_id != null && $ticket->isHRApproved() || !$ticket->isOfficerApproved() && $ticket->isHRApproved() || $ticket->isWaitingForEquipment() && $ticket->isHRApproved()) {
-                // DB::beginTransaction();
                 $new_doc = $ticket->createDocument();
                     // Case 2
 
@@ -252,6 +253,7 @@ class TicketController extends Controller
                 }
 
                 $request['document_id'] = $new_doc->id; 
+                
                 $update1 = $ticket->update($request->all());
 
                 $quantity_update = $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity - 1]);
@@ -260,6 +262,8 @@ class TicketController extends Controller
                     DB::rollBack();
                     alert()->error('Something went wrong!', 'Oops..');
                 } else {
+                    DB::commit();
+                    alert()->success('You have successfully marked the ticket as finished!', 'Success!');
                     $user = $ticket->user()->get();
                     Notification::send($user, new TicketApprovedNotification($ticket));
                 }
@@ -304,7 +308,6 @@ class TicketController extends Controller
                 DB::commit();
                 alert()->success('You have successfully marked the ticket as finished!', 'Success!');
             } else {
-                dd('fifth');
 
                 DB::rollBack();
                 alert()->error('Something went wrong!', 'Oops..');
@@ -312,14 +315,15 @@ class TicketController extends Controller
         }
         
         Notification::send($ticket->HR()->get(), new TicketClosedNotification($ticket));
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     // UPDATE OFFICER DECISION
     public function update_officer_decision($id, TicketRequest $request) {
-        // dd($id, $request);
+        // called by ajax
         $ticket = Ticket::find($id);
-        
+        $this->authorize('update_officer_decision', $ticket);
+
         if ($ticket->isNewEquipmentRequest()) {
             if ($ticket->officer_approval == Ticket::APPROVED && $request->officer_approval == Ticket::APPROVED) {
                 // make sure the status is right if the equipment is being waited for
@@ -329,27 +333,47 @@ class TicketController extends Controller
                     $request['status_id'] = Ticket::IN_PROGRESS;
                 }
 
+                DB::beginTransaction();
                 // if it happens that the request was approved but that there was no available equipment 
                 // and then the equipment arrives, we must make a new reservation 
                 if ($ticket->equipment_id == null && $request->equipment_id != null) {
                     $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
                     
                     // firstly update the ticket 
-                    $ticket->update($request->all());
+                    $update_ticket = $ticket->update($request->all());
 
                     // then update the quantity
-                    $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
+                    $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
+                    if ($new_reservation && $update_ticket && $update_quantity) {
+                        DB::commit();
+                        alert()->success('You have successfully updated the ticket!', 'Success!');
+                    } else {
+                        DB::rollBack();
+                        alert()->error('Something went wrong!', 'Oops..');
+                    }
+                } else {
+                    if ($ticket->update($request->all())) {
+                        DB::commit();
+                        alert()->success('You have successfully updated the ticket!', 'Success!');
+                    } else {
+                        DB::rollBack();
+                        alert()->error('Something went wrong!', 'Oops..');
+                    }
                 }
 
                 // if the ticket changes from approved to rejected
             } else if ($ticket->officer_approval == Ticket::APPROVED && $request->officer_approval == Ticket::REJECTED) {
                  // check if there is a reservation and delete it
+                 DB::beginTransaction();
                  if ($ticket->reservation != null) {
                     
                     $update = $ticket->equipment->update(['available_quantity' => $ticket->equipment->available_quantity + 1]);
                     
                     if ($update) {
                         $ticket->reservation->delete();
+                    } else {
+                        DB::rollBack();
+                        alert()->error('Something went wrong!', 'Oops..');
                     }
                 }
                 // if the request used to wait for new equipment, change that status now that it is rejected
@@ -360,15 +384,31 @@ class TicketController extends Controller
                 $request['equipment_id'] = null;
                 $request['deadline'] = null;
                 $request['price'] = null;
-                $ticket->update($request->all());
+                if ($ticket->update($request->all())) {
+                    DB::commit();
+                    alert()->success('You have successfully updated the ticket!', 'Success!');
+                } else {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
             } else if ($ticket->officer_approval == Ticket::REJECTED && $request->officer_approval == Ticket::REJECTED) {
                 $request['equipment_id'] = null;
                 $request['deadline'] = null;
                 $request['price'] = null;
-                $ticket->update($request->all());
+                if ($ticket->update($request->all())) {
+                    DB::commit();
+                    alert()->success('You have successfully updated the ticket!', 'Success!');
+                } else {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
             } else if ($ticket->officer_approval == Ticket::REJECTED && $request->officer_approval == Ticket::APPROVED) {
-                
-                $ticket->update($request->all());
+                DB::beginTransaction();
+
+                if (!$ticket->update($request->all())) {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
 
                 if ($ticket->equipment_id != null) {
                     // make a reservation 
@@ -377,28 +417,53 @@ class TicketController extends Controller
                     
                     $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
                     
+                    if (!$new_reservation || !$update_quantity) {
+                        DB::rollBack();
+                        alert()->error('Something went wrong!', 'Oops..');
+                    } else {
+                        DB::commit();
+                        alert()->success('You have successfully updated the ticket!', 'Success!');
+                    }
                 } else if ($ticket->equipment_id == null) {
                     // no equipment id means that the equipment is being waited for 
-                    $ticket->update(['status_id' => Ticket::WAITING_FOR_EQUIPMENT]);
+                    $update_status = $ticket->update(['status_id' => Ticket::WAITING_FOR_EQUIPMENT]);
+                    if ($update_status) {
+                        DB::commit();
+                        alert()->success('You have successfully updated the ticket!', 'Success!');
+                    }
                 }
             }
 
         } else if ($ticket->isRepairRequest() || $ticket->isSuppliesRequest()) {
             if ($request->officer_approval == Ticket::APPROVED) {
-                $ticket->update($request->all());
+                DB::beginTransaction();
+                if ($ticket->update($request->all())) {
+                    DB::commit();
+                    alert()->success('You have successfully updated the ticket!', 'Success!');
+                } else {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
             } else if ($request->officer_approval == Ticket::REJECTED) {
                 // delete everything that could be filled if the request was changed from approved to rejected
                 $request['deadline'] = null;
                 $request['price'] = null;
-                $ticket->update($request->all());
+                if ($ticket->update($request->all())) {
+                    DB::commit();
+                    alert()->success('You have successfully updated the ticket!', 'Success!');
+                } else {
+                    DB::rollBack();
+                    alert()->error('Something went wrong!', 'Oops..');
+                }
             }
         }
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function update_HR_decision($id, TicketRequest $request) {
         $ticket = Ticket::find($id);
+        $this->authorize('update_HR_decision', $ticket);
 
         // Case 1: only the comment differs
         if ($ticket->HR_approval == Ticket::APPROVED && $request->HR_approval == Ticket::APPROVED) {

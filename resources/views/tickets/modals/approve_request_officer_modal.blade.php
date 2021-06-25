@@ -1,8 +1,7 @@
 <div class="modal fade show" id="approve_request_officer_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <form method="POST" action="/tickets/update2/{{ $ticket->id }}">
-            @csrf
-            @method('PUT')
+            {{-- sent by ajax --}}
             <div class="modal-content">
                 <div class="modal-header">
                 <h4 class="modal-title">Approve request</h4>
@@ -17,10 +16,9 @@
 
                     @if ($ticket->isNewItemsRequest() && $ticket->isEquipmentRequest())
                         <label for="">Assign equipment:</label>
-                        <select class="form-control @error('equipment_id') is-invalid @enderror" 
+                        <select class="form-control" 
                                 name="equipment_id" 
                                 id="equipment_select" 
-                                {{-- onchange="availableSerialNums()" --}}
                         >
                             <option value="">-- Select available equipment --</option>
                             @if ($available_equipment != '[]')
@@ -31,27 +29,12 @@
                                 <option value="0">Order new equipment</option>
                             @endif
                         </select>
-                        @error('equipment_id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>                        
-                        @enderror
                     @endif
                     
                     <label for="deadline">Delivery deadline:</label>
-                    <input type="date" name="deadline" id="deadline_approve_officer" class="form-control @error('deadline') is-invalid @enderror">
-                    @error('deadline')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>                        
-                    @enderror
+                    <input type="date" name="deadline" id="deadline_approve_officer" class="form-control">
                     <label for="price">Price (€):</label>
-                    <input type="number" min=0 step=0.01 name="price" id="price_approve_officer" class="form-control @error('deadline') is-invalid @enderror">
-                    @error('price')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>                        
-                    @enderror
+                    <input type="number" min=0 step=0.01 name="price" id="price_approve_officer" class="form-control">
                     <label for="officer_remarks">Remarks:</label>
                     <textarea name="officer_remarks" id="officer_remarks_approve" cols="30" rows="5" class="form-control"></textarea>
                 </div>

@@ -1,7 +1,7 @@
 <div class="modal fade show" id="edit_equipment_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <form method="POST" action="/tickets/{{ $ticket->id }}">
-            {{-- @csrf --}}
+            @csrf
             @method('PUT')
             <div class="modal-content">
                 <div class="modal-header">
@@ -12,7 +12,7 @@
                 </div>
                 <div class="row modal-body" id="modal-body">
                     <input type="hidden" name="ticket_type" value="1" id="ticket_type">
-                    <input type="hidden" id="token_edit_equipment" name="_token" value="{{ csrf_token() }}">
+                    {{-- <input type="hidden" id="token_edit_equipment" name="_token" value="{{ csrf_token() }}"> --}}
                     <div class="col-12">
                         <select name="ticket_request_type" class="form-control @error('ticket_request_type') is-invalid @enderror" id="ticket_request_type_id">
                             <option value="">-- select request type --</option>

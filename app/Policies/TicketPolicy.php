@@ -86,7 +86,7 @@ class TicketPolicy
 
     public function update4(User $user, Ticket $ticket) {
         // allow only the officer who worked on this case to update this step
-        return $user->id == $ticket->officer->id;
+        return $user->id == $ticket->officer->id || $user->isSuperAdmin();
     }
 
     public function export_order(User $user, Ticket $ticket) {
@@ -96,4 +96,12 @@ class TicketPolicy
             return $user->isHR() || $user->isAdministrativeOfficer();
         }
     }
+
+    public function update_officer_decision(User $user, Ticket $ticket) {
+        return $ticket->officer_id == $user->id;
+    }
+
+    public function update_HR_decision(User $user, Ticket $ticket) {
+        return $ticket->HR_id == $user->id;
+    } 
 }
