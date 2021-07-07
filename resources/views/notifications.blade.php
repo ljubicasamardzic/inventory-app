@@ -16,7 +16,7 @@
                 <form action="/mark_all_notifications_read/{{ auth()->id() }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <button type="submit" class="btn btn-sm btn-warning float-right">
+                    <button type="submit" class="btn btn-sm btn-warning float-right" @if(auth()->user()->unreadNotifications()->count() < 1) disabled @endif>
                         Mark all as read                  
                     </button>
                 </form>

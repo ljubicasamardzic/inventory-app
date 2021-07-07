@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
+use App\Http\Requests\NewTicketRequest;
 use App\Models\EquipmentCategory;
 use App\Models\Reservation;
 use App\Notifications\HRResponseNotification;
@@ -33,7 +34,7 @@ class TicketController extends Controller
         //
     }
 
-    public function store(TicketRequest $request)
+    public function store(NewTicketRequest $request)
     {
         $request->merge(['user_id' => auth()->id()]);
         
@@ -44,7 +45,7 @@ class TicketController extends Controller
         } else {
             alert()->error('Something went wrong!', 'Oops..');
         }
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function show(Ticket $ticket)

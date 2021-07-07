@@ -239,7 +239,7 @@ $('#approve_button_officer').on('click', function(e) {
         }            
 
         handleErrorsOfficer(err_array, 'deadline_approve_officer', 'price_approve_officer'); 
-    } 
+        } 
 
     });
 });
