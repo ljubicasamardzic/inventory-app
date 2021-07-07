@@ -56,9 +56,9 @@
                             @endif
                             <tr>
                                 <td>Price (€):</td>
-                                @if ($ticket->price)
+                                @if ($ticket->price || $ticket->price == '0')
                                     <td>{{ $ticket->price }}</td>
-                                @else
+                                @elseif (is_null($ticket->price))
                                     <td>/</td>
                                 @endif
                             </tr>

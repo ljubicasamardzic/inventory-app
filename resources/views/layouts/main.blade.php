@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page_title', 'InventoryAPP')</title>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-    <link rel="stylesheet" href="sweetalert2.min.css"> 
-    
-    {{-- <script src="sweetalert2.all.min.js"></script>
-    {{-- <script src="sweetalert2.min.js"></script> --}}
-    
     
     @include('partials.styles')
     @yield('additional_styles', '')

@@ -54,7 +54,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <label for="department_select">Department:</label>
-                                <select name="department_id" id="department_select" class="form-control @error('department_id') is-invalid @endif">
+                                <select name="department_id" id="department_select" class="form-control @error('department_id') is-invalid @endif" onchange="fillPositions()">
                                     <option value="">- select a department -</option>
                                     @foreach($departments as $department)
                                         <option value="{{ $department->id }}" {{ $user->department_id == $department->id ? 'selected' : '' }} >{{ $department->name }}</option>

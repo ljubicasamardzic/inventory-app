@@ -11,15 +11,20 @@ function availableSerialNums(equipment_div, serial_nums_div) {
        'url' : '/equipment-serial-numbers/' + equipment_id,
        'type' : 'GET',
        'success': (response) => {
-        let serial_numbers = response;
-        let options = '';
-        serial_numbers.forEach((number) => {
-            // let selected = '';
-            // if(equipment_id && equipment_id == number.equipment_id) selected = 'selected';
-            options += `<option value=\"${number.id}\">${number.serial_number}</option>`;
-        });
-        $("#" + serial_nums_div).html(options);
-       }
+           // if there are no serial nums make the select field disabled
+        if (response.length == 0) {
+            $('#' + serial_nums_div).prop('disabled', true);
+        } else {
+            let serial_numbers = response;
+            let options = '';
+            serial_numbers.forEach((number) => {
+                // let selected = '';
+                // if(equipment_id && equipment_id == number.equipment_id) selected = 'selected';
+                options += `<option value=\"${number.id}\">${number.serial_number}</option>`;
+            });
+            $("#" + serial_nums_div).html(options);
+           }
+        }
     });
 }
 

@@ -67,7 +67,7 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $sn->serial_number }}</td>
                                             <td>
-                                                <a 
+                                                <button 
                                                     type="button"
                                                     class="btn btn-primary btn-sm btn-flat callModal"
                                                     @cannot('update', $equipment) disabled @endcannot  
@@ -76,19 +76,19 @@
                                                     data-id = {{ $sn->id }}
                                                     data-sn = {{ $sn->serial_number }} >
                                                     <i class="fa fa-edit"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                             <td>
                                                 <form action="/serial-numbers/{{ $sn->id }}" method="POST" id="delete_form_{{ $sn->id }}">
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>
-                                                <a class="btn btn-danger btn-sm btn-flat confirm-delete-btn"
+                                                <button class="btn btn-danger btn-sm btn-flat confirm-delete-btn"
                                                     @cannot('update', $equipment) disabled @endcannot 
                                                     data-id={{ $sn->id }}
                                                 >
                                                     <i class="fa fa-times"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

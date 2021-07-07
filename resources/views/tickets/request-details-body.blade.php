@@ -167,7 +167,7 @@
                             </tr>
                             <tr>
                                 <td>Serial number:</td>
-                                @if ($ticket->document_item_id != null)
+                                @if ($ticket->document_item_id != null && $ticket->document_item->serial_number != null)
                                     <td>{{ $ticket->document_item->serial_number->serial_number }}</td>
                                 @else <td>/</td>
                                 @endif

@@ -8,7 +8,6 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\SerialNumberController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
-use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 

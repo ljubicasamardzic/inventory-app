@@ -2,11 +2,8 @@
     <div class="modal-dialog">
         <form method="POST">
             {{-- submitted via ajax --}}
-            {{-- @csrf
-            @method('PUT') --}}
             <div class="modal-content">
                 <div class="modal-header">
-                {{-- <h4 class="modal-title">Mark request as finished</h4> --}}
                 <a type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </a>
@@ -41,7 +38,7 @@
                             </select>
                         @endif
 
-                    @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::REJECTED)
+                    @elseif ($ticket->isSuppliesRequest() || $ticket->isRepairRequest() || $ticket->isNewEquipmentRequest())
                        
                         @if ($ticket->HR_approval == App\Models\Ticket::REJECTED)
                             <textarea name="final_remarks" id="final_remarks_mark_finished" class="form-control mt-3" placeholder="Explain to the employee why the request was denied" cols="30" rows="5"></textarea>       
@@ -49,8 +46,8 @@
                         
                     @elseif ($ticket->isNewEquipmentRequest() && $ticket->equipment_id != null && $ticket->HR_approval == App\Models\Ticket::APPROVED)
                         <label for="serial_number_select">Assign serial number:</label>
-                        <select name="serial_number_id" id="serial_number_select2" class="form-control">
-                            @if ($ticket->equipment != null && $ticket->equipment->serial_numbers != null)
+                        <select name="serial_number_id" id="serial_number_select2" class="form-control" @if($ticket->equipment->serial_numbers->count() == 0) disabled @endif>
+                            @if ($ticket->equipment != null && $ticket->equipment->serial_numbers->count() > 0)
                                 <option value="">-- available serial numbers --</option>
                                 @foreach ($ticket->equipment->serial_numbers as $sn)
                                     @if (!$sn->is_used)
@@ -60,12 +57,16 @@
                             @endif
                         </select>
                     @endif
+                    {{-- if waiting for equipment and no equipment to assign atm, then don't show the date --}}
+                    @if ($ticket->status_id == App\Models\Ticket::WAITING_FOR_EQUIPMENT && $ticket->HR_approval == App\Models\Ticket::APPROVED && $available_equipment == '[]')
+                    @else 
                         <label for="date_finished">Date finished:</label>
                         <input type="date" 
                             name="date_finished" 
                             id="date_finished_mark_finished" 
                             class="form-control"
                         >
+                    @endif
                     </div>
                 <div class="modal-footer justify-content-between">
                     <a type="button" class="btn btn-default" data-dismiss="modal">Cancel</a>

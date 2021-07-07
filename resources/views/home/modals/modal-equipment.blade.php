@@ -37,7 +37,7 @@
                             </div>
                             @enderror
                             <input type="number" 
-                                    class="form-control mt-3 
+                                    class="form-control mt-3" 
                                     name="quantity" 
                                     id="supplies_quantity" 
                                     placeholder="Quantity"

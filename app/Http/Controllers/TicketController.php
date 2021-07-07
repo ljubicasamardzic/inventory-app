@@ -460,8 +460,6 @@ class TicketController extends Controller
                 }
             }
         }
-
-        // return redirect()->back();
     }
 
     public function update_HR_decision($id, TicketRequest $request) {
@@ -479,6 +477,7 @@ class TicketController extends Controller
             }
             
             $ticket->update($request->all());
+            $ticket->update(['status_id' => Ticket::IN_PROGRESS]);
 
             // Case 3: make a reservation if necessary (perhaps one had been deleted if the ticket was firstly rejected by the HR)
         } else if ($ticket->HR_approval == Ticket::REJECTED && $request->HR_approval == Ticket::APPROVED) {
@@ -486,10 +485,10 @@ class TicketController extends Controller
                 $new_reservation = Reservation::create(['ticket_id' => $ticket->id]);
                     
                 $update_quantity = $new_reservation->ticket->equipment->update(['available_quantity' => $new_reservation->ticket->equipment->available_quantity - 1]);
-            }
+            } 
             $ticket->update($request->all());
             // Case 4: probably only comment changed
-        } else if ($ticket->HR_approval == Ticket::REJECTED && $request->HR_approval == Ticket::APPROVED) {
+        } else if ($ticket->HR_approval == Ticket::REJECTED && $request->HR_approval == Ticket::REJECTED) {
             $ticket->update($request->all());
         }
 
@@ -514,8 +513,6 @@ class TicketController extends Controller
         
         return Excel::download(new OrderExport($data), 'order.xlsx');
     }
-
-
 
     public function test(Request $request) {
         $result = $request->ticket_type;
