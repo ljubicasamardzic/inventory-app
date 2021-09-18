@@ -38,6 +38,7 @@
                             <th>Category</th>
                             <th>Name</th>
                             <th>Qty. available</th>
+                            <th>Qty. reserved</th>
                             <th>Description</th>
                             <th>Edit</th>
                             <th>Delete</th>
@@ -51,7 +52,8 @@
                                     {{ $e->category->name }}
                                 </td>
                                 <td>{{ $e->name }}</td>
-                                <td>{{ $e->available_quantity }}</td>
+                                <td>{{ $e->available_quantity - $e->number_of_reservations }}</td>
+                                <td>{{ $e->number_of_reservations }}</td>
                                 <td>{{ $e->short_description }}</td>
                                 <td>
                                     <a href="/equipment/{{ $e->id }}/edit" class="btn btn-primary btn-sm btn-flat @cannot('update', $e) disabled @endcannot">

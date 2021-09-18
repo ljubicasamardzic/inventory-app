@@ -26,7 +26,7 @@
               @if ($processed_repair_tickets->count() > 0)
                   @foreach ($processed_repair_tickets as $key => $ticket)
                       <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
-                            <td>{{ $key + 1 }}</td>
+                            <td>{{ (($processed_repair_tickets::resolveCurrentPage('repair') - 1) * App\Models\Ticket::PER_PAGE)  + $key + 1 }}</td>
                             <td>{{ $ticket->user->name }}</td>
                             <td>
                                 @if ($ticket->officer != null)
@@ -60,7 +60,7 @@
             </tbody>
           </table>
           <div class="d-flex flex-row justify-content-center mt-3">
-              {{ $tickets->appends(request()->except('page'))->links() }}
+              {{ $processed_repair_tickets->appends(request()->except('page'))->links() }}
           </div>
         </div>
         <!-- /.table-responsive -->

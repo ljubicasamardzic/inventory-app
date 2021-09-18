@@ -360,6 +360,122 @@ $('#btn_submit_mark_finished').on('click', function(e) {
         handleErrorsFinished(err_array); 
         }
     }); 
-    // console.log(id, token, status_id, equipment_id, serial_number_id, date_finished);
+});
 
+function handleErrorsEditRequest(err_array) {
+    let description_supplies = $('#supplies_desc_edit_equipment')[0];
+    let quantity = $('#supplies_quantity_edit_equipment')[0];
+    let equipment_category_id = $('#equipment_category_id_edit')[0];
+    let description_equipment = $('#description_equipment_edit')[0];
+    let document_item_id = $('#description_malfunction_edit')[0];
+    let description_malfunction = $('#description_malfunction_edit')[0];
+
+    if (err_array['description_supplies']) {
+        let error = createErrorMessage(err_array['description_supplies']);
+        description_supplies.after(error);
+        description_supplies.classList.add("is-invalid");
+    }
+    if (err_array['quantity']) {
+        let error = createErrorMessage(err_array['quantity']);
+        quantity.after(error);
+        quantity.classList.add("is-invalid");
+    }
+    if (err_array['equipment_category_id']) {
+        let error = createErrorMessage(err_array['equipment_category_id']);
+        equipment_category_id.after(error);
+        equipment_category_id.classList.add("is-invalid");
+    }
+    if (err_array['description_equipment']) {
+        let error = createErrorMessage(err_array['description_equipment']);
+        description_equipment.after(error);
+        description_equipment.classList.add("is-invalid");
+    }
+    if (err_array['document_item_id']) {
+        let error = createErrorMessage(err_array['document_item_id']);
+        document_item_id.after(error);
+        document_item_id.classList.add("is-invalid");
+    }
+    if (err_array['description_malfunction']) {
+        let error = createErrorMessage(err_array['description_malfunction']);
+        description_malfunction.after(error);
+        description_malfunction.classList.add("is-invalid");
+    }
+}
+
+$('#submit_btn_edit_equipment').on('click', function(e) {
+    e.preventDefault();
+
+    let id = $(this).attr('data-id');
+
+    let ticket_type = $('#ticket_type_edit_equipment').val();
+    let token = $('#token_edit_equipment').val();
+    let ticket_request_type = $('#ticket_request_type_id').val();
+    let description_supplies = $('#supplies_desc_edit_equipment').val();
+    let quantity = $('#supplies_quantity_edit_equipment').val();
+    let equipment_cat = $('#equipment_category_id_edit').val();
+    let description_equipment = $('#description_equipment_edit').val();
+
+    // console.log(id, ticket_type, token, ticket_request_type, supplies_description, quantity, equipment_cat, description_equipment);
+
+    $.ajax({
+        'url' : '/tickets/' + id,
+        'type' : 'PUT',
+        'data': {ticket_type:ticket_type, ticket_request_type:ticket_request_type, description_supplies:description_supplies, quantity:quantity, equipment_category_id:equipment_cat, description_equipment:description_equipment, _token:token},
+        'success': (res) => {
+            // console.log('success', res);
+            window.location.reload();
+        },
+        'error': (res) => { 
+            // console.log('error', res);
+        // remove all errors 
+        $('.invalid-feedback').remove();
+        $(".is-invalid").removeClass('is-invalid');
+
+        let errors = res['responseJSON']['errors'];
+        let err_array = [];
+
+        // get error messages and push them into an array
+        for (let key in errors) {
+            err_array[key] = (errors[key][0]);
+        }            
+
+        handleErrorsEditRequest(err_array); 
+        } 
+    });
+});
+
+$('#submit_btn_edit_malfunction').on('click', function(e) {
+    e.preventDefault();
+
+    let id = $(this).attr('data-id');
+
+    let ticket_type = $('#ticket_type_edit_malfunction').val();
+    let token = $('#token_edit_malfunction').val();
+    let ticket_request_type = $('#ticket_request_edit_malfunction').val();
+    let description_malfunction = $('#description_malfunction_edit').val();
+    let document_item_id = $('#document_item_edit_malfunction').val();
+
+    $.ajax({
+        'url' : '/tickets/' + id,
+        'type' : 'PUT',
+        'data': {ticket_type:ticket_type, ticket_request_type:ticket_request_type, description_malfunction:description_malfunction, document_item_id:document_item_id, _token:token},
+        'success': (res) => {
+            window.location.reload();
+        },
+        'error': (res) => { 
+        // remove all errors 
+        $('.invalid-feedback').remove();
+        $(".is-invalid").removeClass('is-invalid');
+
+        let errors = res['responseJSON']['errors'];
+        let err_array = [];
+
+        // get error messages and push them into an array
+        for (let key in errors) {
+            err_array[key] = (errors[key][0]);
+        }            
+
+        handleErrorsEditRequest(err_array); 
+        } 
+    });
 });

@@ -41,8 +41,13 @@
                                     <td>{{ $equipment->name }}</td>
                                 </tr>
                                 <tr>
+                                    {{-- showing available quantity minus reserved items --}}
                                     <td>Available quantity:</td>
-                                    <td>{{ $equipment->available_quantity }}</td>
+                                    <td>{{ $equipment->available_quantity - $equipment->number_of_reservations }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Reserved quantity:</td>
+                                    <td>{{ $equipment->number_of_reservations }}</td>
                                 </tr>
                                 <tr>
                                     <td>Description:</td>

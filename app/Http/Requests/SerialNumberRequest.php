@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueSerialNoRule;
+use App\Rules\SerialNumberLengthRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SerialNumberRequest extends FormRequest
@@ -33,7 +35,7 @@ class SerialNumberRequest extends FormRequest
     public function storeRules() {
         return [
             'equipment_id' => 'required|integer',
-            'serial_numbers.*' => 'nullable|alpha_num|min:3'
+            'serial_numbers.*' => [new UniqueSerialNoRule($this->equipment_id), new SerialNumberLengthRule]
         ];
     }
 

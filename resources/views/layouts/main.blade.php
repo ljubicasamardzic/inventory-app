@@ -2,12 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('page_title', 'InventoryAPP')</title>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
-    @include('partials.styles')
-    @yield('additional_styles', '')
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>@yield('page_title', 'InventoryAPP')</title>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        
+        @include('partials.styles')
+        @yield('additional_styles', '')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -15,7 +15,6 @@
     
     <div class="wrapper">
         
-        {{--        @include('partials.preloader')--}}
         @include('partials.navbar')
         @include('partials.sidebar')
         

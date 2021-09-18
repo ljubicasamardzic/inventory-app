@@ -115,12 +115,12 @@ class User extends Authenticatable
                             ->orderBy('read_at', 'asc')
                             ->orderBy('created_at', 'desc');
     }
-    public static function searchIds($request) {
-        if ($request->employee_ids != null) {
-            return $request->employee_ids;
-        } else {
-            return User::query()->ids();
-        }
-    }
+    // public static function searchIds($request) {
+    //     if ($request->employee_ids != null) {
+    //         return $request->employee_ids;
+    //     } else {
+    //         return User::query()->ids();
+    //     }
+    // }
 
 }

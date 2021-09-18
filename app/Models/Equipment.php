@@ -74,4 +74,11 @@ class Equipment extends Model
         }
     }
 
+    public function getNumberOfReservationsAttribute() {
+        return Reservation::query()
+                        ->leftJoin('tickets', 'tickets.id', '=', 'reservations.ticket_id')
+                        ->where('tickets.equipment_id', '=', $this->id)
+                        ->count();
+    }
 }
+

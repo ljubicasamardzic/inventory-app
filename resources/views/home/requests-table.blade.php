@@ -34,8 +34,8 @@
               @if ($tickets->count() > 0)
                   @foreach ($tickets as $key => $ticket)
                       <tr class="clickable-row" data-href="/tickets/{{ $ticket->id }}">
-                          <td>{{ $key + 1 }}</td>
-                          <td>
+                        <td>{{ (($tickets::resolveCurrentPage() - 1) * App\Models\Ticket::PER_PAGE)  + $key + 1 }}</td>
+                        <td>
                               @if ($ticket->isNewEquipmentRequest()) New equipment 
                               @elseif ($ticket->isSuppliesRequest()) Office supplies 
                               @elseif ($ticket->isRepairRequest()) Repair equipment

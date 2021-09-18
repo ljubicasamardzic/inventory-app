@@ -52,10 +52,10 @@ function viewPassword(password, status) {
 
     if (password_text.css('-webkit-text-security') == 'none' ) {
         password_text.css('-webkit-text-security', 'disc');
-        showStatus.className='fa fa-eye-slash';
+        showStatus.className = 'fa fa-eye-slash';
     } else {
         password_text.css('-webkit-text-security', 'none');
-        showStatus.className='fa fa-eye';
+        showStatus.className = 'fa fa-eye';
     }
 }
 
@@ -66,6 +66,7 @@ function createErrorMessage(error_text) {
     error_message.classList.add('invalid-feedback');
     return error_message;
 }
+
 function handleErrorsNewRequest(err_array) {
     let description_malfunction_div = $('#description_malfunction')[0];
     let  document_item_slt = $('#document_item_id')[0];
@@ -100,7 +101,6 @@ function handleErrorsNewRequest(err_array) {
         description_malfunction_div.after(error);
         description_malfunction_div.classList.add("is-invalid");
     }
-
 }
 
 // submit equipment or supplies request 
@@ -151,8 +151,6 @@ $('#submit_btn_repair_equipment').on('click', function(e) {
     let document_item_id = $('#document_item_id').val();
     let description_malfunction = $('#description_malfunction').val();
 
-    // console.log(document_item_id);
-    // console.log(token_repair, ticket_type_repair, request_type_repair, document_item_id, description_malfunction);
     $.ajax({
         'url' : '/tickets',
         'type' : 'POST',

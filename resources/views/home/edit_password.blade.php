@@ -7,12 +7,12 @@
 
 @section('content')
 <form action="/update_password" method="POST">
+    @csrf
+    @method('PUT')
     <div class="row">
-        @csrf
-        @method('PUT')
         <input type="hidden" name="id" value="{{ auth()->id() }}">
-        <div class="col-3">
-            <div class="input-group d-flex flex-row align-items-center">
+        <div class="col-4">
+            <div class="d-flex flex-row align-items-center">
                 <input  id="old_password" 
                         name="old_password" 
                         type="​password" 
@@ -29,8 +29,10 @@
                 @enderror
             </div>
         </div>
-        <div class="col-3">
-            <div class="input-group d-flex flex-row align-items-center">
+    </div>
+    <div class="row">
+        <div class="col-4 mt-2">
+            <div class="d-flex flex-row align-items-center">
                 <input  id="new_password" 
                     name="new_password" 
                     type="​password" 
@@ -47,7 +49,9 @@
                 @enderror
             </div>
         </div>
-        <div class="col-3">
+    </div>
+    <div class="row">
+        <div class="col-4 mt-2">
             <div class="input-group d-flex flex-row align-items-center">
                 <input  id="repeated_password" 
                     name="repeated_password" 
@@ -65,7 +69,9 @@
                 @enderror
             </div> 
         </div>
-        <div class="col-3">
+    </div>
+    <div class="row">
+        <div class="col-4 mt-4">
             <button class="btn btn-primary">Save changes</button>
         </div>   
     </div>

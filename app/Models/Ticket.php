@@ -14,7 +14,7 @@ class Ticket extends Model
     
     protected $dates = ['deadline', 'date_finished', 'created_at', 'updated_at'];
 
-    const PER_PAGE = 10;
+    const PER_PAGE = 3;
 
     // protected $primary_key = 'id';
     /** TICKET TYPES **/
@@ -182,7 +182,8 @@ class Ticket extends Model
                                 ->orWhere("user_id", "=", $request->search_checkbox);
                     });
                 })
-                ->select('tickets.*');
+                ->select('tickets.*')
+                ->paginate(Ticket::PER_PAGE);
     }
 
     public function scopeProcessedRepairTickets($query, $request) {
@@ -200,7 +201,7 @@ class Ticket extends Model
                             });
                         })
                         ->select('tickets.*')
-                        ->paginate(Ticket::PER_PAGE);
+                        ->paginate(Ticket::PER_PAGE, ["*"], "repair");
     }
     
     public function createDocument() {

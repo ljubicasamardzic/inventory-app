@@ -1,7 +1,7 @@
 <div class="modal fade show" id="modal-serial-numbers" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <form method="POST" action="/serial-numbers" id="serial_numbers_form">
-            @csrf
+            {{-- @csrf --}}
             <div class="modal-content">
                 <div class="modal-header">
                 <h4 class="modal-title">Add serial numbers</h4>
@@ -10,6 +10,7 @@
                 </a>
                 </div>
                 <div class="row modal-body" id="modal-body">
+                    <input type="hidden" id="token_serial_numbers" value="{{ csrf_token() }}">
                         <input type="hidden" id="equipment_id" name="equipment_id" value="{{ $equipment->id }}">
                         @for ($i = 0; $i < $equipment->required_input_fields; $i++)
                             <div class="col-1">

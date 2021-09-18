@@ -25,15 +25,6 @@ class NewTicketRequest extends FormRequest
 
     public function rules()
     {
-        if ($this->method() == 'POST') {
-            return $this->storeRules();
-        } else if ($this->method() == 'PUT' || $this->method() == 'PATCH') {
-            return $this->updateRules();
-        }
-    }
-
-    public function storeRules() {
-
         return [
             'ticket_type' => 'required|integer',
             'ticket_request_type' => 'required|integer',
@@ -46,7 +37,4 @@ class NewTicketRequest extends FormRequest
         ];
     }
 
-    public function updateRules() {
-
-    }
 }

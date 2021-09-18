@@ -39,18 +39,21 @@ class HomeController extends Controller
                                         ->get();
 
         if ($user->isSuperAdmin()) {
-            $tickets = Ticket::query()->search($request)->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->search($request);
         } else if ($user->isSupportOfficer()) {
-            $tickets = Ticket::query()->equipmentRequests()->search($request)->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->equipmentRequests()->search($request);
         } else if ($user->isAdministrativeOfficer()) {
-            $tickets = Ticket::query()->suppliesRequests()->search($request)->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->suppliesRequests()->search($request);
         } else if ($user->isHR()) {
-            $tickets = Ticket::query()->readyForHR()->search($request)->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->readyForHR()->search($request);
         } else if ($user->isEmployee()) {
-            $tickets = Ticket::query()->openUserTickets()->search($request)->paginate(Ticket::PER_PAGE);
+            $tickets = Ticket::query()->openUserTickets()->search($request);
         } else {
             $tickets = [];
         }
+
+        // changing page name so that it is distinguishable from the other pagination
+        $processed_repair_tickets->setPageName('repair');
 
         $flag = '';
         if (count($request->all()) > 0) {
